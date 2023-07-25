@@ -11,6 +11,8 @@ import (
 )
 
 type application struct {
+	db        *sql.DB
+	secretKey string
 }
 
 func openDB(dsn string) (*sql.DB, error) {
@@ -44,7 +46,7 @@ func main() {
 
 	defer db.Close()
 
-	app := application{}
+	app := application{db: db, secretKey: secretKey}
 
 	tokenString, err := signJWT("abc@gmail.com", secretKey)
 	if err != nil {

@@ -16,5 +16,9 @@ func (app *application) routes() chi.Router {
 		w.Write([]byte("Welcome"))
 	})
 
+	r.Post("/register", app.register)
+
+	r.Post("/login", app.login)
+
 	return r
 }
