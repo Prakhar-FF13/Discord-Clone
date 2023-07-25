@@ -11,7 +11,7 @@ import (
 )
 
 type application struct {
-	db        *sql.DB
+	discord   *DiscordDB
 	secretKey string
 }
 
@@ -46,21 +46,15 @@ func main() {
 
 	defer db.Close()
 
-	app := application{db: db, secretKey: secretKey}
+	discord := &DiscordDB{DB: db}
 
-	tokenString, err := signJWT("abc@gmail.com", secretKey)
-	if err != nil {
-		fmt.Println(err)
-		log.Fatal("Error creating token")
-	}
+	app := application{discord: discord, secretKey: secretKey}
 
-	parsedToken, err := parseJWT(tokenString, secretKey)
-	if err != nil {
-		fmt.Println(err)
-		log.Fatal("Error parsing token")
-	}
-
-	fmt.Println(parsedToken)
+	// parsedToken, err := parseJWT(tokenString, secretKey)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	log.Fatal("Error parsing token")
+	// }
 
 	http.ListenAndServe(fmt.Sprintf(":%s", port), app.routes())
 }
