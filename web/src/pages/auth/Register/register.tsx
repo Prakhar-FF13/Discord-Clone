@@ -1,4 +1,4 @@
-import AuthBox from "../../common/components/AuthBox";
+import AuthBox from "../../../common/components/AuthBox";
 
 const RegisterPage = () => {
   return <AuthBox>Register</AuthBox>;
