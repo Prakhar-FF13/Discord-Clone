@@ -32,3 +32,17 @@ func JsonResponseOK(w http.ResponseWriter, obj interface{}) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(jsonObj)
 }
+
+func JsonResponseNotFound(w http.ResponseWriter, obj interface{}) {
+	// create json response to send back.
+	jsonObj, err := encodeToJSON(obj)
+	if err != nil {
+		fmt.Println("Error creating json response", err)
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write(jsonObj)
+}

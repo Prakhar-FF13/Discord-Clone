@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -43,6 +44,14 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	// fetch User from database.
 	user, err := app.discord.FetchUser(body.Email)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			// there were no rows, but otherwise no error occurred
+			JsonResponseNotFound(w, map[string]string{
+				"msg": "User not found",
+			})
+			return
+		}
+
 		fmt.Println(err)
 		fmt.Println("Something went wrong fetching the user from database")
 		InternalServerErrorResponse(w)
