@@ -16,6 +16,10 @@ export interface SetUserDetailsAction {
   userDetails?: User;
 }
 
+export interface ToastType {
+  showToastMessage: boolean;
+  toastMessageContent: string | null;
+}
 export interface OpenToastAction {
   type: ACTION_TYPES.OpenToast;
   content: string;

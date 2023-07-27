@@ -1,11 +1,10 @@
 import { ACTION_TYPES, Action } from "../../commonTypes";
+import { ToastType } from "../../commonTypes";
 
-const initialState = {
+const initialState: ToastType = {
   showToastMessage: false,
   toastMessageContent: null,
 };
-
-type ToastType = typeof initialState;
 
 const reducer = (state: ToastType = initialState, action: Action) => {
   switch (action.type) {
