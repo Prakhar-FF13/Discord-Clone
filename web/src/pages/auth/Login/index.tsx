@@ -28,8 +28,8 @@ const LoginPage = ({
 
   const handleLogin = () => {
     const userDetails: User = {
-      email: mail,
-      password: password,
+      Email: mail,
+      Password: password,
     };
 
     login(userDetails, navigate);

@@ -1,10 +1,10 @@
 import { ACTION_TYPES, Action, User } from "../../commonTypes";
 
 const initialState: User = {
-  email: "",
+  Email: "",
   Token: "",
-  password: "",
-  username: "",
+  Password: "",
+  Username: "",
 };
 
 const reducer = (state = initialState, action: Action) => {

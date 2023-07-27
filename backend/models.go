@@ -4,12 +4,6 @@ import (
 	"database/sql"
 )
 
-type User struct {
-	Email    string
-	Username string
-	Password string
-}
-
 type DiscordDB struct {
 	DB *sql.DB
 }

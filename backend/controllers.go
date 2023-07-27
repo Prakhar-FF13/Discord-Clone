@@ -9,7 +9,7 @@ import (
 
 func (app *application) register(w http.ResponseWriter, r *http.Request) {
 	// decode the request body using json decoder.
-	var body UserJson
+	var body User
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&body)
 
@@ -32,12 +32,12 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	JsonResponseOK(w, TokenResponse{Msg: "Registered successfully", Token: tokenString})
+	JsonResponseOK(w, User{Token: tokenString, Email: body.Username, Username: body.Username})
 }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	// decode the request body using json decoder.
-	var body UserJson
+	var body User
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&body)
 
@@ -73,5 +73,5 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// send token
-	JsonResponseOK(w, TokenResponse{Msg: "Logged in successfully", Token: tokenString})
+	JsonResponseOK(w, User{Token: tokenString, Email: user.Username, Username: user.Username})
 }

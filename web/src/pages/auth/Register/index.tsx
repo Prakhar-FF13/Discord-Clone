@@ -26,9 +26,9 @@ const RegisterPage = ({
 
   const handleRegister = () => {
     const userDetails: User = {
-      email: mail,
-      password: password,
-      username: username,
+      Email: mail,
+      Password: password,
+      Username: username,
     };
 
     register(userDetails, navigate);
