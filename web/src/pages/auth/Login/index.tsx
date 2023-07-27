@@ -1,22 +1,38 @@
 import { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 import AuthBox from "../../../common/components/AuthBox";
 import LoginPageHeader from "./LoginPageHeader";
 import LoginPageInputs from "./LoginPageInput";
 import LoginPageFooter from "./LoginPageFooter";
 import { validateLoginForm } from "../../../common/utils/validators";
+import { getActions } from "../../../store/actions/authActions";
+import { AppDispatch } from "../../../store/store";
+import { User } from "../../../commonTypes";
 
-const LoginPage = () => {
+const LoginPage = ({
+  login,
+}: {
+  login: (userDetails: User, navigate: NavigateFunction) => void;
+}) => {
   const [mail, setMail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsFormValid(validateLoginForm({ mail, password }));
   }, [mail, password, setIsFormValid]);
 
-  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("Login in");
+  const handleLogin = () => {
+    const userDetails: User = {
+      email: mail,
+      password: password,
+    };
+
+    login(userDetails, navigate);
   };
 
   return (
@@ -33,4 +49,10 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+const mapActionsToProps = (dispatch: AppDispatch) => {
+  return {
+    ...getActions(dispatch),
+  };
+};
+
+export default connect(null, mapActionsToProps)(LoginPage);

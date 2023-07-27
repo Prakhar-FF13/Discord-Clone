@@ -1,21 +1,16 @@
-interface TokenResponse {
-  Token: string;
-}
+import { ACTION_TYPES, Action, User } from "../../commonTypes";
 
-interface Action {
-  type: "REGISTER" | "LOGIN";
-}
-
-const initialState: TokenResponse = {
+const initialState: User = {
+  email: "",
   Token: "",
+  password: "",
+  username: "",
 };
 
 const reducer = (state = initialState, action: Action) => {
   switch (action.type) {
-    case "REGISTER":
-      return { ...state };
-    case "LOGIN":
-      return { ...state };
+    case ACTION_TYPES.SetUserDetailsAction:
+      return { ...state, ...action.userDetails };
     default:
       return state;
   }

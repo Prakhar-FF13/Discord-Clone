@@ -1,19 +1,37 @@
 import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
+import { connect } from "react-redux";
+
 import AuthBox from "../../../common/components/AuthBox";
 import RegisterPageInputs from "./RegisterPageInput";
 import RegisterPageFooter from "./RegisterPageFooter";
 import { validateRegisterForm } from "../../../common/utils/validators";
+import { AppDispatch } from "../../../store/store";
+import { getActions } from "../../../store/actions/authActions";
+import { User } from "../../../commonTypes";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
-const RegisterPage = () => {
+const RegisterPage = ({
+  register,
+}: {
+  register: (userDetails: User, navigate: NavigateFunction) => void;
+}) => {
   const [mail, setMail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
+  const navigate = useNavigate();
+
   const handleRegister = () => {
-    console.log(mail, username, password);
+    const userDetails: User = {
+      email: mail,
+      password: password,
+      username: username,
+    };
+
+    register(userDetails, navigate);
   };
 
   useEffect(() => {
@@ -43,4 +61,10 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+const mapActionsToProps = (dispatch: AppDispatch) => {
+  return {
+    ...getActions(dispatch),
+  };
+};
+
+export default connect(null, mapActionsToProps)(RegisterPage);

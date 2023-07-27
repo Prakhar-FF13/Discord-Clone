@@ -60,9 +60,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 	// compare passwords.
 	if !comparePasswords(user.Password, []byte(body.Password)) {
-		x, _ := json.Marshal(map[string]string{"msg": "Passwords do not match"})
-		w.Header().Add("Content-Type", "application/json")
-		w.Write(x)
+		JsonResponseOK(w, map[string]string{"msg": "Passwords do not match"})
 		return
 	}
 

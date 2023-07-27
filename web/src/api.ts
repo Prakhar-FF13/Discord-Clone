@@ -11,6 +11,7 @@ export const login = async (data: User) => {
     const res = await apiClient.post("/login", data);
     return {
       error: false,
+      data: res.data,
     };
   } catch (exception) {
     return {
@@ -23,9 +24,10 @@ export const login = async (data: User) => {
 export const register = async (data: User) => {
   try {
     const res = await apiClient.post("/register", data);
-    console.log(res);
+
     return {
       error: false,
+      data: res.data,
     };
   } catch (exception) {
     return {
