@@ -5,13 +5,24 @@ export interface User {
   Token?: string;
 }
 
-export const ACTION_TYPES = {
-  SetUserDetailsAction: "AUTH_SET_USER_DETAILS",
-};
+export enum ACTION_TYPES {
+  UserDetails = "AUTH_SET_USER_DETAILS",
+  OpenToast = "OPEN_TOAST",
+  CloseToast = "CLOSE_TOAST",
+}
 
 export interface SetUserDetailsAction {
-  type: "AUTH_SET_USER_DETAILS";
+  type: ACTION_TYPES.UserDetails;
   userDetails?: User;
 }
 
-export type Action = SetUserDetailsAction;
+export interface OpenToastAction {
+  type: ACTION_TYPES.OpenToast;
+  content: string;
+}
+
+export interface CloseToastAction {
+  type: ACTION_TYPES.CloseToast;
+}
+
+export type Action = SetUserDetailsAction | OpenToastAction | CloseToastAction;

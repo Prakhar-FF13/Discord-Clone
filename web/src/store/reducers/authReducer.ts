@@ -9,7 +9,7 @@ const initialState: User = {
 
 const reducer = (state = initialState, action: Action) => {
   switch (action.type) {
-    case ACTION_TYPES.SetUserDetailsAction:
+    case ACTION_TYPES.UserDetails:
       return { ...state, ...action.userDetails };
     default:
       return state;

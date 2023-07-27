@@ -46,8 +46,8 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// there were no rows, but otherwise no error occurred
-			JsonResponseNotFound(w, map[string]string{
-				"msg": "User not found",
+			JsonResponseNotFound(w, MessageResponse{
+				Message: "User not found",
 			})
 			return
 		}
@@ -60,7 +60,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 	// compare passwords.
 	if !comparePasswords(user.Password, []byte(body.Password)) {
-		JsonResponseOK(w, map[string]string{"msg": "Passwords do not match"})
+		JsonResponseOK(w, MessageResponse{Message: "Passwords do not match"})
 		return
 	}
 

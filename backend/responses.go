@@ -14,7 +14,7 @@ func encodeToJSON(obj interface{}) ([]byte, error) {
 func InternalServerErrorResponse(w http.ResponseWriter) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
-	x, _ := encodeToJSON(map[string]string{"msg": "Something went wrong with the server"})
+	x, _ := encodeToJSON(MessageResponse{Message: "Something went wrong with the server"})
 	w.Write(x)
 }
 

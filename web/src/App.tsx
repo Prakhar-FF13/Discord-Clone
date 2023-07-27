@@ -8,6 +8,7 @@ import {
 import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard";
+import Toast from "./common/components/Toast";
 
 import "./App.css";
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </Router>
+      <Toast />
     </>
   );
 }
