@@ -1,12 +1,47 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/cors"
 )
+
+func (app *application) isAuthorized(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		reqToken := r.Header.Get("Authorization")
+
+		if len(reqToken) == 0 {
+			JsonResponseNotAuthorized(w)
+			return
+		}
+		splitToken := strings.Split(reqToken, "Bearer ")
+		if len(splitToken) != 2 {
+			JsonResponseNotAuthorized(w)
+			return
+		}
+
+		tokenString := splitToken[1]
+
+		p, err := parseJWT(tokenString, app.secretKey)
+		if err != nil {
+			fmt.Println(err)
+			InternalServerErrorResponse(w)
+			return
+		}
+
+		if p.ExpiresAt.Before(time.Now()) {
+			JsonResponseNotAuthorized(w)
+			return
+		}
+
+		next(w, r)
+	}
+}
 
 func (app *application) routes() chi.Router {
 	r := chi.NewRouter()
@@ -24,9 +59,9 @@ func (app *application) routes() chi.Router {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/", app.isAuthorized(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Welcome"))
-	})
+	}))
 
 	r.Post("/register", app.register)
 

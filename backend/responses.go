@@ -46,3 +46,16 @@ func JsonResponseNotFound(w http.ResponseWriter, obj interface{}) {
 	w.WriteHeader(http.StatusNotFound)
 	w.Write(jsonObj)
 }
+
+func JsonResponseNotAuthorized(w http.ResponseWriter) {
+	jsonObj, err := encodeToJSON(MessageResponse{Message: "Unauthorized! Please login to continue"})
+	if err != nil {
+		fmt.Println("Error creating json response", err)
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusUnauthorized)
+	w.Write(jsonObj)
+}

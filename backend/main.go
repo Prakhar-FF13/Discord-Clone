@@ -50,11 +50,5 @@ func main() {
 
 	app := application{discord: discord, secretKey: secretKey}
 
-	// parsedToken, err := parseJWT(tokenString, secretKey)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	log.Fatal("Error parsing token")
-	// }
-
 	http.ListenAndServe(fmt.Sprintf(":%s", port), app.routes())
 }
