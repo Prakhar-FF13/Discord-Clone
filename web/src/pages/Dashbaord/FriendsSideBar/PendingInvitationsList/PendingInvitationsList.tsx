@@ -1,6 +1,7 @@
 import { Box, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import Avatar from "../../../../common/components/Avatar";
+import InvitationDecisionButtons from "./InvitationDecisionButtons";
 
 interface PendingInvitationsListProps {
   id: number;
@@ -53,6 +54,11 @@ export default function PendingInvitationsList({
           >
             {username}
           </Typography>
+          <InvitationDecisionButtons
+            disabled={buttonDisabled}
+            acceptInvitation={handleAcceptInvitation}
+            rejectInvitation={handleRejectInvitation}
+          />
         </Box>
       </div>
     </Tooltip>
