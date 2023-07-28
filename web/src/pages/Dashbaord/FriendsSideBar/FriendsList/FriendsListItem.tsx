@@ -1,5 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import Avatar from "../../../../common/components/Avatar";
+import OnlineIndicator from "./OnlineIndicator";
 
 interface FriendListItemProps {
   username: string;
@@ -39,6 +40,7 @@ export default function FriendsListItem({
         >
           {username}
         </Typography>
+        {isOnline && <OnlineIndicator />}
       </Button>
     </>
   );
