@@ -10,6 +10,8 @@ export const getActions = (dispatch: AppDispatch) => {
       dispatch(loginApi(userDetails, navigate)),
     register: (userDetails: User, navigate: NavigateFunction) =>
       dispatch(registerApi(userDetails, navigate)),
+    setUserDetails: (userDetails: User) =>
+      dispatch(setUserDetails(userDetails)),
   };
 };
 
