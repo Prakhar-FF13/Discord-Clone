@@ -7,7 +7,7 @@ import {
 
 import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/Dashbaord";
 import Toast from "./common/components/Toast";
 
 import "./App.css";
