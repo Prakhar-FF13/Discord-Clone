@@ -1,14 +1,14 @@
-const validateEmail = (mail: string) => {
+export const validateEmail = (mail: string) => {
   // prettier-ignore
   const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
   return emailPattern.test(mail);
 };
 
-const validatePassword = (password: string) => {
+export const validatePassword = (password: string) => {
   return password.length >= 6 && password.length <= 12;
 };
 
-const validateUsername = (username: string) => {
+export const validateUsername = (username: string) => {
   return username.length >= 3 && username.length <= 12;
 };
 

@@ -1,7 +1,17 @@
+import { useState } from "react";
 import PrimaryButton from "../../../common/components/PrimaryButton";
+import AddFriendDialog from "./AddFriendDialog";
 
 export default function AddFriendButton() {
-  const handleOpenAddFriendDialog = () => {};
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  const handleOpenAddFriendDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseAddFriendDialog = () => {
+    setIsDialogOpen(false);
+  };
 
   return (
     <>
@@ -16,6 +26,11 @@ export default function AddFriendButton() {
         }}
         disabled={false}
         onClick={handleOpenAddFriendDialog}
+      />
+      <AddFriendDialog
+        isDialogOpen={isDialogOpen}
+        closeDialogHandler={handleCloseAddFriendDialog}
+        sendFriendInvitation={() => {}}
       />
     </>
   );
