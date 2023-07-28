@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import InputWithLabels from "../../../common/components/InputWithLabels";
+import PrimaryButton from "../../../common/components/PrimaryButton";
 
 interface AddFriendDialogProps {
   isDialogOpen: boolean;
@@ -49,6 +50,18 @@ export default function AddFriendDialog(props: AddFriendDialogProps) {
             setValue={setMail}
           />
         </DialogContent>
+        <DialogActions>
+          <PrimaryButton
+            onClick={handleSendInvitation}
+            disabled={!isFormValid}
+            label="Send Invite"
+            additionalStyles={{
+              marginLeft: "15px",
+              marginRight: "15px",
+              marginBottom: "10px",
+            }}
+          />
+        </DialogActions>
       </Dialog>
     </div>
   );
