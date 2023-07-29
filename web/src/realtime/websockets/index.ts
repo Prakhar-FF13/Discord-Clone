@@ -1,3 +1,9 @@
+let conn: WebSocket;
+
 export default function Websocket() {
-  let conn = new WebSocket("ws://localhost:4000/ws");
+  conn = new WebSocket("ws://localhost:4000/ws");
+
+  conn.onmessage = (event) => {
+    console.log(event);
+  };
 }

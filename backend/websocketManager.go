@@ -36,7 +36,7 @@ func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 
 	conn, err := websocketUpgrader.Upgrade(w, r, nil)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Could not upgrade connection", err)
 	}
 
 	// create a new client
@@ -44,8 +44,9 @@ func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 
 	m.addClient(client)
 
-	// Start a go routine to read and write message from/to client
-
+	// Start a go routine to read/write messages
+	go client.readMessages()
+	go client.writeMessages()
 }
 
 func (m *Manager) addClient(client *Client) {
