@@ -67,5 +67,9 @@ func (app *application) routes() chi.Router {
 
 	r.Post("/login", app.login)
 
+	// Websocket
+	websocketManager := NewWebSocketManager()
+	r.HandleFunc("/ws", websocketManager.serveWS)
+
 	return r
 }
