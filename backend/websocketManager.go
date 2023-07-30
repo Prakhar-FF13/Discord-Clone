@@ -23,11 +23,13 @@ var (
 type Manager struct {
 	clients ClientList
 	sync.RWMutex
+	rooms map[string]map[*Client]bool
 }
 
 func NewWebSocketManager() *Manager {
 	return &Manager{
 		clients: make(ClientList),
+		rooms:   make(map[string]map[*Client]bool),
 	}
 }
 
@@ -54,6 +56,7 @@ func (m *Manager) addClient(client *Client) {
 	defer m.Unlock()
 
 	m.clients[client] = true
+	m.rooms[client.roomNo][client] = true
 }
 
 func (m *Manager) removeClient(client *Client) {
@@ -65,4 +68,6 @@ func (m *Manager) removeClient(client *Client) {
 		client.conn.Close()
 		delete(m.clients, client)
 	}
+
+	delete(m.rooms[client.roomNo], client)
 }
