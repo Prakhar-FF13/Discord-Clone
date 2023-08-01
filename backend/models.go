@@ -27,11 +27,47 @@ func (d *DiscordDB) FetchUser(email string) (*User, error) {
 
 	var u User
 
-	err := row.Scan(&u.Email, &u.Username, &u.Password)
+	err := row.Scan(&u.id, &u.Email, &u.Username, &u.Password)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &u, nil
+}
+
+func (d *DiscordDB) FetchInvitations(email string) (*[]FriendInvites, error) {
+	stmt := `SELECT * FROM friendinvites where receiver = ?`
+
+	var invites []FriendInvites
+
+	rows, err := d.DB.Query(stmt, email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var invite FriendInvites
+		if err := rows.Scan(&invite.sender, &invite.receiver, &invite.status); err != nil {
+			return &invites, err
+		}
+		invites = append(invites, invite)
+	}
+
+	return &invites, nil
+}
+
+func (d *DiscordDB) AddInvitation(sender string, target string) error {
+	stmt := `INSERT INTO friendinvites (sender, receiver, status) VALUES(?, ?, ?)`
+
+	_, err := d.DB.Exec(stmt, sender, target, "Unaccepted")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
