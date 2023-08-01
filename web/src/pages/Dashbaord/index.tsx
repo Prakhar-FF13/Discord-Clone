@@ -30,7 +30,7 @@ const Dashboard = ({
     } else {
       const user: User = JSON.parse(userDetails);
       setUserDetails(user);
-      Websocket();
+      Websocket(user);
     }
   }, []);
 

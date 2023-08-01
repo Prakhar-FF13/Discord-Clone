@@ -54,10 +54,30 @@ export const register = async (data: User) => {
   }
 };
 
+// secure routes
+
 const checkResponseCode = (e: any) => {
   const code = e?.response?.status;
 
   if (code) {
     if (code === 401 || code === 403) logout();
+  }
+};
+
+export const sendFriendInvitation = async (mail: string) => {
+  try {
+    const res = await apiClient.post("/friend-invitation/invite", {
+      mail: mail,
+    });
+    return {
+      error: false,
+      data: res.data,
+    };
+  } catch (e: any) {
+    checkResponseCode(e);
+    return {
+      error: true,
+      message: "Something weng wrong",
+    };
   }
 };

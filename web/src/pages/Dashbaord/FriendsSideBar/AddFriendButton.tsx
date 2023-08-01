@@ -30,7 +30,6 @@ export default function AddFriendButton() {
       <AddFriendDialog
         isDialogOpen={isDialogOpen}
         closeDialogHandler={handleCloseAddFriendDialog}
-        sendFriendInvitation={() => {}}
       />
     </>
   );

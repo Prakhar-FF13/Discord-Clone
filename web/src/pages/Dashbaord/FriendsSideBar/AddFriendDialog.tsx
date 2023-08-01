@@ -10,18 +10,23 @@ import {
 } from "@mui/material";
 import InputWithLabels from "../../../common/components/InputWithLabels";
 import PrimaryButton from "../../../common/components/PrimaryButton";
+import { connect } from "react-redux";
+import { friendsActions } from "../../../store/actions/friendsActions";
+import { AppDispatch } from "../../../store/store";
 
 interface AddFriendDialogProps {
   isDialogOpen: boolean;
   closeDialogHandler: () => void;
-  sendFriendInvitation: () => void;
+  sendFriendInvitation: (data: string, handler: () => void) => void;
 }
 
-export default function AddFriendDialog(props: AddFriendDialogProps) {
+const AddFriendDialog = (props: AddFriendDialogProps) => {
   const [mail, setMail] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
-  const handleSendInvitation = () => {};
+  const handleSendInvitation = () => {
+    props.sendFriendInvitation(mail, props.closeDialogHandler);
+  };
 
   const handleCloseDialog = () => {
     props.closeDialogHandler();
@@ -65,4 +70,12 @@ export default function AddFriendDialog(props: AddFriendDialogProps) {
       </Dialog>
     </div>
   );
-}
+};
+
+const mapActionsToProps = (dispatch: AppDispatch) => {
+  return {
+    ...friendsActions(dispatch),
+  };
+};
+
+export default connect(null, mapActionsToProps)(AddFriendDialog);
