@@ -59,3 +59,16 @@ func JsonResponseNotAuthorized(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusUnauthorized)
 	w.Write(jsonObj)
 }
+
+func JsonBadRequest(w http.ResponseWriter) {
+	jsonObj, err := encodeToJSON(MessageResponse{Message: "Bad Request! , Make sure all required data is provided"})
+	if err != nil {
+		fmt.Println("Error creating json response", err)
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusBadRequest)
+	w.Write(jsonObj)
+}

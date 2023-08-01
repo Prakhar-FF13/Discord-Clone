@@ -75,3 +75,16 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	// send token
 	JsonResponseOK(w, User{Token: tokenString, Email: user.Username, Username: user.Username})
 }
+
+func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
+	var p map[string]string
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&p)
+
+	if _, ok := p["mail"]; !ok {
+		JsonBadRequest(w)
+		return
+	}
+
+	JsonResponseOK(w, MessageResponse{Message: "Invite sent"})
+}

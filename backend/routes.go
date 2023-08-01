@@ -67,6 +67,8 @@ func (app *application) routes() chi.Router {
 
 	r.Post("/login", app.login)
 
+	r.Post("/friend-invitation/invite", app.isAuthorized(app.inviteFriend))
+
 	// Websocket
 	websocketManager := NewWebSocketManager()
 	r.HandleFunc("/ws", websocketManager.serveWS)
