@@ -98,6 +98,18 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	invited, invError := app.discord.AlreadyInvited(user.Email, targetMail)
+
+	if invError != nil {
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	if invited {
+		JsonResponseOK(w, MessageResponse{Message: "Invitation already send"})
+		return
+	}
+
 	err := app.discord.AddInvitation(user.Email, targetMail)
 
 	if err != nil {

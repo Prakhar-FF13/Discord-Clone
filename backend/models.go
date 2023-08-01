@@ -36,7 +36,7 @@ func (d *DiscordDB) FetchUser(email string) (*User, error) {
 	return &u, nil
 }
 
-func (d *DiscordDB) FetchInvitations(email string) (*[]FriendInvites, error) {
+func (d *DiscordDB) FetchAllInvitations(email string) (*[]FriendInvites, error) {
 	stmt := `SELECT * FROM friendinvites where receiver = ?`
 
 	var invites []FriendInvites
@@ -58,6 +58,30 @@ func (d *DiscordDB) FetchInvitations(email string) (*[]FriendInvites, error) {
 	}
 
 	return &invites, nil
+}
+
+func (d *DiscordDB) AlreadyInvited(sender, receiver string) (bool, error) {
+	stmt := `SELECT * FROM friendinvites where sender = ? and receiver = ?`
+
+	row := d.DB.QueryRow(stmt, sender, receiver)
+
+	var i FriendInvites
+
+	err := row.Scan(&i.sender, &i.receiver, &i.status)
+
+	if err == sql.ErrNoRows {
+		return false, nil
+	}
+
+	if err != sql.ErrNoRows && err != nil {
+		return true, err
+	}
+
+	if i.status != "Accepted" {
+		return true, nil
+	}
+
+	return false, nil
 }
 
 func (d *DiscordDB) AddInvitation(sender string, target string) error {
