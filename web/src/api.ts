@@ -1,6 +1,7 @@
 import axios from "axios";
 import { User } from "./commonTypes";
 import { logout } from "./common/utils/auth";
+import { validateEmail } from "./common/utils/validators";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:4000",
@@ -66,6 +67,12 @@ const checkResponseCode = (e: any) => {
 
 export const sendFriendInvitation = async (mail: string) => {
   try {
+    if (!validateEmail(mail)) {
+      return {
+        error: true,
+      };
+    }
+
     const res = await apiClient.post("/friend-invitation/invite", {
       mail: mail,
     });
