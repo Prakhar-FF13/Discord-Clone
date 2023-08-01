@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -39,7 +40,10 @@ func (app *application) isAuthorized(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		next(w, r)
+		ctx := context.WithValue(r.Context(), "user", p)
+		newReq := r.WithContext(ctx)
+
+		next(w, newReq)
 	}
 }
 

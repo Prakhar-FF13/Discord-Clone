@@ -81,8 +81,27 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&p)
 
-	if _, ok := p["mail"]; !ok {
+	targetMail, ok := p["mail"]
+	if !ok {
 		JsonBadRequest(w)
+		return
+	}
+
+	user := r.Context().Value("user").(*Payload)
+	if user == nil {
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	if user.Email == targetMail {
+		JsonBadRequest(w)
+		return
+	}
+
+	err := app.discord.AddInvitation(user.Email, targetMail)
+
+	if err != nil {
+		InternalServerErrorResponse(w)
 		return
 	}
 
