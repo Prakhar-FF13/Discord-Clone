@@ -1,6 +1,7 @@
 import { AppDispatch } from "../store";
 import * as api from "../../api";
 import { openToastMessage } from "./toastActions";
+import { ACTION_TYPES } from "../../commonTypes";
 
 export const friendsActions = (dispatch: AppDispatch) => {
   return {
@@ -8,6 +9,13 @@ export const friendsActions = (dispatch: AppDispatch) => {
       dispatch(sendFriendInvitation(mail, closeDialogHandler)),
   };
 };
+
+// export const SetPendingInvitationsAction = (pendingFriendInvitations) => {
+//   return {
+//     type: ACTION_TYPES.SetPendingInvitations,
+//     pendingFriendInvitations,
+//   };
+// };
 
 const sendFriendInvitation = (mail: string, closeDialogHandler: () => void) => {
   return async (dispatch: AppDispatch) => {

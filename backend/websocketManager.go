@@ -21,20 +21,20 @@ var (
 // Manager is like a room.
 // It stores how many clients it is managing.
 type Manager struct {
-	clients ClientList
 	sync.RWMutex
-	rooms map[string]map[*Client]bool
+	rooms         map[string]map[*Client]bool
+	emailToClient map[string]*Client
 }
 
 func NewWebSocketManager() *Manager {
 	return &Manager{
-		clients: make(ClientList),
-		rooms:   make(map[string]map[*Client]bool),
+		rooms:         make(map[string]map[*Client]bool),
+		emailToClient: make(map[string]*Client),
 	}
 }
 
 func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("New Connection")
+	userEmail := r.URL.Query().Get("email")
 
 	conn, err := websocketUpgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -44,30 +44,30 @@ func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 	// create a new client
 	client := NewClient(conn, m)
 
-	m.addClient(client)
+	m.addClient(client, userEmail)
 
 	// Start a go routine to read/write messages
 	go client.readMessages()
 	go client.writeMessages()
 }
 
-func (m *Manager) addClient(client *Client) {
+func (m *Manager) addClient(client *Client, clientEmail string) {
 	m.Lock()
 	defer m.Unlock()
 
-	m.clients[client] = true
-	m.rooms[client.roomNo][client] = true
+	if _, ok := m.rooms[client.room]; !ok {
+		m.rooms[client.room] = make(map[*Client]bool)
+
+	}
+	m.rooms[client.room][client] = true
+	m.emailToClient[clientEmail] = client
 }
 
 func (m *Manager) removeClient(client *Client) {
 	m.Lock()
 	defer m.Unlock()
 
-	// if client present -> remove him.
-	if _, ok := m.clients[client]; ok {
-		client.conn.Close()
-		delete(m.clients, client)
+	if _, ok := m.rooms[client.room]; ok {
+		delete(m.rooms[client.room], client)
 	}
-
-	delete(m.rooms[client.roomNo], client)
 }
