@@ -11,8 +11,9 @@ import (
 )
 
 type application struct {
-	discord   *DiscordDB
-	secretKey string
+	discord          *DiscordDB
+	secretKey        string
+	websocketManager *Manager
 }
 
 func openDB(dsn string) (*sql.DB, error) {
@@ -48,7 +49,10 @@ func main() {
 
 	discord := &DiscordDB{DB: db}
 
-	app := application{discord: discord, secretKey: secretKey}
+	// Websocket
+	websocketManager := NewWebSocketManager()
+
+	app := application{discord: discord, secretKey: secretKey, websocketManager: websocketManager}
 
 	http.ListenAndServe(fmt.Sprintf(":%s", port), app.routes())
 }
