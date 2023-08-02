@@ -110,24 +110,36 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// err := app.discord.AddInvitation(user.Email, targetMail)
+	err := app.discord.AddInvitation(user.Email, targetMail)
 
-	// if err != nil {
-	// 	InternalServerErrorResponse(w)
-	// 	return
-	// }
-
-	// targetInvitations, errFetch := app.discord.FetchAllInvitations(targetMail)
-
-	// payload, errByte := json.Marshal(targetInvitations)
-
-	wp := map[string]string{
-		"kind":    "friend-invitations",
-		"payload": "string(payload)",
+	if err != nil {
+		InternalServerErrorResponse(w)
+		return
 	}
 
-	wpe, _ := encodeToJSON(wp)
+	targetInvitations, errFetch := app.discord.FetchAllInvitations(targetMail)
 
-	app.websocketManager.emailToClient[targetMail].egress <- wpe
+	var x []map[string]string
+	for _, v := range *targetInvitations {
+		x = append(x, map[string]string{
+			"sender":   v.sender,
+			"receiver": v.receiver,
+			"status":   v.status,
+		})
+	}
+
+	y := map[string]interface{}{
+		"kind":    "friend-invitations",
+		"payload": x,
+	}
+
+	payload, errByte := encodeToJSON(y)
+
+	if errFetch != nil || errByte != nil {
+		JsonResponseOK(w, MessageResponse{Message: "Invite sent"})
+		return
+	}
+
+	app.websocketManager.emailToClient[targetMail].egress <- payload
 	JsonResponseOK(w, MessageResponse{Message: "Invite sent"})
 }
