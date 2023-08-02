@@ -32,7 +32,7 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	JsonResponseOK(w, User{Token: tokenString, Email: body.Username, Username: body.Username})
+	JsonResponseOK(w, User{Token: tokenString, Email: body.Email, Username: body.Username})
 }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
@@ -73,7 +73,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// send token
-	JsonResponseOK(w, User{Token: tokenString, Email: user.Username, Username: user.Username})
+	JsonResponseOK(w, User{Token: tokenString, Email: user.Email, Username: user.Username})
 }
 
 func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
@@ -110,12 +110,24 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := app.discord.AddInvitation(user.Email, targetMail)
+	// err := app.discord.AddInvitation(user.Email, targetMail)
 
-	if err != nil {
-		InternalServerErrorResponse(w)
-		return
+	// if err != nil {
+	// 	InternalServerErrorResponse(w)
+	// 	return
+	// }
+
+	// targetInvitations, errFetch := app.discord.FetchAllInvitations(targetMail)
+
+	// payload, errByte := json.Marshal(targetInvitations)
+
+	wp := map[string]string{
+		"kind":    "friend-invitations",
+		"payload": "string(payload)",
 	}
 
+	wpe, _ := encodeToJSON(wp)
+
+	app.websocketManager.emailToClient[targetMail].egress <- wpe
 	JsonResponseOK(w, MessageResponse{Message: "Invite sent"})
 }

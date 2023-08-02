@@ -36,6 +36,8 @@ func NewWebSocketManager() *Manager {
 func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.URL.Query().Get("email")
 
+	fmt.Println("Client connected: ", userEmail)
+
 	conn, err := websocketUpgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fmt.Println("Could not upgrade connection", err)

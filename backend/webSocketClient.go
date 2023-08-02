@@ -8,11 +8,6 @@ import (
 
 type ClientList map[*Client]bool
 
-type ClientMessage struct {
-	kind    string
-	payload map[string]string
-}
-
 // connection to talk to this client and
 // the manager with which this client is associated with.
 type Client struct {
@@ -20,7 +15,7 @@ type Client struct {
 	manager *Manager
 
 	// egress -> used to avoid concurrent writes on websocket connection
-	egress chan ClientMessage
+	egress chan []byte
 	room   string
 }
 
@@ -28,7 +23,7 @@ func NewClient(conn *websocket.Conn, manager *Manager) *Client {
 	return &Client{
 		manager: manager,
 		conn:    conn,
-		egress:  make(chan ClientMessage),
+		egress:  make(chan []byte),
 		room:    "",
 	}
 }
@@ -38,8 +33,7 @@ func (c *Client) readMessages() {
 		c.manager.removeClient(c)
 	}()
 	for {
-		var p ClientMessage
-		err := c.conn.ReadJSON(&p)
+		_, p, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Println("Error reading messages")
@@ -64,11 +58,12 @@ func (c *Client) writeMessages() {
 					log.Println("connection closed: ", err)
 				}
 			}
-			if err := c.conn.WriteJSON(message); err != nil {
+
+			if err := c.conn.WriteMessage(websocket.TextMessage, message); err != nil {
 				log.Println("Failed to send message", err)
 			}
-
 			log.Println("Message sent")
+
 		}
 	}
 }
