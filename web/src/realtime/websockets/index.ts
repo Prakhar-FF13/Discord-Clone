@@ -1,6 +1,11 @@
-import { User } from "../../commonTypes";
-// import { SetPendingInvitationsAction } from "../../store/actions/friendsActions";
+import { SetPendingInvitationsAction } from "./../../store/actions/friendsActions";
+import { FriendInvitation, User, WebSocketResponse } from "../../commonTypes";
 import store from "../../store/store";
+
+interface Payload {
+  kind: WebSocketResponse;
+  payload: FriendInvitation[];
+}
 
 let conn: WebSocket;
 
@@ -8,13 +13,12 @@ export default function Websocket(user: User) {
   conn = new WebSocket(`ws://localhost:4000/ws?email=${user.Email}`);
 
   conn.onmessage = (event: MessageEvent) => {
-    let data = event.data;
+    let dataString: string | null | undefined = event.data;
 
-    if (data) {
-      data = JSON.parse(data);
+    if (dataString) {
+      const data: Payload = JSON.parse(dataString);
       if (data && data.kind === "friend-invitations") {
-        console.log(data.payload);
-        // store.dispatch(SetPendingInvitationsAction(data));
+        store.dispatch(SetPendingInvitationsAction(data.payload));
       }
     }
   };

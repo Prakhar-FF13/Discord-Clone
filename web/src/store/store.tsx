@@ -1,10 +1,14 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-// import thunk from "redux-thunk";
 
 import authReducer from "./reducers/authReducer";
 import toastReducer from "./reducers/toastReducer";
+import friendReducer from "./reducers/friendsReducer";
 
-const rootReducer = combineReducers({ auth: authReducer, toast: toastReducer });
+const rootReducer = combineReducers({
+  auth: authReducer,
+  toast: toastReducer,
+  friends: friendReducer,
+});
 
 const store = configureStore({
   reducer: rootReducer,

@@ -12,8 +12,18 @@ export interface ToastType {
 
 export interface Friends {
   friends: [];
-  pendingFriendsInvitations: [];
+  pendingFriendsInvitations: FriendInvitation[];
   onlineUsers: [];
+}
+
+export interface FriendInvitation {
+  sender: string;
+  receiver: string;
+  status: string;
+}
+
+export enum WebSocketResponse {
+  FriendInvitation = "friend-invitations",
 }
 
 export enum ACTION_TYPES {
