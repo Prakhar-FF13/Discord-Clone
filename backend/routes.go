@@ -75,6 +75,8 @@ func (app *application) routes() chi.Router {
 
 	r.Post("/login", app.login)
 
+	r.Post("/fetch-friends", app.fetchFriends)
+
 	r.Post("/friend-invitation/invite", app.isAuthorized(app.inviteFriend))
 
 	r.HandleFunc("/ws", app.websocketManager.serveWS)

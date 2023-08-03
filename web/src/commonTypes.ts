@@ -12,14 +12,15 @@ export interface ToastType {
 
 export interface Friends {
   friends: [];
-  pendingFriendsInvitations: FriendInvitation[];
+  pendingFriendsInvitations: Friend[];
   onlineUsers: [];
 }
 
-export interface FriendInvitation {
+export interface Friend {
   id: number;
   email: string;
   username: string;
+  status?: string;
 }
 
 export enum WebSocketResponse {

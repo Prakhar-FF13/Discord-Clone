@@ -88,3 +88,27 @@ export const sendFriendInvitation = async (mail: string) => {
     };
   }
 };
+
+export const fetchFriends = async (mail: string) => {
+  try {
+    if (!validateEmail(mail)) {
+      return {
+        error: true,
+      };
+    }
+
+    const res = await apiClient.post("/fetch-friends", {
+      mail: mail,
+    });
+    return {
+      error: false,
+      data: res.data,
+    };
+  } catch (e: any) {
+    checkResponseCode(e);
+    return {
+      error: true,
+      message: "Something weng wrong",
+    };
+  }
+};

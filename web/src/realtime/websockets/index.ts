@@ -1,10 +1,10 @@
 import { SetPendingInvitationsAction } from "./../../store/actions/friendsActions";
-import { FriendInvitation, User, WebSocketResponse } from "../../commonTypes";
+import { Friend, User, WebSocketResponse } from "../../commonTypes";
 import store from "../../store/store";
 
 interface Payload {
   kind: WebSocketResponse;
-  payload: FriendInvitation[];
+  payload: Friend[];
 }
 
 let conn: WebSocket;

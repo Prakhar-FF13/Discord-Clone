@@ -2,7 +2,7 @@ import { styled } from "@mui/system";
 import PendingInvitationsList from "./PendingInvitationsList";
 import { connect } from "react-redux";
 import { RootState } from "../../../../store/store";
-import { FriendInvitation, Friends } from "../../../../commonTypes";
+import { Friend, Friends } from "../../../../commonTypes";
 
 const MainContainer = styled("div")({
   width: "100%",
@@ -16,7 +16,7 @@ const MainContainer = styled("div")({
 function PendingInvitations({ pendingFriendsInvitations }: Friends) {
   return (
     <MainContainer>
-      {pendingFriendsInvitations.map((inv: FriendInvitation) => (
+      {pendingFriendsInvitations.map((inv: Friend) => (
         <PendingInvitationsList
           key={inv.id}
           username={inv.username}

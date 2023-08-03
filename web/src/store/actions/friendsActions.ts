@@ -1,7 +1,7 @@
 import { AppDispatch } from "../store";
 import * as api from "../../api";
 import { openToastMessage } from "./toastActions";
-import { ACTION_TYPES, FriendInvitation } from "../../commonTypes";
+import { ACTION_TYPES, Friend } from "../../commonTypes";
 
 export const friendsActions = (dispatch: AppDispatch) => {
   return {
@@ -11,7 +11,7 @@ export const friendsActions = (dispatch: AppDispatch) => {
 };
 
 export const SetPendingInvitationsAction = (
-  pendingFriendsInvitations: FriendInvitation[]
+  pendingFriendsInvitations: Friend[]
 ) => {
   return {
     type: ACTION_TYPES.SetPendingInvitations,

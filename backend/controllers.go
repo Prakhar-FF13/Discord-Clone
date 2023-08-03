@@ -143,3 +143,25 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 	app.websocketManager.emailToClient[targetMail].egress <- payload
 	JsonResponseOK(w, MessageResponse{Message: "Invite sent"})
 }
+
+func (app *application) fetchFriends(w http.ResponseWriter, r *http.Request) {
+	var p map[string]string
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&p)
+
+	_, ok := p["mail"]
+	if !ok {
+		JsonBadRequest(w)
+		return
+	}
+
+	// fr, errFr := app.discord.FetchAllInvitations(receiver)
+
+	// if errFr != nil {
+	// 	InternalServerErrorResponse(w)
+	// 	return
+	// }
+
+	JsonResponseOK(w, MessageResponse{Message: "ok"})
+
+}
