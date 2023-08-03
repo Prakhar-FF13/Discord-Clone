@@ -12,7 +12,7 @@ type User struct {
 }
 
 type FriendInvites struct {
-	sender   string
-	receiver string
-	status   string
+	id       int
+	username string
+	email    string
 }

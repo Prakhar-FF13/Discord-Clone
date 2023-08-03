@@ -17,9 +17,9 @@ export interface Friends {
 }
 
 export interface FriendInvitation {
-  sender: string;
-  receiver: string;
-  status: string;
+  id: number;
+  email: string;
+  username: string;
 }
 
 export enum WebSocketResponse {

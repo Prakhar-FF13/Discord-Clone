@@ -4,7 +4,6 @@ import Avatar from "../../../../common/components/Avatar";
 import InvitationDecisionButtons from "./InvitationDecisionButtons";
 
 interface PendingInvitationsListProps {
-  id: number;
   username: string;
   email: string;
   acceptFriendInvitation: () => void;
@@ -12,7 +11,6 @@ interface PendingInvitationsListProps {
 }
 
 export default function PendingInvitationsList({
-  id,
   username,
   email,
   acceptFriendInvitation,

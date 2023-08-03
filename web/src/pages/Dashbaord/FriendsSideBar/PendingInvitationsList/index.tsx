@@ -1,18 +1,8 @@
 import { styled } from "@mui/system";
 import PendingInvitationsList from "./PendingInvitationsList";
-
-const DUMMY_INVITATIONS = [
-  {
-    id: 1,
-    username: "Mark",
-    email: "mark@gmail.com",
-  },
-  {
-    id: 2,
-    username: "Marky",
-    email: "marky@gmail.com",
-  },
-];
+import { connect } from "react-redux";
+import { RootState } from "../../../../store/store";
+import { FriendInvitation, Friends } from "../../../../commonTypes";
 
 const MainContainer = styled("div")({
   width: "100%",
@@ -23,15 +13,14 @@ const MainContainer = styled("div")({
   overflow: "auto",
 });
 
-export default function PendingInvitations() {
+function PendingInvitations({ pendingFriendsInvitations }: Friends) {
   return (
     <MainContainer>
-      {DUMMY_INVITATIONS.map((inv) => (
+      {pendingFriendsInvitations.map((inv: FriendInvitation) => (
         <PendingInvitationsList
           key={inv.id}
           username={inv.username}
           email={inv.email}
-          id={inv.id}
           acceptFriendInvitation={() => {}}
           rejectFriendInvitation={() => {}}
         />
@@ -39,3 +28,11 @@ export default function PendingInvitations() {
     </MainContainer>
   );
 }
+
+const mapStateToProps = ({ friends }: RootState) => {
+  return {
+    ...friends,
+  };
+};
+
+export default connect(mapStateToProps, null)(PendingInvitations);

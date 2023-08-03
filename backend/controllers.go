@@ -119,12 +119,12 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 
 	targetInvitations, errFetch := app.discord.FetchAllInvitations(targetMail)
 
-	var x []map[string]string
+	var x []map[string]interface{}
 	for _, v := range *targetInvitations {
-		x = append(x, map[string]string{
-			"sender":   v.sender,
-			"receiver": v.receiver,
-			"status":   v.status,
+		x = append(x, map[string]interface{}{
+			"id":       v.id,
+			"username": v.username,
+			"email":    v.email,
 		})
 	}
 

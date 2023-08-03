@@ -37,7 +37,9 @@ func (d *DiscordDB) FetchUser(email string) (*User, error) {
 }
 
 func (d *DiscordDB) FetchAllInvitations(email string) (*[]FriendInvites, error) {
-	stmt := `SELECT * FROM friendinvites where receiver = ?`
+	// stmt := `SELECT * FROM friendinvites where receiver = ?`
+	stmt := `SELECT id, username, email FROM users where email IN (
+		SELECT sender from friendinvites where receiver = ? )`
 
 	var invites []FriendInvites
 
@@ -51,7 +53,7 @@ func (d *DiscordDB) FetchAllInvitations(email string) (*[]FriendInvites, error) 
 
 	for rows.Next() {
 		var invite FriendInvites
-		if err := rows.Scan(&invite.sender, &invite.receiver, &invite.status); err != nil {
+		if err := rows.Scan(&invite.id, &invite.username, &invite.email); err != nil {
 			return &invites, err
 		}
 		invites = append(invites, invite)
@@ -65,7 +67,13 @@ func (d *DiscordDB) AlreadyInvited(sender, receiver string) (bool, error) {
 
 	row := d.DB.QueryRow(stmt, sender, receiver)
 
-	var i FriendInvites
+	type FriendRow struct {
+		sender   string
+		receiver string
+		status   string
+	}
+
+	var i FriendRow
 
 	err := row.Scan(&i.sender, &i.receiver, &i.status)
 
