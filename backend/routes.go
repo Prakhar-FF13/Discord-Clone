@@ -12,10 +12,6 @@ import (
 	"github.com/rs/cors"
 )
 
-func getValueFromRequest(r *http.Request, key string) any {
-	return r.Context().Value(key)
-}
-
 func (app *application) isAuthorized(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		reqToken := r.Header.Get("Authorization")
