@@ -36,12 +36,11 @@ func (d *DiscordDB) FetchUser(email string) (*User, error) {
 	return &u, nil
 }
 
-func (d *DiscordDB) FetchAllInvitations(email string) (*[]FriendInvites, error) {
-	// stmt := `SELECT * FROM friendinvites where receiver = ?`
+func (d *DiscordDB) FetchAllUnacceptedInvitations(email string) (*[]Friend, error) {
 	stmt := `SELECT id, username, email FROM users where email IN (
-		SELECT sender from friendinvites where receiver = ? )`
+		SELECT sender from friendinvites where receiver = ? AND status = Unaccepted)`
 
-	var invites []FriendInvites
+	var invites []Friend
 
 	rows, err := d.DB.Query(stmt, email)
 
@@ -52,7 +51,7 @@ func (d *DiscordDB) FetchAllInvitations(email string) (*[]FriendInvites, error) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var invite FriendInvites
+		var invite Friend
 		if err := rows.Scan(&invite.id, &invite.username, &invite.email); err != nil {
 			return &invites, err
 		}
@@ -102,4 +101,30 @@ func (d *DiscordDB) AddInvitation(sender string, target string) error {
 	}
 
 	return nil
+}
+
+func (d *DiscordDB) FetchFriends(email string) (*[]Friend, error) {
+	stmt := `SELECT id, username, email FROM users where
+		email IN (SELECT sender as reqEmail from friendinvites where receiver = ? AND status = 'Accepted') OR 
+		email IN (SELECT receiver as reqEmail from friendinvites where sender = ? AND status = 'Accepted');`
+
+	var friends []Friend
+
+	rows, err := d.DB.Query(stmt, email, email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var fr Friend
+		if err := rows.Scan(&fr.id, &fr.username, &fr.email); err != nil {
+			return &friends, err
+		}
+		friends = append(friends, fr)
+	}
+
+	return &friends, nil
 }

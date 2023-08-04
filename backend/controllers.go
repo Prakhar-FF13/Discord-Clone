@@ -117,7 +117,7 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	targetInvitations, errFetch := app.discord.FetchAllInvitations(targetMail)
+	targetInvitations, errFetch := app.discord.FetchAllUnacceptedInvitations(targetMail)
 
 	var x []map[string]interface{}
 	for _, v := range *targetInvitations {
@@ -141,7 +141,7 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.websocketManager.emailToClient[targetMail].egress <- payload
-	JsonResponseOK(w, MessageResponse{Message: "Invite sent"})
+	JsonResponseOK(w, x)
 }
 
 func (app *application) fetchFriends(w http.ResponseWriter, r *http.Request) {
@@ -149,19 +149,35 @@ func (app *application) fetchFriends(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&p)
 
-	_, ok := p["mail"]
+	mail, ok := p["mail"]
 	if !ok {
 		JsonBadRequest(w)
 		return
 	}
 
-	// fr, errFr := app.discord.FetchAllInvitations(receiver)
+	friends, errFr := app.discord.FetchFriends(mail)
 
-	// if errFr != nil {
-	// 	InternalServerErrorResponse(w)
-	// 	return
+	if errFr != nil {
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	var x []map[string]interface{}
+	for _, v := range *friends {
+		x = append(x, map[string]interface{}{
+			"id":       v.id,
+			"username": v.username,
+			"email":    v.email,
+		})
+	}
+
+	// y := map[string]interface{}{
+	// 	"kind":    "friends",
+	// 	"payload": x,
 	// }
 
-	JsonResponseOK(w, MessageResponse{Message: "ok"})
+	// payload, errByte := encodeToJSON(y)
+
+	JsonResponseOK(w, x)
 
 }

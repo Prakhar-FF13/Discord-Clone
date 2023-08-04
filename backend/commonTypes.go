@@ -11,7 +11,7 @@ type User struct {
 	Token    string
 }
 
-type FriendInvites struct {
+type Friend struct {
 	id       int
 	username string
 	email    string
