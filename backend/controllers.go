@@ -147,7 +147,7 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	errWeb := app.sendPendingInvitations(targetMail)
+	errWeb := app.websocketManager.sendPendingInvitations(targetMail)
 
 	if errWeb != nil {
 		fmt.Println(errWeb)

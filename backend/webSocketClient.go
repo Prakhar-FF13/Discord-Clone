@@ -52,6 +52,11 @@ func (c *Client) writeMessages() {
 	defer func() {
 		c.manager.removeClient(c)
 	}()
+
+	// populate initial data
+	go c.manager.sendPendingInvitations(c.email)
+	go c.manager.sendFriends(c.email)
+
 	for {
 		select {
 		case message, ok := <-c.egress:

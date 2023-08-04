@@ -24,12 +24,14 @@ type Manager struct {
 	sync.RWMutex
 	rooms         map[string]map[*Client]bool
 	emailToClient map[string]*Client
+	discord       *DiscordDB
 }
 
-func NewWebSocketManager() *Manager {
+func NewWebSocketManager(d *DiscordDB) *Manager {
 	return &Manager{
 		rooms:         make(map[string]map[*Client]bool),
 		emailToClient: make(map[string]*Client),
+		discord:       d,
 	}
 }
 

@@ -3,11 +3,10 @@ package main
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 )
 
-func (app *application) sendPendingInvitations(targetMail string) error {
-	targetInvitations, errFetch := app.discord.FetchAllUnacceptedInvitations(targetMail)
+func (m *Manager) sendPendingInvitations(targetMail string) error {
+	targetInvitations, errFetch := m.discord.FetchAllUnacceptedInvitations(targetMail)
 
 	var x []map[string]interface{}
 
@@ -26,16 +25,14 @@ func (app *application) sendPendingInvitations(targetMail string) error {
 		"payload": x,
 	}
 
-	fmt.Println(y)
-
 	payload, errByte := encodeToJSON(y)
 
 	if errFetch != nil || errByte != nil {
 		return errors.New("could not send updated pending invitation list via websocket connection")
 	}
 
-	if _, ok := app.websocketManager.emailToClient[targetMail]; ok {
-		app.websocketManager.emailToClient[targetMail].egress <- payload
+	if _, ok := m.emailToClient[targetMail]; ok {
+		m.emailToClient[targetMail].egress <- payload
 	} else {
 		return errors.New("could not get the connection details for the user with the email: " + targetMail)
 	}
@@ -43,8 +40,8 @@ func (app *application) sendPendingInvitations(targetMail string) error {
 	return nil
 }
 
-func (app *application) sendFriends(mail string) error {
-	friends, errFr := app.discord.FetchFriends(mail)
+func (m *Manager) sendFriends(mail string) error {
+	friends, errFr := m.discord.FetchFriends(mail)
 
 	if errFr != nil {
 		return errFr
@@ -70,8 +67,8 @@ func (app *application) sendFriends(mail string) error {
 		return errors.New("could not send updated pending invitation list via websocket connection")
 	}
 
-	if _, ok := app.websocketManager.emailToClient[mail]; ok {
-		app.websocketManager.emailToClient[mail].egress <- payload
+	if _, ok := m.emailToClient[mail]; ok {
+		m.emailToClient[mail].egress <- payload
 	} else {
 		return errors.New("could not get the connection details for the user with the email: " + mail)
 	}

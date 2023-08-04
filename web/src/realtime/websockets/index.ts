@@ -17,7 +17,10 @@ export default function Websocket(user: User) {
 
     if (dataString) {
       const data: Payload = JSON.parse(dataString);
-      if (data && data.kind === "friend-invitations") {
+
+      console.log(data);
+
+      if (data && data.kind === "friend-invitations" && data.payload) {
         store.dispatch(SetPendingInvitationsAction(data.payload));
       }
     }

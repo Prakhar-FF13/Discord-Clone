@@ -50,7 +50,7 @@ func main() {
 	discord := &DiscordDB{DB: db}
 
 	// Websocket
-	websocketManager := NewWebSocketManager()
+	websocketManager := NewWebSocketManager(discord)
 
 	app := application{discord: discord, secretKey: secretKey, websocketManager: websocketManager}
 
