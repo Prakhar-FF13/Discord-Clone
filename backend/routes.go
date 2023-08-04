@@ -71,7 +71,9 @@ func (app *application) routes() chi.Router {
 
 	r.Post("/login", app.login)
 
-	r.Post("/fetch-friends", app.isAuthorized(app.fetchFriends))
+	r.Get("/fetch-friends", app.isAuthorized(app.fetchFriends))
+
+	r.Get("/friend-invitation/pending-invites", app.isAuthorized(app.getPendingInvitations))
 
 	r.Post("/friend-invitation/invite", app.isAuthorized(app.inviteFriend))
 

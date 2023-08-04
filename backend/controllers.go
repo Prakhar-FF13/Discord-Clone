@@ -76,6 +76,36 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	JsonResponseOK(w, User{Token: tokenString, Email: user.Email, Username: user.Username})
 }
 
+func (app *application) getPendingInvitations(w http.ResponseWriter, r *http.Request) {
+	var p map[string]string
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&p)
+
+	mail, ok := p["mail"]
+	if !ok {
+		JsonBadRequest(w)
+		return
+	}
+
+	targetInvitations, errFetch := app.discord.FetchAllUnacceptedInvitations(mail)
+
+	if errFetch != nil {
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	var x []map[string]interface{}
+	for _, v := range *targetInvitations {
+		x = append(x, map[string]interface{}{
+			"id":       v.id,
+			"username": v.username,
+			"email":    v.email,
+		})
+	}
+
+	JsonResponseOK(w, x)
+}
+
 func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 	var p map[string]string
 	decoder := json.NewDecoder(r.Body)
@@ -117,31 +147,13 @@ func (app *application) inviteFriend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	targetInvitations, errFetch := app.discord.FetchAllUnacceptedInvitations(targetMail)
+	errWeb := app.sendPendingInvitations(targetMail)
 
-	var x []map[string]interface{}
-	for _, v := range *targetInvitations {
-		x = append(x, map[string]interface{}{
-			"id":       v.id,
-			"username": v.username,
-			"email":    v.email,
-		})
+	if errWeb != nil {
+		fmt.Println(errWeb)
 	}
 
-	y := map[string]interface{}{
-		"kind":    "friend-invitations",
-		"payload": x,
-	}
-
-	payload, errByte := encodeToJSON(y)
-
-	if errFetch != nil || errByte != nil {
-		JsonResponseOK(w, MessageResponse{Message: "Invite sent"})
-		return
-	}
-
-	app.websocketManager.emailToClient[targetMail].egress <- payload
-	JsonResponseOK(w, x)
+	JsonResponseOK(w, MessageResponse{Message: "Invite sent"})
 }
 
 func (app *application) fetchFriends(w http.ResponseWriter, r *http.Request) {
@@ -171,13 +183,5 @@ func (app *application) fetchFriends(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	// y := map[string]interface{}{
-	// 	"kind":    "friends",
-	// 	"payload": x,
-	// }
-
-	// payload, errByte := encodeToJSON(y)
-
 	JsonResponseOK(w, x)
-
 }

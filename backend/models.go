@@ -38,7 +38,7 @@ func (d *DiscordDB) FetchUser(email string) (*User, error) {
 
 func (d *DiscordDB) FetchAllUnacceptedInvitations(email string) (*[]Friend, error) {
 	stmt := `SELECT id, username, email FROM users where email IN (
-		SELECT sender from friendinvites where receiver = ? AND status = Unaccepted)`
+		SELECT sender from friendinvites where receiver = ? AND status = 'Unaccepted')`
 
 	var invites []Friend
 
