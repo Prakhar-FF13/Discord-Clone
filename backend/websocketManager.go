@@ -57,6 +57,8 @@ func (m *Manager) addClient(client *Client, clientEmail string) {
 	m.Lock()
 	defer m.Unlock()
 
+	client.email = clientEmail
+
 	if _, ok := m.rooms[client.room]; !ok {
 		m.rooms[client.room] = make(map[*Client]bool)
 
@@ -71,5 +73,6 @@ func (m *Manager) removeClient(client *Client) {
 
 	if _, ok := m.rooms[client.room]; ok {
 		delete(m.rooms[client.room], client)
+		delete(m.emailToClient, client.email)
 	}
 }

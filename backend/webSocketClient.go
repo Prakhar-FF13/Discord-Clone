@@ -17,6 +17,7 @@ type Client struct {
 	// egress -> used to avoid concurrent writes on websocket connection
 	egress chan []byte
 	room   string
+	email  string
 }
 
 func NewClient(conn *websocket.Conn, manager *Manager) *Client {
@@ -25,6 +26,7 @@ func NewClient(conn *websocket.Conn, manager *Manager) *Client {
 		conn:    conn,
 		egress:  make(chan []byte),
 		room:    "",
+		email:   "",
 	}
 }
 
