@@ -4,7 +4,7 @@ import store from "../../store/store";
 
 interface Payload {
   kind: WebSocketResponse;
-  payload: Friend[] | null;
+  payload: Friend[];
 }
 
 let conn: WebSocket;

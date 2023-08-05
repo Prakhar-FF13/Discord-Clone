@@ -94,7 +94,7 @@ func (app *application) getPendingInvitations(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	var x []map[string]interface{}
+	x := make([]map[string]interface{}, 0)
 	for _, v := range *targetInvitations {
 		x = append(x, map[string]interface{}{
 			"id":       v.id,
@@ -174,7 +174,7 @@ func (app *application) fetchFriends(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var x []map[string]interface{}
+	x := make([]map[string]interface{}, 0)
 	for _, v := range *friends {
 		x = append(x, map[string]interface{}{
 			"id":       v.id,

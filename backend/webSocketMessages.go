@@ -3,14 +3,15 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 )
 
 func (m *Manager) sendPendingInvitations(targetMail string) error {
 	targetInvitations, errFetch := m.discord.FetchAllUnacceptedInvitations(targetMail)
 
-	var x []map[string]interface{}
+	x := make([]map[string]interface{}, 0)
 
-	if errFetch != sql.ErrNoRows {
+	if errFetch == nil {
 		for _, v := range *targetInvitations {
 			x = append(x, map[string]interface{}{
 				"id":       v.id,
@@ -18,7 +19,11 @@ func (m *Manager) sendPendingInvitations(targetMail string) error {
 				"email":    v.email,
 			})
 		}
+	} else if errFetch != sql.ErrNoRows {
+		return nil
 	}
+
+	fmt.Println(x)
 
 	y := map[string]interface{}{
 		"kind":    "friend-invitations",
@@ -27,7 +32,7 @@ func (m *Manager) sendPendingInvitations(targetMail string) error {
 
 	payload, errByte := encodeToJSON(y)
 
-	if errFetch != nil || errByte != nil {
+	if errByte != nil {
 		return errors.New("could not send updated pending invitation list via websocket connection")
 	}
 
@@ -43,17 +48,18 @@ func (m *Manager) sendPendingInvitations(targetMail string) error {
 func (m *Manager) sendFriends(mail string) error {
 	friends, errFr := m.discord.FetchFriends(mail)
 
-	if errFr != nil {
-		return errFr
-	}
+	x := make([]map[string]interface{}, 0)
 
-	var x []map[string]interface{}
-	for _, v := range *friends {
-		x = append(x, map[string]interface{}{
-			"id":       v.id,
-			"username": v.username,
-			"email":    v.email,
-		})
+	if errFr == nil {
+		for _, v := range *friends {
+			x = append(x, map[string]interface{}{
+				"id":       v.id,
+				"username": v.username,
+				"email":    v.email,
+			})
+		}
+	} else if errFr != sql.ErrNoRows {
+		return errFr
 	}
 
 	y := map[string]interface{}{
@@ -64,7 +70,7 @@ func (m *Manager) sendFriends(mail string) error {
 	payload, errByte := encodeToJSON(y)
 
 	if errByte != nil {
-		return errors.New("could not send updated pending invitation list via websocket connection")
+		return errors.New("could not send updated friends list via websocket connection")
 	}
 
 	if _, ok := m.emailToClient[mail]; ok {
