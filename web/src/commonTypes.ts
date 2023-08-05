@@ -3,6 +3,7 @@ export interface User {
   Username?: string;
   Password: string;
   Token?: string;
+  isOnline?: boolean;
 }
 
 export interface ToastType {
@@ -24,7 +25,8 @@ export interface Friend {
 }
 
 export enum WebSocketResponse {
-  FriendInvitation = "friend-invitations",
+  FriendInvitations = "friend-invitations",
+  Friends = "friends",
 }
 
 export enum ACTION_TYPES {

@@ -21,8 +21,6 @@ function PendingInvitations({ pendingFriendsInvitations }: Friends) {
           key={inv.id}
           username={inv.username}
           email={inv.email}
-          acceptFriendInvitation={() => {}}
-          rejectFriendInvitation={() => {}}
         />
       ))}
     </MainContainer>

@@ -2,15 +2,16 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import Avatar from "../../../../common/components/Avatar";
 import InvitationDecisionButtons from "./InvitationDecisionButtons";
+import { ConnectedProps, connect } from "react-redux";
+import { friendsActions } from "../../../../store/actions/friendsActions";
+import { AppDispatch } from "../../../../store/store";
 
-interface PendingInvitationsListProps {
+interface PendingInvitationsListProps extends ReduxActions {
   username: string;
   email: string;
-  acceptFriendInvitation: () => void;
-  rejectFriendInvitation: () => void;
 }
 
-export default function PendingInvitationsList({
+function PendingInvitationsList({
   username,
   email,
   acceptFriendInvitation,
@@ -19,12 +20,12 @@ export default function PendingInvitationsList({
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
   const handleAcceptInvitation = () => {
-    // acceptFriendInvitation({ id });
+    acceptFriendInvitation(email);
     setButtonDisabled(true);
   };
 
   const handleRejectInvitation = () => {
-    // rejectFriendInvitation({ id });
+    rejectFriendInvitation(email);
   };
 
   return (
@@ -62,3 +63,15 @@ export default function PendingInvitationsList({
     </Tooltip>
   );
 }
+
+function mapActionsToProps(dispatch: AppDispatch) {
+  return {
+    ...friendsActions(dispatch),
+  };
+}
+
+const connector = connect(null, mapActionsToProps);
+
+type ReduxActions = ConnectedProps<typeof connector>;
+
+export default connector(PendingInvitationsList);

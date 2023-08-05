@@ -112,3 +112,51 @@ export const fetchFriends = async (mail: string) => {
     };
   }
 };
+
+export const acceptFriendInvitation = async (mail: string) => {
+  try {
+    if (!validateEmail(mail)) {
+      return {
+        error: true,
+      };
+    }
+
+    const res = await apiClient.post("/friend-invitation/accept", {
+      mail: mail,
+    });
+    return {
+      error: false,
+      data: res.data,
+    };
+  } catch (e: any) {
+    checkResponseCode(e);
+    return {
+      error: true,
+      message: "Something weng wrong in accepting invitation",
+    };
+  }
+};
+
+export const rejectFriendInvitation = async (mail: string) => {
+  try {
+    if (!validateEmail(mail)) {
+      return {
+        error: true,
+      };
+    }
+
+    const res = await apiClient.post("/friend-invitation/reject", {
+      mail: mail,
+    });
+    return {
+      error: false,
+      data: res.data,
+    };
+  } catch (e: any) {
+    checkResponseCode(e);
+    return {
+      error: true,
+      message: "Something weng wrong in rejecting invitation",
+    };
+  }
+};

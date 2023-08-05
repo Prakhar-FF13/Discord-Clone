@@ -7,6 +7,10 @@ export const friendsActions = (dispatch: AppDispatch) => {
   return {
     sendFriendInvitation: (mail: string, closeDialogHandler: () => void) =>
       dispatch(sendFriendInvitation(mail, closeDialogHandler)),
+    acceptFriendInvitation: (mail: string) =>
+      dispatch(acceptFriendInvitation(mail)),
+    rejectFriendInvitation: (mail: string) =>
+      dispatch(rejectFriendInvitation(mail)),
   };
 };
 
@@ -16,6 +20,32 @@ export const SetPendingInvitationsAction = (
   return {
     type: ACTION_TYPES.SetPendingInvitations,
     pendingFriendsInvitations,
+  };
+};
+
+const acceptFriendInvitation = (mail: string) => {
+  return async (dispatch: AppDispatch) => {
+    const res = await api.acceptFriendInvitation(mail);
+    if (res.error) {
+      dispatch(
+        openToastMessage(res.message ? res.message : "Something went wrong")
+      );
+    } else {
+      dispatch(openToastMessage("Invitation has been accepted."));
+    }
+  };
+};
+
+const rejectFriendInvitation = (mail: string) => {
+  return async (dispatch: AppDispatch) => {
+    const res = await api.rejectFriendInvitation(mail);
+    if (res.error) {
+      dispatch(
+        openToastMessage(res.message ? res.message : "Something went wrong")
+      );
+    } else {
+      dispatch(openToastMessage("Invitation has been rejected."));
+    }
   };
 };
 

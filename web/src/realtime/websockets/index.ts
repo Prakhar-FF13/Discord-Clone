@@ -4,7 +4,7 @@ import store from "../../store/store";
 
 interface Payload {
   kind: WebSocketResponse;
-  payload: Friend[];
+  payload: Friend[] | null;
 }
 
 let conn: WebSocket;
@@ -22,6 +22,9 @@ export default function Websocket(user: User) {
 
       if (data && data.kind === "friend-invitations" && data.payload) {
         store.dispatch(SetPendingInvitationsAction(data.payload));
+      }
+
+      if (data && data.kind === "friends" && data.payload) {
       }
     }
   };
