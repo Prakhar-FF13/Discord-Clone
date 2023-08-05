@@ -128,3 +128,27 @@ func (d *DiscordDB) FetchFriends(email string) (*[]Friend, error) {
 
 	return &friends, nil
 }
+
+func (d *DiscordDB) AcceptInvitation(sender, receiver string) error {
+	stmt := `UPDATE friendinvites SET status = 'Accepted' where sender = ? AND receiver = ?;`
+
+	_, err := d.DB.Exec(stmt, sender, receiver)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *DiscordDB) RejectInvitation(sender, receiver string) error {
+	stmt := `UPDATE friendinvites SET status = 'Rejected' where sender = ? AND receiver = ?;`
+
+	_, err := d.DB.Exec(stmt, sender, receiver)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

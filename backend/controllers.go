@@ -185,3 +185,71 @@ func (app *application) fetchFriends(w http.ResponseWriter, r *http.Request) {
 
 	JsonResponseOK(w, x)
 }
+
+func (app *application) acceptFriendInvitation(w http.ResponseWriter, r *http.Request) {
+	var p map[string]string
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&p)
+
+	sender, ok := p["mail"]
+	if !ok {
+		JsonBadRequest(w)
+		return
+	}
+
+	receiver := r.Context().Value("user").(*Payload)
+
+	if receiver == nil {
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	errReject := app.discord.AcceptInvitation(sender, receiver.Email)
+	if errReject != nil {
+		fmt.Println("Unable to Accept Invitation")
+		InternalServerErrorResponse(w)
+		return
+	}
+	errPendingInvites := app.websocketManager.sendPendingInvitations(receiver.Email)
+	errFriends := app.websocketManager.sendFriends(receiver.Email)
+
+	if errPendingInvites != nil || errFriends != nil {
+		fmt.Println("Unable to Send Updated Invitation and Friends Data to user")
+	}
+
+	JsonResponseOK(w, MessageResponse{Message: "Invitation Accepted"})
+}
+
+func (app *application) rejectFriendInvitation(w http.ResponseWriter, r *http.Request) {
+	var p map[string]string
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&p)
+
+	sender, ok := p["mail"]
+	if !ok {
+		JsonBadRequest(w)
+		return
+	}
+
+	receiver := r.Context().Value("user").(*Payload)
+
+	if receiver == nil {
+		InternalServerErrorResponse(w)
+		return
+	}
+
+	errReject := app.discord.RejectInvitation(sender, receiver.Email)
+	if errReject != nil {
+		fmt.Println("Unable to Reject Invitation")
+		InternalServerErrorResponse(w)
+		return
+	}
+	errPendingInvites := app.websocketManager.sendPendingInvitations(receiver.Email)
+	errFriends := app.websocketManager.sendFriends(receiver.Email)
+
+	if errPendingInvites != nil || errFriends != nil {
+		fmt.Println("Unable to Send Updated Invitation and Friends Data to user")
+	}
+
+	JsonResponseOK(w, MessageResponse{Message: "Invitation Rejected"})
+}
