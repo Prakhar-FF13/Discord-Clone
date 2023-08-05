@@ -210,10 +210,12 @@ func (app *application) acceptFriendInvitation(w http.ResponseWriter, r *http.Re
 		InternalServerErrorResponse(w)
 		return
 	}
-	errPendingInvites := app.websocketManager.sendPendingInvitations(receiver.Email)
-	errFriends := app.websocketManager.sendFriends(receiver.Email)
 
-	if errPendingInvites != nil || errFriends != nil {
+	errPendingInvites := app.websocketManager.sendPendingInvitations(receiver.Email)
+	errFriendsReceiver := app.websocketManager.sendFriends(receiver.Email)
+	errFriendsSender := app.websocketManager.sendFriends(sender)
+
+	if errPendingInvites != nil || errFriendsReceiver != nil || errFriendsSender != nil {
 		fmt.Println("Unable to Send Updated Invitation and Friends Data to user")
 	}
 
