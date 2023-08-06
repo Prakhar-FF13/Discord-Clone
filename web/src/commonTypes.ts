@@ -22,6 +22,7 @@ export interface Friend {
   email: string;
   username: string;
   status?: string;
+  isOnline?: boolean;
 }
 
 export enum WebSocketResponse {

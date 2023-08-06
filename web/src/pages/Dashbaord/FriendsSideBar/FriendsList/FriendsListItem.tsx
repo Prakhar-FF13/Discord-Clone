@@ -5,11 +5,9 @@ import OnlineIndicator from "./OnlineIndicator";
 interface FriendListItemProps {
   username: string;
   isOnline: boolean;
-  id: number;
 }
 
 export default function FriendsListItem({
-  id,
   username,
   isOnline,
 }: FriendListItemProps) {
