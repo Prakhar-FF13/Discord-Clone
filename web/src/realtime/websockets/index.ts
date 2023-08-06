@@ -1,4 +1,7 @@
-import { SetPendingInvitationsAction } from "./../../store/actions/friendsActions";
+import {
+  SetFriends,
+  SetPendingInvitationsAction,
+} from "./../../store/actions/friendsActions";
 import { Friend, User, WebSocketResponse } from "../../commonTypes";
 import store from "../../store/store";
 
@@ -25,6 +28,7 @@ export default function Websocket(user: User) {
       }
 
       if (data && data.kind === "friends" && data.payload) {
+        store.dispatch(SetFriends(data.payload));
       }
     }
   };

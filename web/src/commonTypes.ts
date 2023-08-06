@@ -12,7 +12,7 @@ export interface ToastType {
 }
 
 export interface Friends {
-  friends: [];
+  friends: Friend[];
   pendingFriendsInvitations: Friend[];
   onlineUsers: [];
 }

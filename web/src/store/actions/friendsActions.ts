@@ -23,6 +23,13 @@ export const SetPendingInvitationsAction = (
   };
 };
 
+export const SetFriends = (friends: Friend[]) => {
+  return {
+    type: ACTION_TYPES.SetFriends,
+    friends,
+  };
+};
+
 const acceptFriendInvitation = (mail: string) => {
   return async (dispatch: AppDispatch) => {
     const res = await api.acceptFriendInvitation(mail);
