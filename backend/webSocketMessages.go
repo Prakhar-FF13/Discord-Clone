@@ -52,10 +52,15 @@ func (m *Manager) sendFriends(mail string) error {
 
 	if errFr == nil {
 		for _, v := range *friends {
+			isOnline := false
+			if _, ok := m.emailToClient[v.email]; ok {
+				isOnline = true
+			}
 			x = append(x, map[string]interface{}{
 				"id":       v.id,
 				"username": v.username,
 				"email":    v.email,
+				"isOnline": isOnline,
 			})
 		}
 	} else if errFr != sql.ErrNoRows {
