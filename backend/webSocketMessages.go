@@ -86,3 +86,52 @@ func (m *Manager) sendFriends(mail string) error {
 
 	return nil
 }
+
+func (m *Manager) isOnline(mail string) error {
+	friends, errFr := m.discord.FetchFriends(mail)
+
+	if errFr != nil {
+		return errFr
+	}
+
+	for _, fr := range *friends {
+		if conn, ok := m.emailToClient[fr.email]; ok {
+			jsonBytes, errJson := encodeToJSON(map[string]interface{}{
+				"kind": "friend-online",
+				"payload": map[string]interface{}{
+					"email": mail, "isOnline": true,
+				},
+			})
+			if errJson == nil {
+				conn.egress <- jsonBytes
+			}
+		}
+	}
+
+	return nil
+}
+
+func (m *Manager) isOffline(mail string) error {
+	friends, errFr := m.discord.FetchFriends(mail)
+
+	if errFr != nil {
+		return errFr
+	}
+
+	for _, fr := range *friends {
+
+		if conn, ok := m.emailToClient[fr.email]; ok {
+			jsonBytes, errJson := encodeToJSON(map[string]interface{}{
+				"kind": "friend-offline",
+				"payload": map[string]interface{}{
+					"email": mail, "isOnline": false,
+				},
+			})
+			if errJson == nil {
+				conn.egress <- jsonBytes
+			}
+		}
+	}
+
+	return nil
+}

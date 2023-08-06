@@ -67,6 +67,8 @@ func (m *Manager) addClient(client *Client, clientEmail string) {
 	}
 	m.rooms[client.room][client] = true
 	m.emailToClient[clientEmail] = client
+
+	m.isOnline(clientEmail)
 }
 
 func (m *Manager) removeClient(client *Client) {
@@ -76,5 +78,7 @@ func (m *Manager) removeClient(client *Client) {
 	if _, ok := m.rooms[client.room]; ok {
 		delete(m.rooms[client.room], client)
 		delete(m.emailToClient, client.email)
+
+		m.isOffline(client.email)
 	}
 }
