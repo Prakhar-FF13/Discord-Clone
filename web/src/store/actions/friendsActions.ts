@@ -30,6 +30,13 @@ export const SetFriends = (friends: Friend[]) => {
   };
 };
 
+export const SetFriendIsOnline = (friend: Friend) => {
+  return {
+    type: ACTION_TYPES.SetFriendOnline,
+    friend,
+  };
+};
+
 const acceptFriendInvitation = (mail: string) => {
   return async (dispatch: AppDispatch) => {
     const res = await api.acceptFriendInvitation(mail);

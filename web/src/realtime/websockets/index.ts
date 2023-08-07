@@ -1,13 +1,14 @@
 import {
+  SetFriendIsOnline,
   SetFriends,
   SetPendingInvitationsAction,
 } from "./../../store/actions/friendsActions";
-import { Friend, User, WebSocketResponse } from "../../commonTypes";
+import { User, WebSocketResponse } from "../../commonTypes";
 import store from "../../store/store";
 
 interface Payload {
   kind: WebSocketResponse;
-  payload: Friend[];
+  payload: any;
 }
 
 let conn: WebSocket;
@@ -29,6 +30,13 @@ export default function Websocket(user: User) {
 
       if (data && data.kind === "friends" && data.payload) {
         store.dispatch(SetFriends(data.payload));
+      }
+
+      if (data && data.kind === "friend-online" && data.payload) {
+        store.dispatch(SetFriendIsOnline(data.payload));
+      }
+
+      if (data && data.kind === "friend-offline" && data.payload) {
       }
     }
   };

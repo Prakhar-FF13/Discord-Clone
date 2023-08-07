@@ -28,6 +28,8 @@ export interface Friend {
 export enum WebSocketResponse {
   FriendInvitations = "friend-invitations",
   Friends = "friends",
+  FriendOnline = "friend-online",
+  FriendOffline = "friend-offline",
 }
 
 export enum ACTION_TYPES {
@@ -37,6 +39,7 @@ export enum ACTION_TYPES {
   SetFriends = "SET_FRIENDS",
   SetPendingInvitations = "SET_PENDING_INVITATIONS",
   SetOnlineUsers = "SET_ONLINE_USERS",
+  SetFriendOnline = "SET_FRIEND_ONLINE",
 }
 
 export interface SetUserDetailsAction {
@@ -68,10 +71,16 @@ export interface SetOnlineUsersAction {
   onlineUsers: [];
 }
 
+export interface SetFriendIsOnlineAction {
+  type: ACTION_TYPES.SetFriendOnline;
+  friend: Friend;
+}
+
 export type Action =
   | SetUserDetailsAction
   | OpenToastAction
   | CloseToastAction
   | SetFriendsAction
   | SetOnlineUsersAction
-  | SetPendingInvitationsAction;
+  | SetPendingInvitationsAction
+  | SetFriendIsOnlineAction;

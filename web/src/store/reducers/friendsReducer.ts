@@ -23,6 +23,19 @@ const reducer = (state = initialState, action: Action) => {
         ...state,
         onlineUsers: action.onlineUsers,
       };
+    case ACTION_TYPES.SetFriendOnline:
+      let newF = [...state.friends];
+      newF = newF.map((fr) => {
+        const x = { ...fr };
+        if (fr.email === action.friend.email) x.isOnline = true;
+        return x;
+      });
+
+      return {
+        ...state,
+        friends: newF,
+      };
+
     default:
       return state;
   }
