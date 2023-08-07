@@ -1,4 +1,5 @@
 import {
+  SetFriendIsOffline,
   SetFriendIsOnline,
   SetFriends,
   SetPendingInvitationsAction,
@@ -37,6 +38,7 @@ export default function Websocket(user: User) {
       }
 
       if (data && data.kind === "friend-offline" && data.payload) {
+        store.dispatch(SetFriendIsOffline(data.payload));
       }
     }
   };

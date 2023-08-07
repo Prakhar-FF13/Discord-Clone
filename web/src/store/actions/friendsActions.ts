@@ -37,6 +37,13 @@ export const SetFriendIsOnline = (friend: Friend) => {
   };
 };
 
+export const SetFriendIsOffline = (friend: Friend) => {
+  return {
+    type: ACTION_TYPES.SetFriendOffline,
+    friend,
+  };
+};
+
 const acceptFriendInvitation = (mail: string) => {
   return async (dispatch: AppDispatch) => {
     const res = await api.acceptFriendInvitation(mail);

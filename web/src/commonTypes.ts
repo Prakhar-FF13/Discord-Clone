@@ -40,6 +40,7 @@ export enum ACTION_TYPES {
   SetPendingInvitations = "SET_PENDING_INVITATIONS",
   SetOnlineUsers = "SET_ONLINE_USERS",
   SetFriendOnline = "SET_FRIEND_ONLINE",
+  SetFriendOffline = "SET_FRIEND_OFFLINE",
 }
 
 export interface SetUserDetailsAction {
@@ -76,6 +77,11 @@ export interface SetFriendIsOnlineAction {
   friend: Friend;
 }
 
+export interface SetFriendIsOfflineAction {
+  type: ACTION_TYPES.SetFriendOffline;
+  friend: Friend;
+}
+
 export type Action =
   | SetUserDetailsAction
   | OpenToastAction
@@ -83,4 +89,5 @@ export type Action =
   | SetFriendsAction
   | SetOnlineUsersAction
   | SetPendingInvitationsAction
-  | SetFriendIsOnlineAction;
+  | SetFriendIsOnlineAction
+  | SetFriendIsOfflineAction;
