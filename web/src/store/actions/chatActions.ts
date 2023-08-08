@@ -3,7 +3,7 @@ import { AppDispatch } from "../store";
 
 export const chatActions = (dispatch: AppDispatch) => {
   return {
-    setChosenDetails: (details: ChatDetails, chatType: ChatType) =>
+    setChosenChatDetails: (details: ChatDetails, chatType: ChatType) =>
       dispatch(setChosenChatDetails(details, chatType)),
   };
 };

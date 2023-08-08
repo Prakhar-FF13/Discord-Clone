@@ -25,8 +25,13 @@ export interface Friend {
 }
 
 export interface ChatDetails {
-  chatDetails: null;
-  chatType: ChatType;
+  id: number;
+  username: string;
+}
+
+export interface Chat {
+  chatDetails: ChatDetails | null;
+  chatType: ChatType | null;
   messages: string[];
 }
 
@@ -83,17 +88,17 @@ export interface CloseToastAction {
 
 export interface SetFriendsAction {
   type: ACTION_TYPES.SetFriends;
-  friends: Friend[];
+  friends: [];
 }
 
 export interface SetPendingInvitationsAction {
   type: ACTION_TYPES.SetPendingInvitations;
-  pendingFriendsInvitations: Friend[];
+  pendingFriendsInvitations: [];
 }
 
 export interface SetOnlineUsersAction {
   type: ACTION_TYPES.SetOnlineUsers;
-  onlineUsers: Friend[];
+  onlineUsers: [];
 }
 
 export interface SetFriendIsOnlineAction {

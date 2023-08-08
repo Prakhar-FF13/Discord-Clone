@@ -1,6 +1,6 @@
-import { ACTION_TYPES, Action, ChatDetails } from "./../../commonTypes";
+import { ACTION_TYPES, Action, Chat } from "./../../commonTypes";
 
-const initState: ChatDetails = {
+const initState: Chat = {
   chatDetails: null,
   chatType: null,
   messages: [],
@@ -13,7 +13,7 @@ const reducer = (state = initState, action: Action) => {
         ...state,
         chatDetails: action.chatDetails,
         chatType: action.chatType,
-        message: [],
+        messages: [],
       };
     case ACTION_TYPES.SetMessages:
       return {
