@@ -62,7 +62,7 @@ export enum ChatType {
 }
 export interface SetChosenChatDetailsAction {
   type: ACTION_TYPES.SetChosenChatDetails;
-  chatDetails: [];
+  chatDetails: ChatDetails;
   chatType: ChatType;
   messages: string[];
 }
