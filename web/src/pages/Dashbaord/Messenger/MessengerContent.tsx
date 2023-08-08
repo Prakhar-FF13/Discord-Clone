@@ -20,7 +20,7 @@ const MessengerContent = ({ chatDetails }: MessengerContentProps) => {
   return (
     <Wrapper>
       <Messages />
-      <MessageInput />
+      <MessageInput chatDetails={chatDetails} />
     </Wrapper>
   );
 };
