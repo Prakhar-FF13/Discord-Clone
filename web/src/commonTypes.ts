@@ -24,6 +24,12 @@ export interface Friend {
   isOnline?: boolean;
 }
 
+export interface ChatDetails {
+  chatDetails: null;
+  chatType: ChatType;
+  messages: string[];
+}
+
 export enum WebSocketResponse {
   FriendInvitations = "friend-invitations",
   Friends = "friends",
@@ -53,12 +59,12 @@ export interface SetChosenChatDetailsAction {
   type: ACTION_TYPES.SetChosenChatDetails;
   chatDetails: [];
   chatType: ChatType;
-  messages: [];
+  messages: string[];
 }
 
 export interface SetMessageAction {
   type: ACTION_TYPES.SetMessages;
-  messages: [];
+  messages: string[];
 }
 
 export interface SetUserDetailsAction {

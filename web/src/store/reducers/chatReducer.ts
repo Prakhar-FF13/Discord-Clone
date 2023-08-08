@@ -1,6 +1,6 @@
-import { ACTION_TYPES, Action } from "./../../commonTypes";
+import { ACTION_TYPES, Action, ChatDetails } from "./../../commonTypes";
 
-const initState = {
+const initState: ChatDetails = {
   chatDetails: null,
   chatType: null,
   messages: [],
