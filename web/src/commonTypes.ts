@@ -26,7 +26,7 @@ export interface Friend {
 
 export interface ChatDetails {
   id: number;
-  username: string;
+  label: string;
 }
 
 export interface Chat {

@@ -4,7 +4,7 @@ import { ConnectedProps, connect } from "react-redux";
 
 interface ChosenOptionLabelProps extends ReduxState {}
 
-const ChosenOptionLabel = ({ username }: ChosenOptionLabelProps) => {
+const ChosenOptionLabel = ({ label }: ChosenOptionLabelProps) => {
   return (
     <Typography
       sx={{
@@ -12,13 +12,13 @@ const ChosenOptionLabel = ({ username }: ChosenOptionLabelProps) => {
         color: "white",
         fontWeight: "bold",
       }}
-    >{`${username ? username : ""}`}</Typography>
+    >{`${label ? label : ""}`}</Typography>
   );
 };
 
 const mapStateToProps = ({ chat }: RootState) => {
   return {
-    username: chat.chatDetails?.username,
+    label: chat.chatDetails?.label,
   };
 };
 
