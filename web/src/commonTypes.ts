@@ -10,7 +10,6 @@ export interface ToastType {
   showToastMessage: boolean;
   toastMessageContent: string | null;
 }
-
 export interface Friends {
   friends: Friend[];
   pendingFriendsInvitations: Friend[];
@@ -41,6 +40,25 @@ export enum ACTION_TYPES {
   SetOnlineUsers = "SET_ONLINE_USERS",
   SetFriendOnline = "SET_FRIEND_ONLINE",
   SetFriendOffline = "SET_FRIEND_OFFLINE",
+  SetChosenChatDetails = "SET_CHOSEN_CHAT_DETAILS",
+  SetMessages = "SET_MESSAGES",
+  SetChatType = "SET_CHAT_TYPE",
+}
+
+export enum ChatType {
+  DIRECT = "DIRECT",
+  GROUP = "GROUP",
+}
+export interface SetChosenChatDetailsAction {
+  type: ACTION_TYPES.SetChosenChatDetails;
+  chatDetails: [];
+  chatType: ChatType;
+  messages: [];
+}
+
+export interface SetMessageAction {
+  type: ACTION_TYPES.SetMessages;
+  messages: [];
 }
 
 export interface SetUserDetailsAction {
@@ -59,17 +77,17 @@ export interface CloseToastAction {
 
 export interface SetFriendsAction {
   type: ACTION_TYPES.SetFriends;
-  friends: [];
+  friends: Friend[];
 }
 
 export interface SetPendingInvitationsAction {
   type: ACTION_TYPES.SetPendingInvitations;
-  pendingFriendsInvitations: [];
+  pendingFriendsInvitations: Friend[];
 }
 
 export interface SetOnlineUsersAction {
   type: ACTION_TYPES.SetOnlineUsers;
-  onlineUsers: [];
+  onlineUsers: Friend[];
 }
 
 export interface SetFriendIsOnlineAction {
@@ -90,4 +108,6 @@ export type Action =
   | SetOnlineUsersAction
   | SetPendingInvitationsAction
   | SetFriendIsOnlineAction
-  | SetFriendIsOfflineAction;
+  | SetFriendIsOfflineAction
+  | SetChosenChatDetailsAction
+  | SetMessageAction;
