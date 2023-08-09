@@ -57,6 +57,7 @@ export const sendDirectChatMessage = (
       id: id,
       message: msg,
       email: email,
+      date: new Date(Date.now()).toDateString(),
     },
   });
 

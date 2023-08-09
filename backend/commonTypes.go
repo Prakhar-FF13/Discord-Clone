@@ -21,6 +21,7 @@ type ClientPayload struct {
 	Id      int64  `json:"id"`
 	Email   string `json:"email"`
 	Message string `json:"message"`
+	Date    string `json:"date"`
 }
 
 type ClientMessage struct {
