@@ -19,6 +19,7 @@ type Client struct {
 	egress chan []byte
 	room   string
 	email  string
+	id     int64
 }
 
 func NewClient(conn *websocket.Conn, manager *Manager) *Client {

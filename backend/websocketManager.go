@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -37,6 +38,11 @@ func NewWebSocketManager(d *DiscordDB) *Manager {
 
 func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.URL.Query().Get("email")
+	userId, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+
+	if err != nil {
+		fmt.Println("User Id not provided, some functionality might not work")
+	}
 
 	fmt.Println("Client connected: ", userEmail)
 
@@ -48,18 +54,19 @@ func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 	// create a new client
 	client := NewClient(conn, m)
 
-	m.addClient(client, userEmail)
+	m.addClient(client, userEmail, userId)
 
 	// Start a go routine to read/write messages
 	go client.readMessages()
 	go client.writeMessages()
 }
 
-func (m *Manager) addClient(client *Client, clientEmail string) {
+func (m *Manager) addClient(client *Client, clientEmail string, clientId int64) {
 	m.Lock()
 	defer m.Unlock()
 
 	client.email = clientEmail
+	client.id = clientId
 
 	if _, ok := m.rooms[client.room]; !ok {
 		m.rooms[client.room] = make(map[*Client]bool)

@@ -15,7 +15,9 @@ interface Payload {
 let conn: WebSocket;
 
 export default function Websocket(user: User) {
-  conn = new WebSocket(`ws://localhost:4000/ws?email=${user.Email}`);
+  conn = new WebSocket(
+    `ws://localhost:4000/ws?email=${user.Email}&id=${user.Id}`
+  );
 
   conn.onmessage = (event: MessageEvent) => {
     let dataString: string | null | undefined = event.data;
