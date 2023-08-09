@@ -62,7 +62,7 @@ export const sendDirectChatMessage = (message: string) => {
     kind: "chat-message",
     payload: {
       message,
-      date: new Date(Date.now()).toDateString(),
+      date: new Date(Date.now()).toUTCString(),
     },
   });
 

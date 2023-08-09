@@ -85,6 +85,7 @@ func (m *Manager) removeClient(client *Client) {
 	defer m.Unlock()
 
 	if _, ok := m.rooms[client.room]; ok {
+		m.rooms[client.room][client] = false
 		delete(m.rooms[client.room], client)
 		delete(m.emailToClient, client.email)
 
