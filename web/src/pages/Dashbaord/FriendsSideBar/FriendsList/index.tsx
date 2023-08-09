@@ -18,6 +18,7 @@ function FriendsList({ friends }: Friends) {
           key={f.id}
           isOnline={f.isOnline || false}
           id={f.id}
+          email={f.email}
         />
       ))}
     </MainContainer>

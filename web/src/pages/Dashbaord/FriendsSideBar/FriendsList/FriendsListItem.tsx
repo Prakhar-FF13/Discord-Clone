@@ -10,16 +10,21 @@ interface FriendListItemProps extends ReduxActions {
   username: string;
   isOnline: boolean;
   id: number;
+  email: string;
 }
 
 function FriendsListItem({
   id,
   username,
   isOnline,
+  email,
   setChosenChatDetails,
 }: FriendListItemProps) {
   const handleChooseActiveConversation = () => {
-    setChosenChatDetails({ id: id, label: username }, ChatType.DIRECT);
+    setChosenChatDetails(
+      { email: email, id: id, label: username },
+      ChatType.DIRECT
+    );
   };
 
   return (

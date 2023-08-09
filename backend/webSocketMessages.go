@@ -135,3 +135,7 @@ func (m *Manager) isOffline(mail string) error {
 
 	return nil
 }
+
+func (m *Manager) sendDirectChatMessage(sender, receiver int64, message string) {
+
+}

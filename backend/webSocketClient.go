@@ -49,8 +49,9 @@ func (c *Client) readMessages() {
 
 		json.Unmarshal(p, &c)
 
-		// logic to send messages to room here.
-		log.Println(c)
+		if c.Kind == "direct-chat-message" {
+			log.Println(c)
+		}
 	}
 }
 
