@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/gorilla/websocket"
@@ -45,12 +46,14 @@ func (c *Client) readMessages() {
 			break
 		}
 
-		var c ClientMessage
+		var cm ClientMessage
 
-		json.Unmarshal(p, &c)
+		json.Unmarshal(p, &cm)
 
-		if c.Kind == "direct-chat-message" {
-			log.Println(c)
+		fmt.Println(cm)
+
+		if cm.Kind == "direct-chat-message" {
+			c.manager.sendDirectChatMessage(c.id, cm.Payload.Email, cm.Payload.Message)
 		}
 	}
 }

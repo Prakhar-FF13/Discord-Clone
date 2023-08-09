@@ -136,6 +136,21 @@ func (m *Manager) isOffline(mail string) error {
 	return nil
 }
 
-func (m *Manager) sendDirectChatMessage(sender, receiver int64, message string) {
+func (m *Manager) sendDirectChatMessage(sender int64, receiver string, message string) {
+	if conn, ok := m.emailToClient[receiver]; ok {
+		data, err := encodeToJSON(map[string]any{
+			"kind": "direct-chat-message",
+			"payload": &map[string]any{
+				"id":      sender,
+				"message": message,
+			},
+		})
 
+		if err != nil {
+			fmt.Println("Could not send direct chat message")
+		} else {
+			conn.egress <- data
+			fmt.Println("Direct chat message sent")
+		}
+	}
 }

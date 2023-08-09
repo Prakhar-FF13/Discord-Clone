@@ -17,7 +17,13 @@ type Friend struct {
 	email    string
 }
 
+type ClientPayload struct {
+	Id      int64  `json:"id"`
+	Email   string `json:"email"`
+	Message string `json:"message"`
+}
+
 type ClientMessage struct {
-	Kind    string         `json:"kind"`
-	Payload map[string]any `json:"payload"`
+	Kind    string        `json:"kind"`
+	Payload ClientPayload `json:"payload"`
 }
