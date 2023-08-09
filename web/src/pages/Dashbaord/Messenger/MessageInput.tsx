@@ -44,7 +44,12 @@ const MessageInput = ({ chatDetails }: MessageInputProps) => {
     setMessage("");
 
     if (message.length > 0) {
-      sendDirectChatMessage(chatDetails.id, chatDetails.email, message);
+      sendDirectChatMessage(
+        chatDetails.id,
+        chatDetails.email,
+        chatDetails.username,
+        message
+      );
     }
   };
 

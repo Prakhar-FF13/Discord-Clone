@@ -29,6 +29,7 @@ export interface ChatDetails {
   id: number;
   email: string;
   label: string;
+  username: string;
 }
 
 export interface Chat {

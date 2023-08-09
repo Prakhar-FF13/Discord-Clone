@@ -136,14 +136,16 @@ func (m *Manager) isOffline(mail string) error {
 	return nil
 }
 
-func (m *Manager) sendDirectChatMessage(sender int64, receiver string, message string, date string) {
-	if conn, ok := m.emailToClient[receiver]; ok {
+func (m *Manager) sendDirectChatMessage(sender int64, senderMail, username, receiverEmail, date, message string) {
+	if conn, ok := m.emailToClient[receiverEmail]; ok {
 		data, err := encodeToJSON(map[string]any{
 			"kind": "direct-chat-message",
 			"payload": &map[string]any{
-				"id":      sender,
-				"message": message,
-				"date":    date,
+				"id":       sender,
+				"message":  message,
+				"date":     date,
+				"username": username,
+				"email":    senderMail,
 			},
 		})
 

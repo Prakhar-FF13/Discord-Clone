@@ -22,7 +22,7 @@ function FriendsListItem({
 }: FriendListItemProps) {
   const handleChooseActiveConversation = () => {
     setChosenChatDetails(
-      { email: email, id: id, label: username },
+      { email: email, id: id, label: username, username: username },
       ChatType.DIRECT
     );
   };

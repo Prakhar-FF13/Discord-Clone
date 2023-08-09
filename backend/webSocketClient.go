@@ -53,7 +53,7 @@ func (c *Client) readMessages() {
 		fmt.Println(cm)
 
 		if cm.Kind == "direct-chat-message" {
-			c.manager.sendDirectChatMessage(c.id, cm.Payload.Email, cm.Payload.Message, cm.Payload.Date)
+			c.manager.sendDirectChatMessage(c.id, c.email, cm.Payload.Username, cm.Payload.Email, cm.Payload.Date, cm.Payload.Message)
 		}
 	}
 }

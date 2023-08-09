@@ -49,6 +49,7 @@ export default function Websocket(user: User) {
 export const sendDirectChatMessage = (
   id: number,
   email: string,
+  username: string,
   msg: string
 ) => {
   const data = JSON.stringify({
@@ -57,6 +58,7 @@ export const sendDirectChatMessage = (
       id: id,
       message: msg,
       email: email,
+      username: username,
       date: new Date(Date.now()).toDateString(),
     },
   });
