@@ -17,10 +17,11 @@ type Client struct {
 	manager *Manager
 
 	// egress -> used to avoid concurrent writes on websocket connection
-	egress chan []byte
-	room   string
-	email  string
-	id     int64
+	egress   chan []byte
+	room     string
+	email    string
+	username string
+	id       int64
 }
 
 func NewClient(conn *websocket.Conn, manager *Manager) *Client {
@@ -52,8 +53,20 @@ func (c *Client) readMessages() {
 
 		fmt.Println(cm)
 
-		if cm.Kind == "direct-chat-message" {
-			c.manager.sendDirectChatMessage(c.id, c.email, cm.Payload.Username, cm.Payload.Email, cm.Payload.Date, cm.Payload.Message)
+		if cm.Kind == "room-change" {
+			if cm.Payload.RoomId != c.room {
+
+				if _, ok := c.manager.rooms[c.room]; ok {
+					delete(c.manager.rooms[c.room], c)
+				}
+				if _, ok := c.manager.rooms[cm.Payload.RoomId]; !ok {
+					c.manager.rooms[cm.Payload.RoomId] = make(map[*Client]bool)
+				}
+				c.manager.rooms[cm.Payload.RoomId][c] = true
+				c.room = cm.Payload.RoomId
+			}
+		} else if cm.Kind == "direct-chat-message" {
+			c.manager.sendDirectChatMessage(c.id, c.email, c.username, cm.Payload.RoomId, cm.Payload.Date, cm.Payload.Message)
 		}
 	}
 }

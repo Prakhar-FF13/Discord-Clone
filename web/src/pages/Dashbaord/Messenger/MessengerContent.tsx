@@ -1,26 +1,25 @@
 import { styled } from "@mui/material";
-import { ChatDetails } from "../../../commonTypes";
 import { useEffect } from "react";
 import Messages from "./Messages";
 import MessageInput from "./MessageInput";
 
 interface MessengerContentProps {
-  chatDetails: ChatDetails;
+  roomId: string;
 }
 
 const Wrapper = styled("div")({
   flexGrow: 1,
 });
 
-const MessengerContent = ({ chatDetails }: MessengerContentProps) => {
+const MessengerContent = ({ roomId }: MessengerContentProps) => {
   useEffect(() => {
     // Todo fetching chat history from spaceific user id
-  }, [chatDetails]);
+  }, [roomId]);
 
   return (
     <Wrapper>
       <Messages />
-      <MessageInput chatDetails={chatDetails} />
+      <MessageInput roomId={roomId} />
     </Wrapper>
   );
 };

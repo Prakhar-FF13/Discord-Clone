@@ -2,11 +2,11 @@ import { Button, Typography } from "@mui/material";
 import Avatar from "../../../../common/components/Avatar";
 import OnlineIndicator from "./OnlineIndicator";
 import { chatActions } from "../../../../store/actions/chatActions";
-import { ChatType } from "../../../../commonTypes";
 import { ConnectedProps, connect } from "react-redux";
-import { AppDispatch } from "../../../../store/store";
+import { AppDispatch, RootState } from "../../../../store/store";
+import { sendChangeRoom } from "../../../../realtime/websockets";
 
-interface FriendListItemProps extends ReduxActions {
+interface FriendListItemProps extends ReduxStateAndActions {
   username: string;
   isOnline: boolean;
   id: number;
@@ -18,13 +18,15 @@ function FriendsListItem({
   username,
   isOnline,
   email,
+  Id,
   setChosenChatDetails,
 }: FriendListItemProps) {
   const handleChooseActiveConversation = () => {
-    setChosenChatDetails(
-      { email: email, id: id, label: username, username: username },
-      ChatType.DIRECT
-    );
+    if (Id) {
+      const roomId = `${Math.min(id, Id)}-${Math.max(id, Id)}`;
+      sendChangeRoom(roomId);
+      setChosenChatDetails(roomId, username);
+    }
   };
 
   return (
@@ -61,14 +63,20 @@ function FriendsListItem({
   );
 }
 
+const mapStateToProps = (state: RootState) => {
+  return {
+    Id: state.auth.Id,
+  };
+};
+
 const mapActionsToProps = (dispatch: AppDispatch) => {
   return {
     ...chatActions(dispatch),
   };
 };
 
-const connector = connect(null, mapActionsToProps);
+const connector = connect(mapStateToProps, mapActionsToProps);
 
-type ReduxActions = ConnectedProps<typeof connector>;
+type ReduxStateAndActions = ConnectedProps<typeof connector>;
 
 export default connector(FriendsListItem);

@@ -4,7 +4,7 @@ export interface User {
   Username?: string;
   Password: string;
   Token?: string;
-  isOnline?: boolean;
+  isOnline?: boolean | undefined;
 }
 
 export interface ToastType {
@@ -25,17 +25,10 @@ export interface Friend {
   isOnline?: boolean;
 }
 
-export interface ChatDetails {
-  id: number;
-  email: string;
-  label: string;
-  username: string;
-}
-
 export interface Chat {
-  chatDetails: ChatDetails | null;
-  chatType: ChatType | null;
+  roomId: string;
   messages: string[];
+  chatLabel: string;
 }
 
 export enum WebSocketResponse {
@@ -56,7 +49,6 @@ export enum ACTION_TYPES {
   SetFriendOffline = "SET_FRIEND_OFFLINE",
   SetChosenChatDetails = "SET_CHOSEN_CHAT_DETAILS",
   SetMessages = "SET_MESSAGES",
-  SetChatType = "SET_CHAT_TYPE",
 }
 
 export enum ChatType {
@@ -65,8 +57,7 @@ export enum ChatType {
 }
 export interface SetChosenChatDetailsAction {
   type: ACTION_TYPES.SetChosenChatDetails;
-  chatDetails: ChatDetails;
-  chatType: ChatType;
+  roomId: string;
   messages: string[];
 }
 

@@ -18,11 +18,9 @@ type Friend struct {
 }
 
 type ClientPayload struct {
-	Id       int64  `json:"id"`
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Message  string `json:"message"`
-	Date     string `json:"date"`
+	RoomId  string `json:"roomId"`
+	Message string `json:"message"`
+	Date    string `json:"date"`
 }
 
 type ClientMessage struct {

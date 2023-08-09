@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ChatDetails } from "../../../commonTypes";
 import { ConnectedProps, connect } from "react-redux";
 import { styled } from "@mui/material";
 import { sendDirectChatMessage } from "../../../realtime/websockets";
@@ -24,10 +23,10 @@ const Input = styled("input")({
 });
 
 interface MessageInputProps extends ReduxState {
-  chatDetails: ChatDetails;
+  roomId: string;
 }
 
-const MessageInput = ({ chatDetails }: MessageInputProps) => {
+const MessageInput = ({ roomId }: MessageInputProps) => {
   const [message, setMessage] = useState("");
 
   const handleMessageValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,19 +43,14 @@ const MessageInput = ({ chatDetails }: MessageInputProps) => {
     setMessage("");
 
     if (message.length > 0) {
-      sendDirectChatMessage(
-        chatDetails.id,
-        chatDetails.email,
-        chatDetails.username,
-        message
-      );
+      sendDirectChatMessage(roomId, message);
     }
   };
 
   return (
     <MainContainer>
       <Input
-        placeholder={`Write message to ${chatDetails.label}`}
+        placeholder="Write message"
         value={message}
         onChange={handleMessageValueChange}
         onKeyDown={handleKeyPress}

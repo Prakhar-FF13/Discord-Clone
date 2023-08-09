@@ -18,7 +18,7 @@ const ChosenOptionLabel = ({ label }: ChosenOptionLabelProps) => {
 
 const mapStateToProps = ({ chat }: RootState) => {
   return {
-    label: chat.chatDetails?.label,
+    label: chat.chatLabel,
   };
 };
 

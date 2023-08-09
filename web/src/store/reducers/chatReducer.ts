@@ -1,8 +1,8 @@
 import { ACTION_TYPES, Action, Chat } from "./../../commonTypes";
 
 const initState: Chat = {
-  chatDetails: null,
-  chatType: null,
+  roomId: "",
+  chatLabel: "",
   messages: [],
 };
 
@@ -11,8 +11,7 @@ const reducer = (state = initState, action: Action) => {
     case ACTION_TYPES.SetChosenChatDetails:
       return {
         ...state,
-        chatDetails: action.chatDetails,
-        chatType: action.chatType,
+        roomId: action.roomId,
         messages: [],
       };
     case ACTION_TYPES.SetMessages:

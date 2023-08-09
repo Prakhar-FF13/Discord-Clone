@@ -13,10 +13,10 @@ const MainContainer = styled("div")({
   alignItems: "center",
 });
 
-const Messages = ({ chatDetails, messages }: ReduxChatState) => {
+const Messages = ({ roomId, chatLabel, messages }: ReduxChatState) => {
   return (
     <MainContainer>
-      <MessagesHeader label={chatDetails ? chatDetails.label : ""} />
+      <MessagesHeader label={chatLabel ? chatLabel : ""} />
       {DUMMY_MESSAGES.map((msg, idx) => {
         return (
           <Message

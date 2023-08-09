@@ -46,19 +46,23 @@ export default function Websocket(user: User) {
   };
 }
 
-export const sendDirectChatMessage = (
-  id: number,
-  email: string,
-  username: string,
-  msg: string
-) => {
+export const sendChangeRoom = (roomId: string) => {
+  const data = JSON.stringify({
+    kind: "room-change",
+    payload: {
+      roomId,
+    },
+  });
+
+  sendWebsocketMessage(data);
+};
+
+export const sendDirectChatMessage = (roomId: string, message: string) => {
   const data = JSON.stringify({
     kind: "direct-chat-message",
     payload: {
-      id: id,
-      message: msg,
-      email: email,
-      username: username,
+      roomId,
+      message,
       date: new Date(Date.now()).toDateString(),
     },
   });

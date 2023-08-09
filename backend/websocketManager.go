@@ -39,6 +39,7 @@ func NewWebSocketManager(d *DiscordDB) *Manager {
 func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.URL.Query().Get("email")
 	userId, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+	userName := r.URL.Query().Get("username")
 
 	if err != nil {
 		fmt.Println("User Id not provided, some functionality might not work")
@@ -54,19 +55,20 @@ func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 	// create a new client
 	client := NewClient(conn, m)
 
-	m.addClient(client, userEmail, userId)
+	m.addClient(client, userEmail, userId, userName)
 
 	// Start a go routine to read/write messages
 	go client.readMessages()
 	go client.writeMessages()
 }
 
-func (m *Manager) addClient(client *Client, clientEmail string, clientId int64) {
+func (m *Manager) addClient(client *Client, clientEmail string, clientId int64, clientUsername string) {
 	m.Lock()
 	defer m.Unlock()
 
 	client.email = clientEmail
 	client.id = clientId
+	client.username = clientUsername
 
 	if _, ok := m.rooms[client.room]; !ok {
 		m.rooms[client.room] = make(map[*Client]bool)

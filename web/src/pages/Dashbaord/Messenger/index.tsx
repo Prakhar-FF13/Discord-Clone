@@ -11,13 +11,13 @@ const MainContainer = styled("div")({
   marginTop: "48px",
 });
 
-function Messenger({ chatDetails }: ReduxState) {
+function Messenger({ roomId }: ReduxState) {
   return (
     <MainContainer>
-      {!chatDetails ? (
+      {!roomId || roomId.length === 0 ? (
         <Welcome />
       ) : (
-        <MessengerContent chatDetails={chatDetails} />
+        <MessengerContent roomId={roomId} />
       )}
     </MainContainer>
   );

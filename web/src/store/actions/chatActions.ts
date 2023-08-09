@@ -1,21 +1,18 @@
-import { ACTION_TYPES, ChatDetails, ChatType } from "../../commonTypes";
+import { ACTION_TYPES } from "../../commonTypes";
 import { AppDispatch } from "../store";
 
 export const chatActions = (dispatch: AppDispatch) => {
   return {
-    setChosenChatDetails: (details: ChatDetails, chatType: ChatType) =>
-      dispatch(setChosenChatDetails(details, chatType)),
+    setChosenChatDetails: (roomId: string, chatLabel: string) =>
+      dispatch(setChosenChatDetails(roomId, chatLabel)),
   };
 };
 
-export const setChosenChatDetails = (
-  chatDetails: ChatDetails,
-  type: ChatType
-) => {
+export const setChosenChatDetails = (roomId: string, chatLabel: string) => {
   return {
     type: ACTION_TYPES.SetChosenChatDetails,
-    chatType: type,
-    chatDetails,
+    roomId,
+    chatLabel,
   };
 };
 
