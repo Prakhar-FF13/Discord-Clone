@@ -19,7 +19,7 @@ const MessengerContent = ({ roomId }: MessengerContentProps) => {
   return (
     <Wrapper>
       <Messages />
-      <MessageInput roomId={roomId} />
+      <MessageInput />
     </Wrapper>
   );
 };

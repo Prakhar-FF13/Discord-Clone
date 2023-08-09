@@ -57,11 +57,10 @@ export const sendChangeRoom = (roomId: string) => {
   sendWebsocketMessage(data);
 };
 
-export const sendDirectChatMessage = (roomId: string, message: string) => {
+export const sendDirectChatMessage = (message: string) => {
   const data = JSON.stringify({
-    kind: "direct-chat-message",
+    kind: "chat-message",
     payload: {
-      roomId,
       message,
       date: new Date(Date.now()).toDateString(),
     },

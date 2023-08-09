@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ConnectedProps, connect } from "react-redux";
 import { styled } from "@mui/material";
 import { sendDirectChatMessage } from "../../../realtime/websockets";
 
@@ -22,11 +21,7 @@ const Input = styled("input")({
   padding: "0 10px",
 });
 
-interface MessageInputProps extends ReduxState {
-  roomId: string;
-}
-
-const MessageInput = ({ roomId }: MessageInputProps) => {
+const MessageInput = () => {
   const [message, setMessage] = useState("");
 
   const handleMessageValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +38,7 @@ const MessageInput = ({ roomId }: MessageInputProps) => {
     setMessage("");
 
     if (message.length > 0) {
-      sendDirectChatMessage(roomId, message);
+      sendDirectChatMessage(message);
     }
   };
 
@@ -59,8 +54,4 @@ const MessageInput = ({ roomId }: MessageInputProps) => {
   );
 };
 
-const connector = connect();
-
-type ReduxState = ConnectedProps<typeof connector>;
-
-export default connector(MessageInput);
+export default MessageInput;
