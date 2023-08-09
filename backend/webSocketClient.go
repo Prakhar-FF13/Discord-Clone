@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 
 	"github.com/gorilla/websocket"
@@ -43,8 +44,12 @@ func (c *Client) readMessages() {
 			break
 		}
 
+		var c ClientMessage
+
+		json.Unmarshal(p, &c)
+
 		// logic to send messages to room here.
-		log.Println(p)
+		log.Println(c)
 	}
 }
 

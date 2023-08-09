@@ -8,12 +8,14 @@ import (
 )
 
 type Payload struct {
+	Id    int64  `json:"id"`
 	Email string `json:"email"`
 	jwt.RegisteredClaims
 }
 
-func signJWT(email string, secretKey string) (string, error) {
+func signJWT(id int64, email string, secretKey string) (string, error) {
 	claims := &Payload{
+		Id:    id,
 		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),

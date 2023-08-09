@@ -43,3 +43,19 @@ export default function Websocket(user: User) {
     }
   };
 }
+
+export const sendDirectChatMessage = (id: number, msg: string) => {
+  const data = JSON.stringify({
+    kind: "direct-chat-message",
+    payload: {
+      id: id,
+      message: msg,
+    },
+  });
+
+  sendWebsocketMessage(data);
+};
+
+export const sendWebsocketMessage = (data: string) => {
+  conn.send(data);
+};

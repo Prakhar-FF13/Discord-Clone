@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChatDetails } from "../../../commonTypes";
 import { ConnectedProps, connect } from "react-redux";
 import { styled } from "@mui/material";
+import { sendDirectChatMessage } from "../../../realtime/websockets";
 
 const MainContainer = styled("div")({
   height: "60px",
@@ -40,8 +41,11 @@ const MessageInput = ({ chatDetails }: MessageInputProps) => {
   };
 
   const handleSendMessage = () => {
-    console.log("sending message to server");
     setMessage("");
+
+    if (message.length > 0) {
+      sendDirectChatMessage(chatDetails.id, message);
+    }
   };
 
   return (

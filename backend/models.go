@@ -8,16 +8,20 @@ type DiscordDB struct {
 	DB *sql.DB
 }
 
-func (d *DiscordDB) InsertUser(email, username, password string) error {
+func (d *DiscordDB) InsertUser(email, username, password string) (int64, error) {
 	stmt := `INSERT INTO users (email, username, password) VALUES(?, ?, ?)`
 
-	_, err := d.DB.Exec(stmt, email, username, password)
+	res, err := d.DB.Exec(stmt, email, username, password)
 
 	if err != nil {
-		return err
+		return -1, err
 	}
 
-	return nil
+	if id, errId := res.LastInsertId(); errId == nil {
+		return id, nil
+	}
+
+	return -1, nil
 }
 
 func (d *DiscordDB) FetchUser(email string) (*User, error) {
@@ -27,7 +31,7 @@ func (d *DiscordDB) FetchUser(email string) (*User, error) {
 
 	var u User
 
-	err := row.Scan(&u.id, &u.Email, &u.Username, &u.Password)
+	err := row.Scan(&u.Id, &u.Email, &u.Username, &u.Password)
 
 	if err != nil {
 		return nil, err

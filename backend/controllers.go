@@ -17,7 +17,7 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 	hashedPass := hashAndSalt([]byte(body.Password))
 
 	//try to insert user into DB
-	err := app.discord.InsertUser(body.Email, body.Username, hashedPass)
+	id, err := app.discord.InsertUser(body.Email, body.Username, hashedPass)
 	if err != nil {
 		fmt.Println("Error inserting the user into Database.", err)
 		InternalServerErrorResponse(w)
@@ -25,14 +25,14 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a JWT.
-	tokenString, err := signJWT(body.Email, app.secretKey)
+	tokenString, err := signJWT(id, body.Email, app.secretKey)
 	if err != nil {
 		fmt.Println("Error creating token", err)
 		InternalServerErrorResponse(w)
 		return
 	}
 
-	JsonResponseOK(w, User{Token: tokenString, Email: body.Email, Username: body.Username})
+	JsonResponseOK(w, User{Token: tokenString, Email: body.Email, Username: body.Username, Id: id})
 }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +65,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// All ok Create a JWT to send to user.
-	tokenString, err := signJWT(body.Email, app.secretKey)
+	tokenString, err := signJWT(int64(user.Id), user.Email, app.secretKey)
 	if err != nil {
 		fmt.Println("Error creating token", err)
 		InternalServerErrorResponse(w)
@@ -73,7 +73,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// send token
-	JsonResponseOK(w, User{Token: tokenString, Email: user.Email, Username: user.Username})
+	JsonResponseOK(w, User{Token: tokenString, Email: user.Email, Username: user.Username, Id: user.Id})
 }
 
 func (app *application) getPendingInvitations(w http.ResponseWriter, r *http.Request) {
