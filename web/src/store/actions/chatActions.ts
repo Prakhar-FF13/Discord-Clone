@@ -22,3 +22,10 @@ export const setAMessage = (message: ChatMessage) => {
     message,
   };
 };
+
+export const setRoomMessages = (messages: ChatMessage[]) => {
+  return {
+    type: ACTION_TYPES.SetRoomMessages,
+    messages,
+  };
+};

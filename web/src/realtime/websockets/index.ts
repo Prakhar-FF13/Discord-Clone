@@ -4,9 +4,9 @@ import {
   SetFriends,
   SetPendingInvitationsAction,
 } from "./../../store/actions/friendsActions";
-import { User, WebSocketResponse } from "../../commonTypes";
+import { User, WebSocketRequest, WebSocketResponse } from "../../commonTypes";
 import store from "../../store/store";
-import { setAMessage } from "../../store/actions/chatActions";
+import { setAMessage, setRoomMessages } from "../../store/actions/chatActions";
 
 interface Payload {
   kind: WebSocketResponse;
@@ -56,8 +56,16 @@ export default function Websocket(user: User) {
         store.dispatch(SetFriendIsOffline(data.payload));
       }
 
-      if (data && data.kind === WebSocketResponse.Messages && data.payload) {
+      if (data && data.kind === WebSocketResponse.Message && data.payload) {
         store.dispatch(setAMessage(data.payload));
+      }
+
+      if (
+        data &&
+        data.kind === WebSocketResponse.RoomMessages &&
+        data.payload
+      ) {
+        store.dispatch(setRoomMessages(data.payload));
       }
     }
   };
@@ -65,7 +73,7 @@ export default function Websocket(user: User) {
 
 export const sendChangeRoom = (roomId: string) => {
   const data = JSON.stringify({
-    kind: "room-change",
+    kind: WebSocketRequest.RoomChange,
     payload: {
       roomId,
     },
@@ -76,7 +84,7 @@ export const sendChangeRoom = (roomId: string) => {
 
 export const sendChatMessage = (message: string) => {
   const data = JSON.stringify({
-    kind: WebSocketResponse.Messages,
+    kind: WebSocketResponse.Message,
     payload: {
       message,
       date: new Date(Date.now()).toUTCString(),
