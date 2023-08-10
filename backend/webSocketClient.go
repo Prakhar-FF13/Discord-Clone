@@ -64,6 +64,8 @@ func (c *Client) readMessages() {
 				}
 				c.manager.rooms[cm.Payload.RoomId][c] = true
 				c.room = cm.Payload.RoomId
+
+				c.manager.sendAllChatMessagesForARoom(c.room)
 			}
 		} else if cm.Kind == "chat-message" {
 			chatMessage := ChatMessage{

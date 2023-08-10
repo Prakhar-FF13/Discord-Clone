@@ -161,3 +161,28 @@ func (m *Manager) sendChatMessage(chatMessage ChatMessage) {
 		}
 	}
 }
+
+func (m *Manager) sendAllChatMessagesForARoom(roomId string) {
+	messages, err := m.discord.FetchAllChatMessagesForARoom(roomId)
+
+	if err != nil {
+		return
+	}
+
+	payload := &map[string]any{
+		"kind":    "room-messages",
+		"payload": messages,
+	}
+
+	bytePayload, errJson := encodeToJSON(payload)
+
+	if errJson != nil {
+		return
+	}
+
+	for conn, ok := range m.rooms[roomId] {
+		if ok {
+			conn.egress <- bytePayload
+		}
+	}
+}
