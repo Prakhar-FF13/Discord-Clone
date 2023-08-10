@@ -136,23 +136,25 @@ func (m *Manager) isOffline(mail string) error {
 	return nil
 }
 
-func (m *Manager) sendChatMessage(sender int64, senderMail, senderUsername, roomId, date, message string) {
+func (m *Manager) sendChatMessage(chatMessage ChatMessage) {
 	data := &map[string]any{
 		"kind": "chat-message",
 		"payload": &map[string]any{
-			"roomId":    roomId,
-			"createdBy": sender,
-			"email":     senderMail,
-			"username":  senderUsername,
-			"date":      date,
-			"message":   message,
+			"roomId":    chatMessage.RoomId,
+			"createdBy": chatMessage.CreatedBy,
+			"email":     chatMessage.Email,
+			"username":  chatMessage.Username,
+			"date":      chatMessage.Date,
+			"message":   chatMessage.Message,
 		},
 	}
 
 	dataBytes, err := encodeToJSON(data)
 
+	go m.discord.InsertAChatMessage(chatMessage)
+
 	if err == nil {
-		for conn, prs := range m.rooms[roomId] {
+		for conn, prs := range m.rooms[chatMessage.RoomId] {
 			if prs {
 				conn.egress <- dataBytes
 			}

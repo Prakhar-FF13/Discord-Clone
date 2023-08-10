@@ -66,7 +66,15 @@ func (c *Client) readMessages() {
 				c.room = cm.Payload.RoomId
 			}
 		} else if cm.Kind == "chat-message" {
-			c.manager.sendChatMessage(c.id, c.email, c.username, c.room, cm.Payload.Date, cm.Payload.Message)
+			chatMessage := ChatMessage{
+				Email:     c.email,
+				Username:  c.username,
+				RoomId:    c.room,
+				Date:      cm.Payload.Date,
+				Message:   cm.Payload.Message,
+				CreatedBy: c.id,
+			}
+			c.manager.sendChatMessage(chatMessage)
 		}
 	}
 }

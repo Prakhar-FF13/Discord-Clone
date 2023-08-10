@@ -27,3 +27,12 @@ type ClientMessage struct {
 	Kind    string        `json:"kind"`
 	Payload ClientPayload `json:"payload"`
 }
+
+type ChatMessage struct {
+	CreatedBy int64  `db:"createdBy" json:"createdBy"`
+	Email     string `db:"email" json:"email"`
+	Username  string `db:"username" json:"username"`
+	RoomId    string `db:"roomId" json:"roomId"`
+	Message   string `db:"message" json:"message"`
+	Date      string `db:"date" json:"date"`
+}

@@ -156,3 +156,46 @@ func (d *DiscordDB) RejectInvitation(sender, receiver string) error {
 
 	return nil
 }
+
+func (d *DiscordDB) FetchAllChatMessagesForARoom(roomId string) (*[]map[string]any, error) {
+	stmt := `SELECT * FROM chatMessages WHERE roomId = ?`
+
+	messages := make([]map[string]any, 0)
+
+	rows, err := d.DB.Query(stmt, roomId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var x ChatMessage
+		if err := rows.Scan(&x.RoomId, &x.CreatedBy, &x.Email, &x.Username, &x.Date, &x.Message); err != nil {
+			return &messages, err
+		}
+		messages = append(messages, map[string]any{
+			"roomId":    x.RoomId,
+			"createdBy": x.CreatedBy,
+			"email":     x.Email,
+			"username":  x.Username,
+			"date":      x.Date,
+			"message":   x.Message,
+		})
+	}
+
+	return &messages, nil
+}
+
+func (d *DiscordDB) InsertAChatMessage(cm ChatMessage) error {
+	stmt := `INSERT INTO chatMessages VALUES(?, ?, ?, ?, ?, ?)`
+
+	_, err := d.DB.Exec(stmt, cm.RoomId, cm.CreatedBy, cm.Email, cm.Username, cm.Date, cm.Message)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
