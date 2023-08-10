@@ -14,10 +14,14 @@ const reducer = (state = initState, action: Action) => {
         roomId: action.roomId,
         messages: [],
       };
-    case ACTION_TYPES.SetMessages:
+    case ACTION_TYPES.SetAMessage:
+      if (action.message.roomId !== state.roomId) {
+        return state;
+      }
+
       return {
         ...state,
-        messages: action.messages,
+        messages: [...state.messages, action.message],
       };
     default:
       return state;

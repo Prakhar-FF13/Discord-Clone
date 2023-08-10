@@ -136,21 +136,24 @@ func (m *Manager) isOffline(mail string) error {
 	return nil
 }
 
-func (m *Manager) sendDirectChatMessage(sender int64, senderMail, senderUsername, roomId, date, message string) {
-	for conn, prs := range m.rooms[roomId] {
-		if prs {
-			data := &map[string]any{
-				"roomId":    roomId,
-				"createdBy": sender,
-				"email":     senderMail,
-				"username":  senderUsername,
-				"date":      date,
-				"message":   message,
-			}
+func (m *Manager) sendChatMessage(sender int64, senderMail, senderUsername, roomId, date, message string) {
+	data := &map[string]any{
+		"kind": "chat-message",
+		"payload": &map[string]any{
+			"roomId":    roomId,
+			"createdBy": sender,
+			"email":     senderMail,
+			"username":  senderUsername,
+			"date":      date,
+			"message":   message,
+		},
+	}
 
-			dataBytes, err := encodeToJSON(data)
+	dataBytes, err := encodeToJSON(data)
 
-			if err == nil {
+	if err == nil {
+		for conn, prs := range m.rooms[roomId] {
+			if prs {
 				conn.egress <- dataBytes
 			}
 		}

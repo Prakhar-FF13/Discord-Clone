@@ -2,7 +2,6 @@ import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { styled } from "@mui/material";
 import MessagesHeader from "./MessagesHeader";
-import DUMMY_MESSAGES from "./DUMMY_MESSAGES";
 import Message from "./Message";
 
 const MainContainer = styled("div")({
@@ -13,15 +12,15 @@ const MainContainer = styled("div")({
   alignItems: "center",
 });
 
-const Messages = ({ roomId, chatLabel, messages }: ReduxChatState) => {
+const Messages = ({ chatLabel, messages }: ReduxChatState) => {
   return (
     <MainContainer>
       <MessagesHeader label={chatLabel ? chatLabel : ""} />
-      {DUMMY_MESSAGES.map((msg, idx) => {
+      {messages.map((msg) => {
         return (
           <Message
-            key={msg.id}
-            content={msg.content}
+            key={msg.date}
+            message={msg.message}
             email={msg.email}
             username={msg.username}
             date={msg.date}

@@ -25,9 +25,18 @@ export interface Friend {
   isOnline?: boolean;
 }
 
+export interface ChatMessage {
+  createdBy: string;
+  date: string;
+  email: string;
+  message: string;
+  roomId: string;
+  username: string;
+}
+
 export interface Chat {
   roomId: string;
-  messages: string[];
+  messages: ChatMessage[];
   chatLabel: string;
 }
 
@@ -36,6 +45,7 @@ export enum WebSocketResponse {
   Friends = "friends",
   FriendOnline = "friend-online",
   FriendOffline = "friend-offline",
+  Messages = "chat-message",
 }
 
 export enum ACTION_TYPES {
@@ -48,22 +58,18 @@ export enum ACTION_TYPES {
   SetFriendOnline = "SET_FRIEND_ONLINE",
   SetFriendOffline = "SET_FRIEND_OFFLINE",
   SetChosenChatDetails = "SET_CHOSEN_CHAT_DETAILS",
-  SetMessages = "SET_MESSAGES",
+  SetAMessage = "SET_A_MESSAGES",
 }
 
-export enum ChatType {
-  DIRECT = "DIRECT",
-  GROUP = "GROUP",
-}
 export interface SetChosenChatDetailsAction {
   type: ACTION_TYPES.SetChosenChatDetails;
   roomId: string;
-  messages: string[];
+  messages: ChatMessage[];
 }
 
-export interface SetMessageAction {
-  type: ACTION_TYPES.SetMessages;
-  messages: string[];
+export interface SetAMessageAction {
+  type: ACTION_TYPES.SetAMessage;
+  message: ChatMessage;
 }
 
 export interface SetUserDetailsAction {
@@ -115,4 +121,4 @@ export type Action =
   | SetFriendIsOnlineAction
   | SetFriendIsOfflineAction
   | SetChosenChatDetailsAction
-  | SetMessageAction;
+  | SetAMessageAction;

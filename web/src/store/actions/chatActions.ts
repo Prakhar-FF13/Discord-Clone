@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from "../../commonTypes";
+import { ACTION_TYPES, ChatMessage } from "../../commonTypes";
 import { AppDispatch } from "../store";
 
 export const chatActions = (dispatch: AppDispatch) => {
@@ -16,9 +16,9 @@ export const setChosenChatDetails = (roomId: string, chatLabel: string) => {
   };
 };
 
-export const setMessages = (messages: string[]) => {
+export const setAMessage = (message: ChatMessage) => {
   return {
-    type: ACTION_TYPES.SetMessages,
-    messages,
+    type: ACTION_TYPES.SetAMessage,
+    message,
   };
 };

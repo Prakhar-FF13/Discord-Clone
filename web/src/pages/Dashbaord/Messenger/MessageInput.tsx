@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { styled } from "@mui/material";
-import { sendDirectChatMessage } from "../../../realtime/websockets";
+import { sendChatMessage } from "../../../realtime/websockets";
 
 const MainContainer = styled("div")({
   height: "60px",
@@ -38,7 +38,7 @@ const MessageInput = () => {
     setMessage("");
 
     if (message.length > 0) {
-      sendDirectChatMessage(message);
+      sendChatMessage(message);
     }
   };
 

@@ -66,7 +66,7 @@ func (c *Client) readMessages() {
 				c.room = cm.Payload.RoomId
 			}
 		} else if cm.Kind == "chat-message" {
-			c.manager.sendDirectChatMessage(c.id, c.email, c.username, c.room, cm.Payload.Date, cm.Payload.Message)
+			c.manager.sendChatMessage(c.id, c.email, c.username, c.room, cm.Payload.Date, cm.Payload.Message)
 		}
 	}
 }

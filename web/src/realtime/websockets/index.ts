@@ -6,6 +6,7 @@ import {
 } from "./../../store/actions/friendsActions";
 import { User, WebSocketResponse } from "../../commonTypes";
 import store from "../../store/store";
+import { setAMessage } from "../../store/actions/chatActions";
 
 interface Payload {
   kind: WebSocketResponse;
@@ -16,7 +17,7 @@ let conn: WebSocket;
 
 export default function Websocket(user: User) {
   conn = new WebSocket(
-    `ws://localhost:4000/ws?email=${user.Email}&id=${user.Id}`
+    `ws://localhost:4000/ws?email=${user.Email}&id=${user.Id}&username=${user.Username}`
   );
 
   conn.onmessage = (event: MessageEvent) => {
@@ -27,20 +28,36 @@ export default function Websocket(user: User) {
 
       console.log(data);
 
-      if (data && data.kind === "friend-invitations" && data.payload) {
+      if (
+        data &&
+        data.kind === WebSocketResponse.FriendInvitations &&
+        data.payload
+      ) {
         store.dispatch(SetPendingInvitationsAction(data.payload));
       }
 
-      if (data && data.kind === "friends" && data.payload) {
+      if (data && data.kind === WebSocketResponse.Friends && data.payload) {
         store.dispatch(SetFriends(data.payload));
       }
 
-      if (data && data.kind === "friend-online" && data.payload) {
+      if (
+        data &&
+        data.kind === WebSocketResponse.FriendOnline &&
+        data.payload
+      ) {
         store.dispatch(SetFriendIsOnline(data.payload));
       }
 
-      if (data && data.kind === "friend-offline" && data.payload) {
+      if (
+        data &&
+        data.kind === WebSocketResponse.FriendOffline &&
+        data.payload
+      ) {
         store.dispatch(SetFriendIsOffline(data.payload));
+      }
+
+      if (data && data.kind === WebSocketResponse.Messages && data.payload) {
+        store.dispatch(setAMessage(data.payload));
       }
     }
   };
@@ -57,9 +74,9 @@ export const sendChangeRoom = (roomId: string) => {
   sendWebsocketMessage(data);
 };
 
-export const sendDirectChatMessage = (message: string) => {
+export const sendChatMessage = (message: string) => {
   const data = JSON.stringify({
-    kind: "chat-message",
+    kind: WebSocketResponse.Messages,
     payload: {
       message,
       date: new Date(Date.now()).toUTCString(),

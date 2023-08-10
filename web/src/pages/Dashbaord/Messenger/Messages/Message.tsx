@@ -23,11 +23,11 @@ const MessageContent = styled("div")({
 interface MessageProps {
   email: string;
   username: string;
-  content: string;
+  message: string;
   date: string;
 }
 
-const Message = ({ username, content, date }: MessageProps) => {
+const Message = ({ username, message, date }: MessageProps) => {
   return (
     <MainContainer>
       <AvatarContainer>
@@ -43,7 +43,7 @@ const Message = ({ username, content, date }: MessageProps) => {
           {username}{" "}
           <span style={{ fontSize: "12px", color: "#72767d" }}>{date}</span>
         </Typography>
-        <MessageContent>{content}</MessageContent>
+        <MessageContent>{message}</MessageContent>
       </MessageContainer>
     </MainContainer>
   );
