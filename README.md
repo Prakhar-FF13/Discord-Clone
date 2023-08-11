@@ -6,7 +6,7 @@ A chatting and video calling app.
 
 1. React with TypeScript for UI.
 2. Redux (Thunk for async dispatches) for state management.
-3. Go backend.
+3. Go backend (Gorilla websockets, chi router, pion webRTC).
 4. MySQL Database.
 5. JWT Based authentication.
 6. Material UI for styling.
@@ -21,8 +21,8 @@ A chatting and video calling app.
    1. Updating Friends List.
    2. Updating Friend Requests List.
    3. Updating the indicator whenever a friend comes online or goes offline.
+   4. Chatting with friends.
 
 ## In Development:
 
-1. Chatting with friends.
-2. Video calling using WebRTC.
+1. Video calling using WebRTC.
