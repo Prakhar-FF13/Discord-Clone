@@ -81,7 +81,7 @@ export enum ACTION_TYPES {
   SetChosenChatDetails = "SET_CHOSEN_CHAT_DETAILS",
   SetAMessage = "SET_A_MESSAGES",
   SetRoomMessages = "SET_ROOM_MESSAGES",
-  OpenVideoRoom = "OPEN_VIDEO_ROOM",
+  JoinVideoRoom = "JOIN_VIDEO_ROOM",
   SetVideoRoomDetails = "SET_VIDEO_ROOM_DETAILS",
   SetActiveRoom = "SET_ACTIVE_VIDEO_ROOM",
   SetLocalStream = "SET_LOCAL_STREAM",
@@ -96,10 +96,11 @@ export interface AddNewRoomAction {
   roomDetails: VideoRoomDetails[];
 }
 
-export interface SetOpenVideoRoomAction {
-  type: ACTION_TYPES.OpenVideoRoom;
+export interface JoinVideoRoomAction {
+  type: ACTION_TYPES.JoinVideoRoom;
   isUserInRoom: boolean;
   isUserRoomCreator: boolean;
+  activeRoomDetails: VideoRoomDetails;
 }
 
 export interface SetChosenChatDetailsAction {
@@ -169,5 +170,5 @@ export type Action =
   | SetChosenChatDetailsAction
   | SetAMessageAction
   | SetRoomMessagesAction
-  | SetOpenVideoRoomAction
+  | JoinVideoRoomAction
   | AddNewRoomAction;

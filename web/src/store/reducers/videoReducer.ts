@@ -15,11 +15,12 @@ const initState: VideoRoom = {
 
 const reducer = (state = initState, action: Action) => {
   switch (action.type) {
-    case ACTION_TYPES.OpenVideoRoom:
+    case ACTION_TYPES.JoinVideoRoom:
       return {
         ...state,
         isUserInRoom: action.isUserInRoom,
         isUserRoomCreator: action.isUserRoomCreator,
+        activeRoomDetails: action.activeRoomDetails,
       };
     case ACTION_TYPES.AddNewRoom:
       return {

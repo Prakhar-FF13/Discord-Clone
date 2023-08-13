@@ -1,10 +1,12 @@
 import { styled } from "@mui/system";
 import MainPageButton from "./MainPageButton";
 import CreateRoomButton from "./CreateRoomButton";
-import { RootState } from "../../../store/store";
+import store, { RootState } from "../../../store/store";
 import { ConnectedProps, connect } from "react-redux";
 import { IconButton, Tooltip } from "@mui/material";
 import { PlayCircle } from "@mui/icons-material";
+import { setJoinRoom } from "../../../store/actions/videoRoomActions";
+import { VideoRoomDetails } from "../../../commonTypes";
 
 const MainContainer = styled("div")({
   width: "72px",
@@ -15,8 +17,10 @@ const MainContainer = styled("div")({
   backgroundColor: "#202225",
 });
 
-function SideBar({ rooms }: StateFromRedux) {
-  const handleJoinRoom = () => {};
+function SideBar({ rooms, Email }: StateFromRedux) {
+  const handleJoinRoom = (room: VideoRoomDetails) => {
+    store.dispatch(setJoinRoom(Email === room.createdBy, true, room));
+  };
 
   return (
     <MainContainer>
@@ -26,7 +30,7 @@ function SideBar({ rooms }: StateFromRedux) {
         return (
           <Tooltip key={r.roomId} title={"Room Id: " + r.roomId}>
             <IconButton
-              onClick={handleJoinRoom}
+              onClick={() => handleJoinRoom(r)}
               style={{
                 width: "48px",
                 height: "48px",
@@ -51,6 +55,7 @@ function SideBar({ rooms }: StateFromRedux) {
 const mapStateToProps = (state: RootState) => {
   return {
     ...state.video,
+    ...state.auth,
   };
 };
 
