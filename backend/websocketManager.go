@@ -19,7 +19,7 @@ var (
 	}
 )
 
-type VideoRoom struct {
+type VideoRoomOnline struct {
 	createdBy    string
 	participants []*Client
 }
@@ -31,7 +31,7 @@ type Manager struct {
 	rooms         map[string]map[*Client]bool
 	emailToClient map[string]*Client
 	discord       *DiscordDB
-	videoRooms    map[string]VideoRoom
+	videoRooms    map[string]VideoRoomOnline
 }
 
 func NewWebSocketManager(d *DiscordDB) *Manager {
@@ -39,7 +39,7 @@ func NewWebSocketManager(d *DiscordDB) *Manager {
 		rooms:         make(map[string]map[*Client]bool),
 		emailToClient: make(map[string]*Client),
 		discord:       d,
-		videoRooms:    make(map[string]VideoRoom),
+		videoRooms:    make(map[string]VideoRoomOnline),
 	}
 }
 
@@ -105,4 +105,6 @@ func (m *Manager) createRoom(mail string) {
 	if err != nil {
 		fmt.Println("Error creating new room")
 	}
+
+	m.sendAllJoinedRoomsId(mail)
 }

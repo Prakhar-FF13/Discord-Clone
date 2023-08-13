@@ -42,11 +42,15 @@ export interface Chat {
   chatLabel: string;
 }
 
+export interface VideoRoomDetails {
+  createdBy: string;
+  roomId: string;
+}
 export interface VideoRoom {
   isUserInRoom: boolean;
   isUserRoomCreator: boolean;
-  roomDetails: null;
-  activeRooms: [];
+  activeRoomDetails: VideoRoomDetails | null;
+  rooms: VideoRoomDetails[];
   localStream: Stream | null;
   remoteStream: Stream[];
   audioOnly: boolean;
@@ -79,11 +83,17 @@ export enum ACTION_TYPES {
   SetRoomMessages = "SET_ROOM_MESSAGES",
   OpenVideoRoom = "OPEN_VIDEO_ROOM",
   SetVideoRoomDetails = "SET_VIDEO_ROOM_DETAILS",
-  SetActiveRooms = "SET_ACTIVE_VIDEO_ROOMS",
+  SetActiveRoom = "SET_ACTIVE_VIDEO_ROOM",
   SetLocalStream = "SET_LOCAL_STREAM",
   SetRemoteStreams = "SET_REMOTE_STREAMS",
   SetAudioOnly = "SET_AUDIO_ONLY",
   SetScreenShareStream = "SET_SCREEN_SHARE_STREAM",
+  AddNewRoom = "ADD_NEW_ROOM",
+}
+
+export interface AddNewRoomAction {
+  type: ACTION_TYPES.AddNewRoom;
+  roomDetails: VideoRoomDetails[];
 }
 
 export interface SetOpenVideoRoomAction {
@@ -159,4 +169,5 @@ export type Action =
   | SetChosenChatDetailsAction
   | SetAMessageAction
   | SetRoomMessagesAction
-  | SetOpenVideoRoomAction;
+  | SetOpenVideoRoomAction
+  | AddNewRoomAction;

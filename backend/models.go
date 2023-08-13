@@ -205,11 +205,51 @@ func (d *DiscordDB) InsertAChatMessage(cm ChatMessage) error {
 func (d *DiscordDB) CreateRoom(mail string) error {
 	stmt := `INSERT INTO videorooms VALUES(?, ?)`
 
-	_, err := d.DB.Exec(stmt, uuid.New().String(), mail)
+	id := uuid.New().String()
 
-	if err != nil {
-		return err
+	_, errVid := d.DB.Exec(stmt, id, mail)
+
+	if errVid != nil {
+		return errVid
+	}
+
+	stmt = `INSERT INTO joinedvideorooms VALUES(?, ?)`
+
+	_, errVidPart := d.DB.Exec(stmt, id, mail)
+
+	if errVidPart != nil {
+		return errVidPart
 	}
 
 	return nil
+}
+
+func (d *DiscordDB) FetchAllJoinedVideoRooms(mail string) (*[]map[string]string, error) {
+	stmt := `SELECT roomId, createdBy FROM videorooms WHERE roomId IN (
+		SELECT roomId FROM joinedvideorooms WHERE mail = ?
+	)`
+
+	roomIds := make([]map[string]string, 0)
+
+	rows, err := d.DB.Query(stmt, mail)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var x VideoRoom
+		if err := rows.Scan(&x.RoomId, &x.CreatedBy); err != nil {
+			return &roomIds, err
+		}
+		y := map[string]string{
+			"createdBy": x.CreatedBy,
+			"roomId":    x.RoomId,
+		}
+		roomIds = append(roomIds, y)
+	}
+
+	return &roomIds, nil
 }

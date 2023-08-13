@@ -7,7 +7,7 @@ import {
 import { User, WebSocketMessageKind } from "../commonTypes";
 import store from "../store/store";
 import { setAMessage, setRoomMessages } from "../store/actions/chatActions";
-// import * as videoRoomHandler from "./videoRoomHandler";
+import * as videoRoomHandler from "./videoRoomHandler";
 
 interface Payload {
   kind: WebSocketMessageKind;
@@ -70,6 +70,7 @@ export default function Websocket(user: User) {
       }
 
       if (data && data.kind === WebSocketMessageKind.VideoRoomCreate) {
+        videoRoomHandler.newRoomCreated(data.payload);
       }
     }
   };

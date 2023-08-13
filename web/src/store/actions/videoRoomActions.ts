@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from "../../commonTypes";
+import { ACTION_TYPES, VideoRoomDetails } from "../../commonTypes";
 
 export const setOpenRoom = (
   isUserRoomCreator = false,
@@ -8,5 +8,12 @@ export const setOpenRoom = (
     type: ACTION_TYPES.OpenVideoRoom,
     isUserInRoom,
     isUserRoomCreator,
+  };
+};
+
+export const addNewRoom = (roomDetails: VideoRoomDetails[]) => {
+  return {
+    type: ACTION_TYPES.AddNewRoom,
+    roomDetails,
   };
 };

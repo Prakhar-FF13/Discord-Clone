@@ -4,8 +4,8 @@ import { VideoRoom } from "../../commonTypes";
 const initState: VideoRoom = {
   isUserInRoom: false,
   isUserRoomCreator: false,
-  roomDetails: null,
-  activeRooms: [],
+  activeRoomDetails: null,
+  rooms: [],
   localStream: null,
   remoteStream: [],
   audioOnly: false,
@@ -20,6 +20,11 @@ const reducer = (state = initState, action: Action) => {
         ...state,
         isUserInRoom: action.isUserInRoom,
         isUserRoomCreator: action.isUserRoomCreator,
+      };
+    case ACTION_TYPES.AddNewRoom:
+      return {
+        ...state,
+        rooms: action.roomDetails,
       };
     default:
       return state;

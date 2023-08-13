@@ -36,3 +36,8 @@ type ChatMessage struct {
 	Message   string `db:"message" json:"message"`
 	Date      string `db:"date" json:"date"`
 }
+
+type VideoRoom struct {
+	CreatedBy string `db:"createdBy" json:"createdBy"`
+	RoomId    string `db:"roomId" json:"roomId"`
+}

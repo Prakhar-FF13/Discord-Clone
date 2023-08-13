@@ -186,3 +186,24 @@ func (m *Manager) sendAllChatMessagesForARoom(roomId string) {
 		}
 	}
 }
+
+func (m *Manager) sendAllJoinedRoomsId(mail string) {
+	roomIds, errRoomIds := m.discord.FetchAllJoinedVideoRooms(mail)
+
+	if errRoomIds != nil {
+		return
+	}
+
+	payload := map[string]any{
+		"kind":    "video-room-create",
+		"payload": *roomIds,
+	}
+
+	jsonPayload, errbytes := encodeToJSON(payload)
+
+	if errbytes != nil {
+		return
+	}
+
+	m.emailToClient[mail].egress <- jsonPayload
+}
