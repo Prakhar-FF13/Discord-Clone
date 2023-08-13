@@ -1,5 +1,6 @@
 import { styled } from "@mui/system";
 import MainPageButton from "./MainPageButton";
+import CreateRoomButton from "./CreateRoomButton";
 
 const MainContainer = styled("div")({
   width: "72px",
@@ -14,6 +15,7 @@ export default function SideBar() {
   return (
     <MainContainer>
       <MainPageButton />
+      <CreateRoomButton />
     </MainContainer>
   );
 }
