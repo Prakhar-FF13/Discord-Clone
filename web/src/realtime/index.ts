@@ -4,12 +4,13 @@ import {
   SetFriends,
   SetPendingInvitationsAction,
 } from "../store/actions/friendsActions";
-import { User, WebSocketRequest, WebSocketResponse } from "../commonTypes";
+import { User, WebSocketMessageKind } from "../commonTypes";
 import store from "../store/store";
 import { setAMessage, setRoomMessages } from "../store/actions/chatActions";
+// import * as videoRoomHandler from "./videoRoomHandler";
 
 interface Payload {
-  kind: WebSocketResponse;
+  kind: WebSocketMessageKind;
   payload: any;
 }
 
@@ -30,19 +31,19 @@ export default function Websocket(user: User) {
 
       if (
         data &&
-        data.kind === WebSocketResponse.FriendInvitations &&
+        data.kind === WebSocketMessageKind.FriendInvitations &&
         data.payload
       ) {
         store.dispatch(SetPendingInvitationsAction(data.payload));
       }
 
-      if (data && data.kind === WebSocketResponse.Friends && data.payload) {
+      if (data && data.kind === WebSocketMessageKind.Friends && data.payload) {
         store.dispatch(SetFriends(data.payload));
       }
 
       if (
         data &&
-        data.kind === WebSocketResponse.FriendOnline &&
+        data.kind === WebSocketMessageKind.FriendOnline &&
         data.payload
       ) {
         store.dispatch(SetFriendIsOnline(data.payload));
@@ -50,22 +51,25 @@ export default function Websocket(user: User) {
 
       if (
         data &&
-        data.kind === WebSocketResponse.FriendOffline &&
+        data.kind === WebSocketMessageKind.FriendOffline &&
         data.payload
       ) {
         store.dispatch(SetFriendIsOffline(data.payload));
       }
 
-      if (data && data.kind === WebSocketResponse.Message && data.payload) {
+      if (data && data.kind === WebSocketMessageKind.Message && data.payload) {
         store.dispatch(setAMessage(data.payload));
       }
 
       if (
         data &&
-        data.kind === WebSocketResponse.RoomMessages &&
+        data.kind === WebSocketMessageKind.RoomMessages &&
         data.payload
       ) {
         store.dispatch(setRoomMessages(data.payload));
+      }
+
+      if (data && data.kind === WebSocketMessageKind.VideoRoomCreate) {
       }
     }
   };
@@ -73,7 +77,7 @@ export default function Websocket(user: User) {
 
 export const sendChangeRoom = (roomId: string) => {
   const data = JSON.stringify({
-    kind: WebSocketRequest.RoomChange,
+    kind: WebSocketMessageKind.RoomChange,
     payload: {
       roomId,
     },
@@ -84,11 +88,19 @@ export const sendChangeRoom = (roomId: string) => {
 
 export const sendChatMessage = (message: string) => {
   const data = JSON.stringify({
-    kind: WebSocketResponse.Message,
+    kind: WebSocketMessageKind.Message,
     payload: {
       message,
       date: new Date(Date.now()).toUTCString(),
     },
+  });
+
+  sendWebsocketMessage(data);
+};
+
+export const sendVideoRoomCreateMessage = () => {
+  const data = JSON.stringify({
+    kind: WebSocketMessageKind.VideoRoomCreate,
   });
 
   sendWebsocketMessage(data);

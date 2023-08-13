@@ -77,6 +77,8 @@ func (c *Client) readMessages() {
 				CreatedBy: c.id,
 			}
 			c.manager.sendChatMessage(chatMessage)
+		} else if cm.Kind == "video-room-create" {
+			c.manager.createRoom(c.email)
 		}
 	}
 }

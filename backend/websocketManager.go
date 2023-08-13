@@ -19,6 +19,11 @@ var (
 	}
 )
 
+type VideoRoom struct {
+	createdBy    string
+	participants []*Client
+}
+
 // Manager is like a room.
 // It stores how many clients it is managing.
 type Manager struct {
@@ -26,6 +31,7 @@ type Manager struct {
 	rooms         map[string]map[*Client]bool
 	emailToClient map[string]*Client
 	discord       *DiscordDB
+	videoRooms    map[string]VideoRoom
 }
 
 func NewWebSocketManager(d *DiscordDB) *Manager {
@@ -33,6 +39,7 @@ func NewWebSocketManager(d *DiscordDB) *Manager {
 		rooms:         make(map[string]map[*Client]bool),
 		emailToClient: make(map[string]*Client),
 		discord:       d,
+		videoRooms:    make(map[string]VideoRoom),
 	}
 }
 
@@ -90,5 +97,12 @@ func (m *Manager) removeClient(client *Client) {
 		delete(m.emailToClient, client.email)
 
 		m.isOffline(client.email)
+	}
+}
+
+func (m *Manager) createRoom(mail string) {
+	err := m.discord.CreateRoom(mail)
+	if err != nil {
+		fmt.Println("Error creating new room")
 	}
 }

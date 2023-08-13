@@ -2,6 +2,8 @@ package main
 
 import (
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 type DiscordDB struct {
@@ -192,6 +194,18 @@ func (d *DiscordDB) InsertAChatMessage(cm ChatMessage) error {
 	stmt := `INSERT INTO chatMessages VALUES(?, ?, ?, ?, ?, ?)`
 
 	_, err := d.DB.Exec(stmt, cm.RoomId, cm.CreatedBy, cm.Email, cm.Username, cm.Date, cm.Message)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *DiscordDB) CreateRoom(mail string) error {
+	stmt := `INSERT INTO videorooms VALUES(?, ?)`
+
+	_, err := d.DB.Exec(stmt, uuid.New().String(), mail)
 
 	if err != nil {
 		return err

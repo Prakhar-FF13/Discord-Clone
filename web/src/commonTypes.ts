@@ -54,17 +54,15 @@ export interface VideoRoom {
   isScreenSharingActive: boolean;
 }
 
-export enum WebSocketRequest {
-  RoomChange = "room-change",
-}
-
-export enum WebSocketResponse {
+export enum WebSocketMessageKind {
   FriendInvitations = "friend-invitations",
   Friends = "friends",
   FriendOnline = "friend-online",
   FriendOffline = "friend-offline",
   Message = "chat-message",
+  RoomChange = "room-change",
   RoomMessages = "room-messages",
+  VideoRoomCreate = "video-room-create",
 }
 
 export enum ACTION_TYPES {
