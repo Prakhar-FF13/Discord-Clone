@@ -4,7 +4,7 @@ import { IconButton } from "@mui/material";
 
 const MainContainer = styled("div")({
   position: "absolute",
-  bottom: "10px",
+  bottom: "0px",
   right: "10px",
 });
 

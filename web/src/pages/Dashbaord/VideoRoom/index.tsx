@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 import ResizeRoomButton from "./ResizeRoomButton";
+import VideosContainer from "./VideosContainer";
+import RoomButtons from "./RoomButtons";
 
 const MainContainer = styled("div")({
   position: "absolute",
@@ -35,6 +37,8 @@ const VideoRoom = () => {
     <MainContainer
       style={isRoomMinimized ? minimizedRoomStyle : fullScreenRoomStyle}
     >
+      <VideosContainer />
+      <RoomButtons />
       <ResizeRoomButton
         isRoomMinimized={isRoomMinimized}
         handleRoomResize={roomResizeHandler}
