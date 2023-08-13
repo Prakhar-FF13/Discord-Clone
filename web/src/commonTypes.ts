@@ -1,3 +1,5 @@
+import { Stream } from "stream";
+
 export interface User {
   Id?: number;
   Email: string;
@@ -40,6 +42,18 @@ export interface Chat {
   chatLabel: string;
 }
 
+export interface VideoRoom {
+  isUserInRoom: boolean;
+  isUserRoomCreator: boolean;
+  roomDetails: null;
+  activeRooms: [];
+  localStream: Stream | null;
+  remoteStream: Stream[];
+  audioOnly: boolean;
+  screenSharingStream: Stream | null;
+  isScreenSharingActive: boolean;
+}
+
 export enum WebSocketRequest {
   RoomChange = "room-change",
 }
@@ -65,6 +79,13 @@ export enum ACTION_TYPES {
   SetChosenChatDetails = "SET_CHOSEN_CHAT_DETAILS",
   SetAMessage = "SET_A_MESSAGES",
   SetRoomMessages = "SET_ROOM_MESSAGES",
+  OpenVideoRoom = "OPEN_VIDEO_ROOM",
+  SetVideoRoomDetails = "SET_VIDEO_ROOM_DETAILS",
+  SetActiveRooms = "SET_ACTIVE_VIDEO_ROOMS",
+  SetLocalStream = "SET_LOCAL_STREAM",
+  SetRemoteStreams = "SET_REMOTE_STREAMS",
+  SetAudioOnly = "SET_AUDIO_ONLY",
+  SetScreenShareStream = "SET_SCREEN_SHARE_STREAM",
 }
 
 export interface SetChosenChatDetailsAction {
