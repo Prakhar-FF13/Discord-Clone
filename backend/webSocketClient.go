@@ -17,11 +17,12 @@ type Client struct {
 	manager *Manager
 
 	// egress -> used to avoid concurrent writes on websocket connection
-	egress   chan []byte
-	room     string
-	email    string
-	username string
-	id       int64
+	egress    chan []byte
+	room      string
+	email     string
+	username  string
+	id        int64
+	videoRoom string
 }
 
 func NewClient(conn *websocket.Conn, manager *Manager) *Client {
@@ -78,7 +79,7 @@ func (c *Client) readMessages() {
 			}
 			c.manager.sendChatMessage(chatMessage)
 		} else if cm.Kind == "video-room-create" {
-			c.manager.createRoom(c.email)
+			c.createRoom(c.email)
 		}
 	}
 }
@@ -108,4 +109,13 @@ func (c *Client) writeMessages() {
 
 		}
 	}
+}
+
+func (c *Client) createRoom(mail string) {
+	err := c.manager.discord.CreateRoom(mail)
+	if err != nil {
+		fmt.Println("Error creating new room")
+	}
+
+	c.manager.sendAllJoinedRooms(mail)
 }

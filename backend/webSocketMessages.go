@@ -187,7 +187,7 @@ func (m *Manager) sendAllChatMessagesForARoom(roomId string) {
 	}
 }
 
-func (m *Manager) sendAllJoinedRoomsId(mail string) {
+func (m *Manager) sendAllJoinedRooms(mail string) {
 	roomIds, errRoomIds := m.discord.FetchAllJoinedVideoRooms(mail)
 
 	if errRoomIds != nil {

@@ -21,7 +21,7 @@ var (
 
 type VideoRoomOnline struct {
 	createdBy    string
-	participants []*Client
+	participants map[*Client]bool
 }
 
 // Manager is like a room.
@@ -62,29 +62,30 @@ func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 	// create a new client
 	client := NewClient(conn, m)
 
-	m.addClient(client, userEmail, userId, userName)
+	client.email = userEmail
+	client.id = userId
+	client.username = userName
+
+	m.addClient(client)
 
 	// Start a go routine to read/write messages
 	go client.readMessages()
 	go client.writeMessages()
+
+	m.isOnline(userEmail)
+	m.sendAllJoinedRooms(userEmail)
 }
 
-func (m *Manager) addClient(client *Client, clientEmail string, clientId int64, clientUsername string) {
+func (m *Manager) addClient(client *Client) {
 	m.Lock()
 	defer m.Unlock()
-
-	client.email = clientEmail
-	client.id = clientId
-	client.username = clientUsername
 
 	if _, ok := m.rooms[client.room]; !ok {
 		m.rooms[client.room] = make(map[*Client]bool)
 
 	}
 	m.rooms[client.room][client] = true
-	m.emailToClient[clientEmail] = client
-
-	m.isOnline(clientEmail)
+	m.emailToClient[client.email] = client
 }
 
 func (m *Manager) removeClient(client *Client) {
@@ -95,16 +96,10 @@ func (m *Manager) removeClient(client *Client) {
 		m.rooms[client.room][client] = false
 		delete(m.rooms[client.room], client)
 		delete(m.emailToClient, client.email)
+		if _, ok := m.videoRooms[client.videoRoom]; ok {
+			delete(m.videoRooms[client.videoRoom].participants, client)
+		}
 
 		m.isOffline(client.email)
 	}
-}
-
-func (m *Manager) createRoom(mail string) {
-	err := m.discord.CreateRoom(mail)
-	if err != nil {
-		fmt.Println("Error creating new room")
-	}
-
-	m.sendAllJoinedRoomsId(mail)
 }
