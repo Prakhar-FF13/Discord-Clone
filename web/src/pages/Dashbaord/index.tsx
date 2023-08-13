@@ -7,9 +7,10 @@ import { useEffect } from "react";
 import { User } from "../../commonTypes";
 import { logout } from "../../common/utils/auth";
 import { getActions } from "../../store/actions/authActions";
-import { connect } from "react-redux";
-import { AppDispatch } from "../../store/store";
+import { connect, ConnectedProps } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
 import Websocket from "../../realtime";
+import VideoRoom from "./VideoRoom";
 
 const Wrapper = styled("div")({
   width: "100%",
@@ -17,11 +18,7 @@ const Wrapper = styled("div")({
   display: "flex",
 });
 
-const Dashboard = ({
-  setUserDetails,
-}: {
-  setUserDetails: (userDetails: User) => void;
-}) => {
+const Dashboard = ({ setUserDetails, isUserInRoom }: FromRedux) => {
   useEffect(() => {
     const userDetails: string | null = localStorage.getItem("user");
 
@@ -40,6 +37,7 @@ const Dashboard = ({
       <FriendsSideBar />
       <Messenger />
       <AppBar />
+      {isUserInRoom && <VideoRoom />}
     </Wrapper>
   );
 };
@@ -50,4 +48,14 @@ const mapActionsToProps = (dispatch: AppDispatch) => {
   };
 };
 
-export default connect(null, mapActionsToProps)(Dashboard);
+const mapStateToProps = (state: RootState) => {
+  return {
+    ...state.video,
+  };
+};
+
+const connector = connect(mapStateToProps, mapActionsToProps);
+
+type FromRedux = ConnectedProps<typeof connector>;
+
+export default connector(Dashboard);
