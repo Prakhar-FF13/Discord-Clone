@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { styled } from "@mui/material";
-import { sendChatMessage } from "../../../realtime/websockets";
+import { sendChatMessage } from "../../../realtime";
 
 const MainContainer = styled("div")({
   height: "60px",

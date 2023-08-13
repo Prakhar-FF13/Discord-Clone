@@ -4,7 +4,7 @@ import OnlineIndicator from "./OnlineIndicator";
 import { chatActions } from "../../../../store/actions/chatActions";
 import { ConnectedProps, connect } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
-import { sendChangeRoom } from "../../../../realtime/websockets";
+import { sendChangeRoom } from "../../../../realtime";
 
 interface FriendListItemProps extends ReduxStateAndActions {
   username: string;

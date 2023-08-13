@@ -9,7 +9,7 @@ import { logout } from "../../common/utils/auth";
 import { getActions } from "../../store/actions/authActions";
 import { connect } from "react-redux";
 import { AppDispatch } from "../../store/store";
-import Websocket from "../../realtime/websockets";
+import Websocket from "../../realtime";
 
 const Wrapper = styled("div")({
   width: "100%",
@@ -32,7 +32,7 @@ const Dashboard = ({
       setUserDetails(user);
       Websocket(user);
     }
-  }, []);
+  }, [setUserDetails]);
 
   return (
     <Wrapper>

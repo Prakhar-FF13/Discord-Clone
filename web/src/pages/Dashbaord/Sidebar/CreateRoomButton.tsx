@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import * as roomHandler from "../../../realtime/videoRoomHandler";
 
 const CreateRoomButton = () => {
   const createNewRoomHandler = () => {
-    // create a room, send info to the server
+    roomHandler.createNewRoom();
   };
 
   return (

@@ -88,6 +88,12 @@ export enum ACTION_TYPES {
   SetScreenShareStream = "SET_SCREEN_SHARE_STREAM",
 }
 
+export interface SetOpenVideoRoomAction {
+  type: ACTION_TYPES.OpenVideoRoom;
+  isUserInRoom: boolean;
+  isUserRoomCreator: boolean;
+}
+
 export interface SetChosenChatDetailsAction {
   type: ACTION_TYPES.SetChosenChatDetails;
   roomId: string;
@@ -154,4 +160,5 @@ export type Action =
   | SetFriendIsOfflineAction
   | SetChosenChatDetailsAction
   | SetAMessageAction
-  | SetRoomMessagesAction;
+  | SetRoomMessagesAction
+  | SetOpenVideoRoomAction;

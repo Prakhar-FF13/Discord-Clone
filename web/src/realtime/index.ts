@@ -3,10 +3,10 @@ import {
   SetFriendIsOnline,
   SetFriends,
   SetPendingInvitationsAction,
-} from "./../../store/actions/friendsActions";
-import { User, WebSocketRequest, WebSocketResponse } from "../../commonTypes";
-import store from "../../store/store";
-import { setAMessage, setRoomMessages } from "../../store/actions/chatActions";
+} from "../store/actions/friendsActions";
+import { User, WebSocketRequest, WebSocketResponse } from "../commonTypes";
+import store from "../store/store";
+import { setAMessage, setRoomMessages } from "../store/actions/chatActions";
 
 interface Payload {
   kind: WebSocketResponse;
