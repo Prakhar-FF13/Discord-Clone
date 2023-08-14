@@ -99,9 +99,19 @@ export const sendChatMessage = (message: string) => {
   sendWebsocketMessage(data);
 };
 
-export const sendVideoRoomCreateMessage = () => {
+export const sendVideoRoomCreateMessage = (roomLabel: string) => {
   const data = JSON.stringify({
     kind: WebSocketMessageKind.VideoRoomCreate,
+    payload: { roomLabel },
+  });
+
+  sendWebsocketMessage(data);
+};
+
+export const sendJoinVideoRoomMessage = (roomId: string) => {
+  const data = JSON.stringify({
+    kind: WebSocketMessageKind.JoinVideoRoom,
+    payload: { roomId },
   });
 
   sendWebsocketMessage(data);

@@ -67,6 +67,7 @@ export enum WebSocketMessageKind {
   RoomChange = "room-change",
   RoomMessages = "room-messages",
   VideoRoomCreate = "video-room-create",
+  JoinVideoRoom = "video-room-join",
 }
 
 export enum ACTION_TYPES {
