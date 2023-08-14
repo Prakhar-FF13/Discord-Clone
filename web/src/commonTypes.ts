@@ -45,6 +45,7 @@ export interface Chat {
 export interface VideoRoomDetails {
   createdBy: string;
   roomId: string;
+  label: string;
 }
 export interface VideoRoom {
   isUserInRoom: boolean;

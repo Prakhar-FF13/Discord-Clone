@@ -7,6 +7,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import { PlayCircle } from "@mui/icons-material";
 import { setJoinRoom } from "../../../store/actions/videoRoomActions";
 import { VideoRoomDetails } from "../../../commonTypes";
+import Avatar from "../../../common/components/Avatar";
 
 const MainContainer = styled("div")({
   width: "72px",
@@ -43,7 +44,7 @@ function SideBar({ rooms, Email }: StateFromRedux) {
                 backgroundColor: "#5865F2",
               }}
             >
-              <PlayCircle />
+              <Avatar username={r.label} />
             </IconButton>
           </Tooltip>
         );
