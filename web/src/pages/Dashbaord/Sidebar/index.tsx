@@ -4,7 +4,6 @@ import CreateRoomButton from "./CreateRoomButton";
 import store, { RootState } from "../../../store/store";
 import { ConnectedProps, connect } from "react-redux";
 import { IconButton, Tooltip } from "@mui/material";
-import { PlayCircle } from "@mui/icons-material";
 import { setJoinRoom } from "../../../store/actions/videoRoomActions";
 import { VideoRoomDetails } from "../../../commonTypes";
 import Avatar from "../../../common/components/Avatar";
@@ -29,7 +28,7 @@ function SideBar({ rooms, Email }: StateFromRedux) {
       <CreateRoomButton />
       {rooms.map((r) => {
         return (
-          <Tooltip key={r.roomId} title={"Room Id: " + r.roomId}>
+          <Tooltip key={r.roomId} title={r.label}>
             <IconButton
               onClick={() => handleJoinRoom(r)}
               style={{

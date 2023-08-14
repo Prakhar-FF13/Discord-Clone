@@ -3,6 +3,9 @@ import { useState } from "react";
 import ResizeRoomButton from "./ResizeRoomButton";
 import VideosContainer from "./VideosContainer";
 import RoomButtons from "./RoomButtons";
+import VideoRoomLabel from "./VideoRoomLabel";
+import { RootState } from "../../../store/store";
+import { ConnectedProps, connect } from "react-redux";
 
 const MainContainer = styled("div")({
   position: "absolute",
@@ -26,7 +29,7 @@ const minimizedRoomStyle = {
   height: "40vh",
 };
 
-const VideoRoom = () => {
+const VideoRoom = ({ roomId }: StateFromRedux) => {
   const [isRoomMinimized, setIsRoomMinimized] = useState(true);
 
   const roomResizeHandler = () => {
@@ -43,8 +46,19 @@ const VideoRoom = () => {
         isRoomMinimized={isRoomMinimized}
         handleRoomResize={roomResizeHandler}
       />
+      <VideoRoomLabel isRoomMinimized={isRoomMinimized} roomId={roomId || ""} />
     </MainContainer>
   );
 };
 
-export default VideoRoom;
+const mapStateToProps = (state: RootState) => {
+  return {
+    ...state.video.activeRoomDetails,
+  };
+};
+
+const connector = connect(mapStateToProps, null);
+
+type StateFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(VideoRoom);
