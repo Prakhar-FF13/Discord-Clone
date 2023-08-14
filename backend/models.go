@@ -202,7 +202,7 @@ func (d *DiscordDB) InsertAChatMessage(cm ChatMessage) error {
 	return nil
 }
 
-func (d *DiscordDB) CreateRoom(mail, label string) error {
+func (d *DiscordDB) CreateVideoRoom(mail, label string) error {
 	stmt := `INSERT INTO videorooms VALUES(?, ?, ?)`
 
 	id := uuid.New().String()
@@ -216,6 +216,18 @@ func (d *DiscordDB) CreateRoom(mail, label string) error {
 	stmt = `INSERT INTO joinedvideorooms VALUES(?, ?)`
 
 	_, errVidPart := d.DB.Exec(stmt, id, mail)
+
+	if errVidPart != nil {
+		return errVidPart
+	}
+
+	return nil
+}
+
+func (d *DiscordDB) JoinVideoRoom(roomId, mail string) error {
+	stmt := `INSERT INTO joinedvideorooms VALUES(?, ?)`
+
+	_, errVidPart := d.DB.Exec(stmt, roomId, mail)
 
 	if errVidPart != nil {
 		return errVidPart

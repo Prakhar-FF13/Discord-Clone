@@ -79,10 +79,9 @@ func (c *Client) readMessages() {
 			}
 			c.manager.sendChatMessage(chatMessage)
 		} else if cm.Kind == "video-room-create" {
-
-			fmt.Printf("%+v\n", cm.Payload)
-
-			c.createRoom(c.email, cm.Payload.Label)
+			c.createVideoRoom(c.email, cm.Payload.Label)
+		} else if cm.Kind == "video-room-join" {
+			c.joinVideoRoom(cm.Payload.RoomId)
 		}
 	}
 }
@@ -114,11 +113,22 @@ func (c *Client) writeMessages() {
 	}
 }
 
-func (c *Client) createRoom(mail, label string) {
-	err := c.manager.discord.CreateRoom(mail, label)
+func (c *Client) createVideoRoom(mail, label string) {
+	err := c.manager.discord.CreateVideoRoom(mail, label)
 	if err != nil {
 		fmt.Println("Error creating new room")
 	}
 
 	c.manager.sendAllJoinedRooms(mail)
+}
+
+func (c *Client) joinVideoRoom(roomId string) {
+	c.videoRoom = roomId
+	err := c.manager.discord.JoinVideoRoom(roomId, c.email)
+
+	if err != nil {
+		fmt.Println("Error joining the room")
+	}
+
+	c.manager.sendAllJoinedRooms(c.email)
 }

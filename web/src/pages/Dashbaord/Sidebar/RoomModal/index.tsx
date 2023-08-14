@@ -22,10 +22,12 @@ function RoomModal({ isDialogOpen, closeDialogHandler }: RoomModalProps) {
 
   const createNewRoomHandler = () => {
     roomHandler.createNewRoom(roomLabel);
+    closeDialogHandler();
   };
 
   const joinVideoRoomHandler = () => {
     roomHandler.joinVideoRoom(roomId);
+    closeDialogHandler();
   };
 
   return (
