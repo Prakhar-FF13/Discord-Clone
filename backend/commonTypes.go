@@ -21,6 +21,7 @@ type ClientPayload struct {
 	RoomId  string `json:"roomId"`
 	Message string `json:"message"`
 	Date    string `json:"date"`
+	Label   string `json:"roomLabel"`
 }
 
 type ClientMessage struct {
@@ -40,4 +41,5 @@ type ChatMessage struct {
 type VideoRoom struct {
 	CreatedBy string `db:"createdBy" json:"createdBy"`
 	RoomId    string `db:"roomId" json:"roomId"`
+	Label     string `db:"roomLabel" json:"roomLabel"`
 }

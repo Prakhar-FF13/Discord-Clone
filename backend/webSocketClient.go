@@ -79,7 +79,10 @@ func (c *Client) readMessages() {
 			}
 			c.manager.sendChatMessage(chatMessage)
 		} else if cm.Kind == "video-room-create" {
-			c.createRoom(c.email)
+
+			fmt.Printf("%+v\n", cm.Payload)
+
+			c.createRoom(c.email, cm.Payload.Label)
 		}
 	}
 }
@@ -111,8 +114,8 @@ func (c *Client) writeMessages() {
 	}
 }
 
-func (c *Client) createRoom(mail string) {
-	err := c.manager.discord.CreateRoom(mail)
+func (c *Client) createRoom(mail, label string) {
+	err := c.manager.discord.CreateRoom(mail, label)
 	if err != nil {
 		fmt.Println("Error creating new room")
 	}
