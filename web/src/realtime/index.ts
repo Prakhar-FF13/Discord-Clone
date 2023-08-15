@@ -117,6 +117,15 @@ export const sendJoinVideoRoomMessage = (roomId: string) => {
   sendWebsocketMessage(data);
 };
 
+export const sendEnterVideoRoomMessage = (roomId: string) => {
+  const data = JSON.stringify({
+    kind: WebSocketMessageKind.EnterVideoRoom,
+    payload: { roomId },
+  });
+
+  sendWebsocketMessage(data);
+};
+
 export const sendWebsocketMessage = (data: string) => {
   conn.send(data);
 };

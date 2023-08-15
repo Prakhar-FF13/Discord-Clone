@@ -7,6 +7,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import { setJoinRoom } from "../../../store/actions/videoRoomActions";
 import { VideoRoomDetails } from "../../../commonTypes";
 import Avatar from "../../../common/components/Avatar";
+import { sendEnterVideoRoomMessage } from "../../../realtime";
 
 const MainContainer = styled("div")({
   width: "72px",
@@ -20,6 +21,7 @@ const MainContainer = styled("div")({
 function SideBar({ rooms, Email }: StateFromRedux) {
   const handleJoinRoom = (room: VideoRoomDetails) => {
     store.dispatch(setJoinRoom(Email === room.createdBy, true, room));
+    sendEnterVideoRoomMessage(room.roomId);
   };
 
   return (

@@ -82,6 +82,8 @@ func (c *Client) readMessages() {
 			c.createVideoRoom(c.email, cm.Payload.Label)
 		} else if cm.Kind == "video-room-join" {
 			c.joinVideoRoom(cm.Payload.RoomId)
+		} else if cm.Kind == "video-room-enter" {
+			c.enterVideoRoom(cm.Payload.RoomId)
 		}
 	}
 }
@@ -123,7 +125,6 @@ func (c *Client) createVideoRoom(mail, label string) {
 }
 
 func (c *Client) joinVideoRoom(roomId string) {
-	c.videoRoom = roomId
 	err := c.manager.discord.JoinVideoRoom(roomId, c.email)
 
 	if err != nil {
@@ -131,4 +132,13 @@ func (c *Client) joinVideoRoom(roomId string) {
 	}
 
 	c.manager.sendAllJoinedRooms(c.email)
+}
+
+func (c *Client) enterVideoRoom(roomId string) {
+	if _, ok := c.manager.videoRooms[c.videoRoom]; ok {
+		delete(c.manager.videoRooms[c.videoRoom].participants, c)
+	}
+
+	c.videoRoom = roomId
+	c.manager.videoRooms[roomId].participants[c] = true
 }
