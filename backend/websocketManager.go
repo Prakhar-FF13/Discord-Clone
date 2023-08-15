@@ -71,9 +71,6 @@ func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 	// Start a go routine to read/write messages
 	go client.readMessages()
 	go client.writeMessages()
-
-	m.isOnline(userEmail)
-	m.sendAllJoinedRooms(userEmail)
 }
 
 func (m *Manager) addClient(client *Client) {

@@ -96,6 +96,8 @@ func (c *Client) writeMessages() {
 	// populate initial data
 	go c.manager.sendPendingInvitations(c.email)
 	go c.manager.sendFriends(c.email)
+	go c.manager.isOnline(c.email)
+	go c.manager.sendAllJoinedRooms(c.email)
 
 	for {
 		select {
