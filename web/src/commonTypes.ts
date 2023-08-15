@@ -52,10 +52,10 @@ export interface VideoRoom {
   isUserRoomCreator: boolean;
   activeRoomDetails: VideoRoomDetails | null;
   rooms: VideoRoomDetails[];
-  localStream: Stream | null;
-  remoteStream: Stream[];
+  localStream: MediaStream | null;
+  remoteStream: MediaStream[];
   audioOnly: boolean;
-  screenSharingStream: Stream | null;
+  screenSharingStream: MediaStream | null;
   isScreenSharingActive: boolean;
 }
 
@@ -70,6 +70,10 @@ export enum WebSocketMessageKind {
   VideoRoomCreate = "video-room-create",
   JoinVideoRoom = "video-room-join",
   EnterVideoRoom = "video-room-enter",
+  OfferVideoRoom = "offer-video-room",
+  AnswerVideoRoom = "answer-video-room",
+  NewUserInVideoRoom = "new-user-video-room",
+  NewIceCandidate = "new-ice-candidate",
 }
 
 export enum ACTION_TYPES {
@@ -92,6 +96,23 @@ export enum ACTION_TYPES {
   SetAudioOnly = "SET_AUDIO_ONLY",
   SetScreenShareStream = "SET_SCREEN_SHARE_STREAM",
   AddNewRoom = "ADD_NEW_ROOM",
+  AddRemoteStream = "ADD_REMOTE_STREAM",
+  AddLocalStream = "ADD_LOCAL_STREAM",
+  CloseVideoCall = "CLOSE_VIDEO_CALL",
+}
+
+export interface CloseVideoCallAction {
+  type: ACTION_TYPES.CloseVideoCall;
+}
+
+export interface AddRemoteStreamAction {
+  type: ACTION_TYPES.AddRemoteStream;
+  stream: MediaStream;
+}
+
+export interface AddLocalStreamAction {
+  type: ACTION_TYPES.AddLocalStream;
+  stream: MediaStream;
 }
 
 export interface AddNewRoomAction {
@@ -174,4 +195,7 @@ export type Action =
   | SetAMessageAction
   | SetRoomMessagesAction
   | JoinVideoRoomAction
-  | AddNewRoomAction;
+  | AddNewRoomAction
+  | AddRemoteStreamAction
+  | AddLocalStreamAction
+  | CloseVideoCallAction;

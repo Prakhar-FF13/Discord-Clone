@@ -52,7 +52,7 @@ func (c *Client) readMessages() {
 
 		json.Unmarshal(p, &cm)
 
-		fmt.Println(cm)
+		fmt.Printf("\n-------\n%+v\n--------\n", cm)
 
 		if cm.Kind == "room-change" {
 			if cm.Payload.RoomId != c.room {
@@ -84,6 +84,36 @@ func (c *Client) readMessages() {
 			c.joinVideoRoom(cm.Payload.RoomId)
 		} else if cm.Kind == "video-room-enter" {
 			c.enterVideoRoom(cm.Payload.RoomId)
+		} else if cm.Kind == "offer-video-room" {
+			x := map[string]any{
+				"kind": "offer-video-room",
+				"payload": map[string]any{
+					"mail":  cm.Payload.Mail,
+					"offer": cm.Payload.Offer,
+				},
+			}
+
+			c.redirectToMail(cm.Payload.Mail, x)
+		} else if cm.Kind == "answer-video-room" {
+			x := map[string]any{
+				"kind": "answer-video-room",
+				"payload": map[string]any{
+					"mail":   cm.Payload.Mail,
+					"answer": cm.Payload.Answer,
+				},
+			}
+
+			c.redirectToMail(cm.Payload.Mail, x)
+		} else if cm.Kind == "new-ice-candidate" {
+			x := map[string]any{
+				"kind": "new-ice-candidate",
+				"payload": map[string]any{
+					"mail":      cm.Payload.Mail,
+					"candidate": cm.Payload.Candidate,
+				},
+			}
+
+			c.redirectToMail(cm.Payload.Mail, x)
 		}
 	}
 }
@@ -141,6 +171,22 @@ func (c *Client) enterVideoRoom(roomId string) {
 		delete(c.manager.videoRooms[c.videoRoom].participants, c)
 	}
 
+	c.manager.newUserJoinedARoom(c.email, roomId)
+
 	c.videoRoom = roomId
+	if _, ok := c.manager.videoRooms[roomId]; !ok {
+		c.manager.videoRooms[roomId] = VideoRoomOnline{createdBy: "", participants: make(map[*Client]bool)}
+	}
 	c.manager.videoRooms[roomId].participants[c] = true
+}
+
+func (c *Client) redirectToMail(mail string, payload map[string]any) {
+	payloadJson, err := encodeToJSON(payload)
+
+	if err != nil {
+		fmt.Println("Could not redirect message to target email")
+		return
+	}
+
+	c.manager.emailToClient[mail].egress <- payloadJson
 }

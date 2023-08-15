@@ -8,6 +8,7 @@ import { User, WebSocketMessageKind } from "../commonTypes";
 import store from "../store/store";
 import { setAMessage, setRoomMessages } from "../store/actions/chatActions";
 import * as videoRoomHandler from "./videoRoomHandler";
+import { handleNewIceCandidateMsg } from "./webRTC";
 
 interface Payload {
   kind: WebSocketMessageKind;
@@ -72,6 +73,22 @@ export default function Websocket(user: User) {
       if (data && data.kind === WebSocketMessageKind.VideoRoomCreate) {
         videoRoomHandler.newRoomCreated(data.payload);
       }
+
+      if (data && data.kind === WebSocketMessageKind.OfferVideoRoom) {
+        videoRoomHandler.videoRoomSendAnswer(data.payload);
+      }
+
+      if (data && data.kind === WebSocketMessageKind.AnswerVideoRoom) {
+      }
+
+      if (data && data.kind === WebSocketMessageKind.NewUserInVideoRoom) {
+        //@TODO Complete this.
+        videoRoomHandler.videoRoomSendOffer(data.payload);
+      }
+
+      if (data && data.kind === WebSocketMessageKind.NewIceCandidate) {
+        handleNewIceCandidateMsg(data.payload);
+      }
     }
   };
 }
@@ -121,6 +138,42 @@ export const sendEnterVideoRoomMessage = (roomId: string) => {
   const data = JSON.stringify({
     kind: WebSocketMessageKind.EnterVideoRoom,
     payload: { roomId },
+  });
+
+  sendWebsocketMessage(data);
+};
+
+export const sendWebRTCOfferMessage = (
+  offer: RTCSessionDescription,
+  mail: string
+) => {
+  const data = JSON.stringify({
+    kind: WebSocketMessageKind.OfferVideoRoom,
+    payload: { offer, mail },
+  });
+
+  sendWebsocketMessage(data);
+};
+
+export const sendWebRTCAnswerMessage = (
+  answer: RTCSessionDescription,
+  mail: string
+) => {
+  const data = JSON.stringify({
+    kind: WebSocketMessageKind.AnswerVideoRoom,
+    payload: { answer, mail },
+  });
+
+  sendWebsocketMessage(data);
+};
+
+export const sendWebRTCNewIceCandidateMessage = (
+  mail: string,
+  candidate: RTCIceCandidate
+) => {
+  const data = JSON.stringify({
+    kind: WebSocketMessageKind.NewIceCandidate,
+    payload: { mail, candidate },
   });
 
   sendWebsocketMessage(data);

@@ -1,4 +1,8 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
 
 import authReducer from "./reducers/authReducer";
 import toastReducer from "./reducers/toastReducer";

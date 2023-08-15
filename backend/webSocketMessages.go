@@ -207,3 +207,23 @@ func (m *Manager) sendAllJoinedRooms(mail string) {
 
 	m.emailToClient[mail].egress <- jsonPayload
 }
+
+func (m *Manager) newUserJoinedARoom(mail string, roomId string) {
+	payload := map[string]any{
+		"kind": "new-user-video-room",
+		"payload": map[string]any{
+			"mail": mail,
+		},
+	}
+
+	paylodJson, err := encodeToJSON(payload)
+
+	if err != nil {
+		fmt.Println("Error notifying other users that a new user has joined the video room")
+		return
+	}
+
+	for conn := range m.videoRooms[roomId].participants {
+		conn.egress <- paylodJson
+	}
+}

@@ -27,6 +27,22 @@ const reducer = (state = initState, action: Action) => {
         ...state,
         rooms: action.roomDetails,
       };
+    case ACTION_TYPES.AddRemoteStream:
+      console.log("reducer remote stream", action);
+
+      return {
+        ...state,
+        remoteStream: [...state.remoteStream, action.stream],
+      };
+    case ACTION_TYPES.AddLocalStream:
+      console.log("reducer local stream", action);
+
+      return {
+        ...state,
+        localStream: action.stream,
+      };
+    case ACTION_TYPES.CloseVideoCall:
+      return { ...initState };
     default:
       return state;
   }

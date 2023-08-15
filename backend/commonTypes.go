@@ -18,10 +18,14 @@ type Friend struct {
 }
 
 type ClientPayload struct {
-	RoomId  string `json:"roomId"`
-	Message string `json:"message"`
-	Date    string `json:"date"`
-	Label   string `json:"roomLabel"`
+	RoomId    string         `json:"roomId"`
+	Message   string         `json:"message"`
+	Date      string         `json:"date"`
+	Label     string         `json:"roomLabel"`
+	Mail      string         `json:"mail"`
+	Offer     map[string]any `json:"offer"`
+	Answer    map[string]any `json:"answer"`
+	Candidate map[string]any `json:"candidate"`
 }
 
 type ClientMessage struct {
