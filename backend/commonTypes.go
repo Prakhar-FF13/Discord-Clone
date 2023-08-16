@@ -26,6 +26,7 @@ type ClientPayload struct {
 	Offer     map[string]any `json:"offer"`
 	Answer    map[string]any `json:"answer"`
 	Candidate map[string]any `json:"candidate"`
+	Sender    string         `json:"sender"`
 }
 
 type ClientMessage struct {

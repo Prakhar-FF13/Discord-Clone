@@ -29,8 +29,6 @@ export default function Websocket(user: User, dispatch: Dispatch<any>) {
     if (dataString) {
       const data: Payload = JSON.parse(dataString);
 
-      console.log(data);
-
       if (
         data &&
         data.kind === WebSocketMessageKind.FriendInvitations &&
@@ -76,18 +74,26 @@ export default function Websocket(user: User, dispatch: Dispatch<any>) {
       }
 
       if (data && data.kind === WebSocketMessageKind.OfferVideoRoom) {
-        videoRoomHandler.videoRoomSendAnswer(data.payload, dispatch);
+        console.log("Got offer: ", data.payload);
+        videoRoomHandler.videoRoomSendAnswer(
+          user.Email,
+          data.payload,
+          dispatch
+        );
       }
 
       if (data && data.kind === WebSocketMessageKind.AnswerVideoRoom) {
+        console.log("Got answer: ", data.payload);
+        videoRoomHandler.videoRoomReceiveAnswer(data.payload);
       }
 
       if (data && data.kind === WebSocketMessageKind.NewUserInVideoRoom) {
         //@TODO Complete this.
-        videoRoomHandler.videoRoomSendOffer(data.payload, dispatch);
+        videoRoomHandler.videoRoomSendOffer(user.Email, data.payload, dispatch);
       }
 
       if (data && data.kind === WebSocketMessageKind.NewIceCandidate) {
+        console.log("Got ice candidate: ", data.payload);
         handleNewIceCandidateMsg(data.payload);
       }
     }
@@ -146,11 +152,12 @@ export const sendEnterVideoRoomMessage = (roomId: string) => {
 
 export const sendWebRTCOfferMessage = (
   offer: RTCSessionDescription,
-  mail: string
+  mail: string,
+  sender: string
 ) => {
   const data = JSON.stringify({
     kind: WebSocketMessageKind.OfferVideoRoom,
-    payload: { offer, mail },
+    payload: { offer, mail, sender },
   });
 
   sendWebsocketMessage(data);
@@ -158,23 +165,25 @@ export const sendWebRTCOfferMessage = (
 
 export const sendWebRTCAnswerMessage = (
   answer: RTCSessionDescription,
-  mail: string
+  mail: string,
+  sender: string
 ) => {
   const data = JSON.stringify({
     kind: WebSocketMessageKind.AnswerVideoRoom,
-    payload: { answer, mail },
+    payload: { answer, mail, sender },
   });
 
   sendWebsocketMessage(data);
 };
 
 export const sendWebRTCNewIceCandidateMessage = (
+  sender: string,
   mail: string,
   candidate: RTCIceCandidate
 ) => {
   const data = JSON.stringify({
     kind: WebSocketMessageKind.NewIceCandidate,
-    payload: { mail, candidate },
+    payload: { sender, mail, candidate },
   });
 
   sendWebsocketMessage(data);

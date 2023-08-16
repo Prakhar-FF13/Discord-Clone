@@ -15,6 +15,13 @@ export const getPeer = (mail: string) => {
   return peers[mail];
 };
 
+export const addRemoteDescription = async (
+  mail: string,
+  desc: RTCSessionDescription
+) => {
+  await peers[mail].setRemoteDescription(desc).catch(reportError);
+};
+
 export default function closeVideoCall(dispatch: React.Dispatch<any>) {
   Object.keys(peers).forEach((k) => {
     peers[k].ontrack = null;
@@ -59,41 +66,40 @@ export function handleGetUserMediaError(
 }
 
 export function createPeerConnection(
-  mail: string,
-  dispatch: React.Dispatch<any>
+  myMail: string,
+  targetMail: string,
+  dispatch: React.Dispatch<any>,
+  type: string
 ) {
   const pc = new RTCPeerConnection({
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "stun:stun2.l.google.com:19302" },
-      { urls: "stun:stun3.l.google.com:19302" },
-      { urls: "stun:stun4.l.google.com:19302" },
       { urls: "stun:stun.stunprotocol.org" },
     ],
   });
 
   // called when a track is added to a peer connection
   const handleNegotiationNeededEvent = () => {
-    pc.createOffer()
-      .then((offer: RTCSessionDescriptionInit) => {
-        pc.setLocalDescription(offer).then(() => {
-          if (pc.localDescription) {
-            sendWebRTCOfferMessage(pc.localDescription, mail);
-          }
+    if (type === "offer")
+      pc.createOffer()
+        .then((offer: RTCSessionDescriptionInit) => {
+          pc.setLocalDescription(offer).then(() => {
+            if (pc.localDescription) {
+              sendWebRTCOfferMessage(pc.localDescription, targetMail, myMail);
+            }
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+          closeVideoCall(dispatch);
         });
-      })
-      .catch((e) => {
-        console.log(e);
-        closeVideoCall(dispatch);
-      });
   };
 
   // send ice candidate.
   // called when webrtc needs us to send ice candidate
   const handleICECandidateEvent = (ev: RTCPeerConnectionIceEvent) => {
     if (ev.candidate) {
-      sendWebRTCNewIceCandidateMessage(mail, ev.candidate);
+      sendWebRTCNewIceCandidateMessage(myMail, targetMail, ev.candidate);
     }
   };
 
@@ -130,21 +136,21 @@ export function createPeerConnection(
   pc.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
   pc.onsignalingstatechange = handleSignalingStateChangeEvent;
 
-  addPeer(mail, pc);
+  addPeer(targetMail, pc);
 
   return pc;
 }
 
 export const handleNewIceCandidateMsg = ({
-  mail,
+  sender,
   candidate,
 }: {
-  mail: string;
+  sender: string;
   candidate: RTCIceCandidate;
 }) => {
   const can = new RTCIceCandidate(candidate);
 
-  getPeer(mail)
+  getPeer(sender)
     .addIceCandidate(can)
     .catch((e) => console.log(e));
 };

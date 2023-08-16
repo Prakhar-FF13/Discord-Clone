@@ -7,6 +7,7 @@ import { VideoRoomDetails } from "../commonTypes";
 import { addLocalStream, addNewRoom } from "../store/actions/videoRoomActions";
 import {
   addPeer,
+  addRemoteDescription,
   createPeerConnection,
   handleGetUserMediaError,
 } from "./webRTC";
@@ -37,10 +38,11 @@ export const newRoomCreated = (
 
 // called when a new user joins a video room.
 export const videoRoomSendOffer = (
+  myMail: string,
   { mail }: { mail: string },
   dispatch: React.Dispatch<any>
 ) => {
-  const pc = createPeerConnection(mail, dispatch);
+  const pc = createPeerConnection(myMail, mail, dispatch, "offer");
   navigator.mediaDevices
     .getUserMedia(mediaConfig)
     .then((stream: MediaStream) => {
@@ -52,36 +54,65 @@ export const videoRoomSendOffer = (
       stream.getTracks().forEach((track) => pc.addTrack(track, stream));
     })
     .catch((e) => handleGetUserMediaError(e, dispatch));
+  addPeer(mail, pc);
 };
 
-export const videoRoomSendAnswer = (
+// called when an offer is recieved through websockets.
+export const videoRoomSendAnswer = async (
+  myMail: string,
   {
     offer,
     mail,
+    sender,
   }: {
-    offer: RTCSessionDescription;
+    offer: RTCSessionDescriptionInit;
     mail: string;
+    sender: string;
   },
   dispatch: React.Dispatch<any>
 ) => {
-  const pc = createPeerConnection(mail, dispatch);
+  const pc = createPeerConnection(myMail, sender, dispatch, "answer");
 
   const desc = new RTCSessionDescription(offer);
 
-  pc.setRemoteDescription(desc)
-    .then(() => navigator.mediaDevices.getUserMedia(mediaConfig))
-    .then((stream: MediaStream) => {
-      dispatch(addLocalStream(stream));
+  if (pc.signalingState !== "stable") {
+    // Set the local and remove descriptions for rollback; don't proceed
+    // until both return.
+    await Promise.all([
+      pc.setLocalDescription({ type: "rollback" }),
+      pc.setRemoteDescription(desc),
+    ]);
+    return;
+  } else {
+    await pc.setRemoteDescription(desc);
+  }
 
-      stream.getTracks().forEach((track) => pc.addTrack(track, stream));
-    })
-    .then(() => pc.createAnswer())
-    .then((answer) => pc.setLocalDescription(answer))
-    .then(() => {
-      if (pc.localDescription)
-        sendWebRTCAnswerMessage(pc.localDescription, mail);
-    })
-    .catch((e) => handleGetUserMediaError(e, dispatch));
+  const stream = await navigator.mediaDevices.getUserMedia(mediaConfig);
 
-  addPeer(mail, pc);
+  dispatch(addLocalStream(stream));
+
+  try {
+    stream
+      .getTracks()
+      .forEach((track) => pc.addTransceiver(track, { streams: [stream] }));
+  } catch (err) {
+    console.log(err);
+  }
+
+  await pc.setLocalDescription(await pc.createAnswer());
+
+  if (pc.localDescription)
+    sendWebRTCAnswerMessage(pc.localDescription, sender, myMail);
+};
+
+// called when an answer is recieved for an offer sent through websockets.
+export const videoRoomReceiveAnswer = ({
+  sender,
+  answer,
+}: {
+  answer: RTCSessionDescriptionInit;
+  sender: string;
+}) => {
+  const desc = new RTCSessionDescription(answer);
+  addRemoteDescription(sender, desc);
 };

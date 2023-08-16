@@ -23,8 +23,6 @@ func (m *Manager) sendPendingInvitations(targetMail string) error {
 		return nil
 	}
 
-	fmt.Println(x)
-
 	y := map[string]interface{}{
 		"kind":    "friend-invitations",
 		"payload": x,

@@ -52,8 +52,6 @@ func (c *Client) readMessages() {
 
 		json.Unmarshal(p, &cm)
 
-		fmt.Printf("\n-------\n%+v\n--------\n", cm)
-
 		if cm.Kind == "room-change" {
 			if cm.Payload.RoomId != c.room {
 
@@ -88,8 +86,9 @@ func (c *Client) readMessages() {
 			x := map[string]any{
 				"kind": "offer-video-room",
 				"payload": map[string]any{
-					"mail":  cm.Payload.Mail,
-					"offer": cm.Payload.Offer,
+					"mail":   cm.Payload.Mail,
+					"offer":  cm.Payload.Offer,
+					"sender": cm.Payload.Sender,
 				},
 			}
 
@@ -100,6 +99,7 @@ func (c *Client) readMessages() {
 				"payload": map[string]any{
 					"mail":   cm.Payload.Mail,
 					"answer": cm.Payload.Answer,
+					"sender": cm.Payload.Sender,
 				},
 			}
 
@@ -110,6 +110,7 @@ func (c *Client) readMessages() {
 				"payload": map[string]any{
 					"mail":      cm.Payload.Mail,
 					"candidate": cm.Payload.Candidate,
+					"sender":    cm.Payload.Sender,
 				},
 			}
 
@@ -141,8 +142,6 @@ func (c *Client) writeMessages() {
 			if err := c.conn.WriteMessage(websocket.TextMessage, message); err != nil {
 				log.Println("Failed to send message", err)
 			}
-			log.Println("Message sent")
-
 		}
 	}
 }

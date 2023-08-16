@@ -34,15 +34,11 @@ const reducer = (state = initState, action: Action) => {
         rooms: action.roomDetails,
       };
     case ACTION_TYPES.AddRemoteStream:
-      console.log("reducer remote stream", action);
-
       return {
         ...state,
         remoteStream: [...state.remoteStream, action.stream],
       };
     case ACTION_TYPES.AddLocalStream:
-      console.log("reducer local stream", action);
-
       return {
         ...state,
         localStream: action.stream,
