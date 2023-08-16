@@ -42,10 +42,7 @@ export default function closeVideoCall(dispatch: React.Dispatch<any>) {
   dispatch(closeVideoCallAction());
 }
 
-export function handleGetUserMediaError(
-  e: Error,
-  dispatch: React.Dispatch<any>
-) {
+export function handleGetUserMediaError(e: any, dispatch: React.Dispatch<any>) {
   switch (e.name) {
     case "NotFoundError":
       alert(
@@ -77,23 +74,6 @@ export function createPeerConnection(
       { urls: "stun:stun.stunprotocol.org" },
     ],
   });
-
-  // called when a track is added to a peer connection
-  const handleNegotiationNeededEvent = () => {
-    if (type === "offer")
-      pc.createOffer()
-        .then((offer: RTCSessionDescriptionInit) => {
-          pc.setLocalDescription(offer).then(() => {
-            if (pc.localDescription) {
-              sendWebRTCOfferMessage(pc.localDescription, targetMail, myMail);
-            }
-          });
-        })
-        .catch((e) => {
-          console.log(e);
-          closeVideoCall(dispatch);
-        });
-  };
 
   // send ice candidate.
   // called when webrtc needs us to send ice candidate
@@ -127,14 +107,36 @@ export function createPeerConnection(
   function handleICEGatheringStateChangeEvent(ev: Event) {
     // Our sample just logs information to console here,
     // but you can do whatever you need.
+    console.log("*** ICE gathering state changed to: " + pc.iceGatheringState);
   }
+
+  // called when a track is added to a peer connection
+  const handleNegotiationNeededEvent = () => {
+    pc.createOffer()
+      .then((offer: RTCSessionDescriptionInit) => {
+        pc.setLocalDescription(offer).then(() => {
+          if (pc.localDescription) {
+            sendWebRTCOfferMessage(
+              pc.localDescription,
+              targetMail,
+              myMail,
+              type
+            );
+          }
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        closeVideoCall(dispatch);
+      });
+  };
 
   pc.onicecandidate = handleICECandidateEvent;
   pc.ontrack = handleTrackEvent;
-  pc.onnegotiationneeded = handleNegotiationNeededEvent;
   pc.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
   pc.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
   pc.onsignalingstatechange = handleSignalingStateChangeEvent;
+  pc.onnegotiationneeded = handleNegotiationNeededEvent;
 
   addPeer(targetMail, pc);
 

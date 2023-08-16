@@ -37,23 +37,25 @@ export const newRoomCreated = (
 };
 
 // called when a new user joins a video room.
-export const videoRoomSendOffer = (
+export const videoRoomSendOffer = async (
   myMail: string,
   { mail }: { mail: string },
   dispatch: React.Dispatch<any>
 ) => {
   const pc = createPeerConnection(myMail, mail, dispatch, "offer");
-  navigator.mediaDevices
-    .getUserMedia(mediaConfig)
-    .then((stream: MediaStream) => {
-      dispatch(addLocalStream(stream));
 
-      // send the stream to connected peer.
-      // IMPORTANT - this triggers the onnegotiationstarted event on the peer connection
-      // it is handled in webRTC file.
-      stream.getTracks().forEach((track) => pc.addTrack(track, stream));
-    })
-    .catch((e) => handleGetUserMediaError(e, dispatch));
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia(mediaConfig);
+
+    dispatch(addLocalStream(stream));
+
+    stream
+      .getTracks()
+      .forEach((track) => pc.addTransceiver(track, { streams: [stream] }));
+  } catch (e) {
+    handleGetUserMediaError(e, dispatch);
+  }
+
   addPeer(mail, pc);
 };
 
@@ -62,11 +64,9 @@ export const videoRoomSendAnswer = async (
   myMail: string,
   {
     offer,
-    mail,
     sender,
   }: {
     offer: RTCSessionDescriptionInit;
-    mail: string;
     sender: string;
   },
   dispatch: React.Dispatch<any>
@@ -79,7 +79,7 @@ export const videoRoomSendAnswer = async (
     // Set the local and remove descriptions for rollback; don't proceed
     // until both return.
     await Promise.all([
-      pc.setLocalDescription({ type: "rollback" }),
+      // pc.setLocalDescription({ type: "rollback" }),
       pc.setRemoteDescription(desc),
     ]);
     return;
@@ -114,5 +114,6 @@ export const videoRoomReceiveAnswer = ({
   sender: string;
 }) => {
   const desc = new RTCSessionDescription(answer);
+
   addRemoteDescription(sender, desc);
 };

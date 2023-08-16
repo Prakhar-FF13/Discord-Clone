@@ -88,7 +88,6 @@ export default function Websocket(user: User, dispatch: Dispatch<any>) {
       }
 
       if (data && data.kind === WebSocketMessageKind.NewUserInVideoRoom) {
-        //@TODO Complete this.
         videoRoomHandler.videoRoomSendOffer(user.Email, data.payload, dispatch);
       }
 
@@ -153,14 +152,15 @@ export const sendEnterVideoRoomMessage = (roomId: string) => {
 export const sendWebRTCOfferMessage = (
   offer: RTCSessionDescription,
   mail: string,
-  sender: string
+  sender: string,
+  type: string
 ) => {
   const data = JSON.stringify({
     kind: WebSocketMessageKind.OfferVideoRoom,
     payload: { offer, mail, sender },
   });
 
-  sendWebsocketMessage(data);
+  if (type === "offer") sendWebsocketMessage(data);
 };
 
 export const sendWebRTCAnswerMessage = (
