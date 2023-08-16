@@ -6,7 +6,6 @@ import {
 import { VideoRoomDetails } from "../commonTypes";
 import { addLocalStream, addNewRoom } from "../store/actions/videoRoomActions";
 import {
-  addPeer,
   addRemoteDescription,
   createPeerConnection,
   handleGetUserMediaError,
@@ -55,8 +54,6 @@ export const videoRoomSendOffer = async (
   } catch (e) {
     handleGetUserMediaError(e, dispatch);
   }
-
-  addPeer(mail, pc);
 };
 
 // called when an offer is recieved through websockets.
@@ -78,13 +75,13 @@ export const videoRoomSendAnswer = async (
   if (pc.signalingState !== "stable") {
     // Set the local and remove descriptions for rollback; don't proceed
     // until both return.
-    await Promise.all([
-      // pc.setLocalDescription({ type: "rollback" }),
-      pc.setRemoteDescription(desc),
-    ]);
-    return;
+    // await Promise.all([
+    //   pc.setLocalDescription({ type: "rollback" }),
+    //   pc.setRemoteDescription(desc),
+    // ]);
+    await addRemoteDescription(sender, desc);
   } else {
-    await pc.setRemoteDescription(desc);
+    await addRemoteDescription(sender, desc);
   }
 
   const stream = await navigator.mediaDevices.getUserMedia(mediaConfig);

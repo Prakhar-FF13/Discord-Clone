@@ -113,17 +113,10 @@ export function createPeerConnection(
   // called when a track is added to a peer connection
   const handleNegotiationNeededEvent = () => {
     pc.createOffer()
-      .then((offer: RTCSessionDescriptionInit) => {
-        pc.setLocalDescription(offer).then(() => {
-          if (pc.localDescription) {
-            sendWebRTCOfferMessage(
-              pc.localDescription,
-              targetMail,
-              myMail,
-              type
-            );
-          }
-        });
+      .then((offer: RTCSessionDescriptionInit) => pc.setLocalDescription(offer))
+      .then(() => {
+        if (pc.localDescription)
+          sendWebRTCOfferMessage(pc.localDescription, targetMail, myMail, type);
       })
       .catch((e) => {
         console.log(e);
