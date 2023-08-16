@@ -1,13 +1,15 @@
 import { styled } from "@mui/system";
 import MainPageButton from "./MainPageButton";
 import CreateRoomButton from "./CreateRoomButton";
-import store, { RootState } from "../../../store/store";
+import { RootState } from "../../../store/store";
 import { ConnectedProps, connect } from "react-redux";
 import { IconButton, Tooltip } from "@mui/material";
 import { setJoinRoom } from "../../../store/actions/videoRoomActions";
 import { VideoRoomDetails } from "../../../commonTypes";
 import Avatar from "../../../common/components/Avatar";
 import { sendEnterVideoRoomMessage } from "../../../realtime";
+import { useContext } from "react";
+import { VideoContext } from "../../../store/reducers/videoReducer";
 
 const MainContainer = styled("div")({
   width: "72px",
@@ -18,9 +20,11 @@ const MainContainer = styled("div")({
   backgroundColor: "#202225",
 });
 
-function SideBar({ rooms, Email }: StateFromRedux) {
+function SideBar({ Email }: StateFromRedux) {
+  const { videoState, setVideoState } = useContext(VideoContext);
+
   const handleJoinRoom = (room: VideoRoomDetails) => {
-    store.dispatch(setJoinRoom(Email === room.createdBy, true, room));
+    setVideoState(setJoinRoom(Email === room.createdBy, true, room));
     sendEnterVideoRoomMessage(room.roomId);
   };
 
@@ -28,7 +32,7 @@ function SideBar({ rooms, Email }: StateFromRedux) {
     <MainContainer>
       <MainPageButton />
       <CreateRoomButton />
-      {rooms.map((r) => {
+      {videoState.rooms.map((r) => {
         return (
           <Tooltip key={r.roomId} title={r.label}>
             <IconButton
@@ -56,7 +60,6 @@ function SideBar({ rooms, Email }: StateFromRedux) {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    ...state.video,
     ...state.auth,
   };
 };

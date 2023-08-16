@@ -1,7 +1,8 @@
 import { ACTION_TYPES, Action } from "./../../commonTypes";
 import { VideoRoom } from "../../commonTypes";
+import { createContext, Dispatch } from "react";
 
-const initState: VideoRoom = {
+export const initState: VideoRoom = {
   isUserInRoom: false,
   isUserRoomCreator: false,
   activeRoomDetails: null,
@@ -12,6 +13,11 @@ const initState: VideoRoom = {
   screenSharingStream: null,
   isScreenSharingActive: false,
 };
+
+export const VideoContext = createContext<{
+  videoState: VideoRoom;
+  setVideoState: Dispatch<any>;
+}>({ videoState: initState, setVideoState: () => null });
 
 const reducer = (state = initState, action: Action) => {
   switch (action.type) {

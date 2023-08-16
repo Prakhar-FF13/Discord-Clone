@@ -9,6 +9,7 @@ import store from "../store/store";
 import { setAMessage, setRoomMessages } from "../store/actions/chatActions";
 import * as videoRoomHandler from "./videoRoomHandler";
 import { handleNewIceCandidateMsg } from "./webRTC";
+import { Dispatch } from "react";
 
 interface Payload {
   kind: WebSocketMessageKind;
@@ -17,7 +18,7 @@ interface Payload {
 
 let conn: WebSocket;
 
-export default function Websocket(user: User) {
+export default function Websocket(user: User, dispatch: Dispatch<any>) {
   conn = new WebSocket(
     `ws://localhost:4000/ws?email=${user.Email}&id=${user.Id}&username=${user.Username}`
   );
@@ -71,11 +72,11 @@ export default function Websocket(user: User) {
       }
 
       if (data && data.kind === WebSocketMessageKind.VideoRoomCreate) {
-        videoRoomHandler.newRoomCreated(data.payload);
+        videoRoomHandler.newRoomCreated(data.payload, dispatch);
       }
 
       if (data && data.kind === WebSocketMessageKind.OfferVideoRoom) {
-        videoRoomHandler.videoRoomSendAnswer(data.payload);
+        videoRoomHandler.videoRoomSendAnswer(data.payload, dispatch);
       }
 
       if (data && data.kind === WebSocketMessageKind.AnswerVideoRoom) {
@@ -83,7 +84,7 @@ export default function Websocket(user: User) {
 
       if (data && data.kind === WebSocketMessageKind.NewUserInVideoRoom) {
         //@TODO Complete this.
-        videoRoomHandler.videoRoomSendOffer(data.payload);
+        videoRoomHandler.videoRoomSendOffer(data.payload, dispatch);
       }
 
       if (data && data.kind === WebSocketMessageKind.NewIceCandidate) {

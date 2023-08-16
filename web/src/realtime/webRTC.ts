@@ -1,9 +1,9 @@
+import React from "react";
 import { sendWebRTCNewIceCandidateMessage, sendWebRTCOfferMessage } from ".";
 import {
   addRemoteStream,
   closeVideoCallAction,
 } from "../store/actions/videoRoomActions";
-import store from "../store/store";
 
 const peers: { [key: string]: RTCPeerConnection } = {};
 
@@ -15,7 +15,7 @@ export const getPeer = (mail: string) => {
   return peers[mail];
 };
 
-export default function closeVideoCall() {
+export default function closeVideoCall(dispatch: React.Dispatch<any>) {
   Object.keys(peers).forEach((k) => {
     peers[k].ontrack = null;
     peers[k].onicecandidate = null;
@@ -32,10 +32,13 @@ export default function closeVideoCall() {
     delete peers[k];
   });
 
-  store.dispatch(closeVideoCallAction());
+  dispatch(closeVideoCallAction());
 }
 
-export function handleGetUserMediaError(e: Error) {
+export function handleGetUserMediaError(
+  e: Error,
+  dispatch: React.Dispatch<any>
+) {
   switch (e.name) {
     case "NotFoundError":
       alert(
@@ -52,10 +55,13 @@ export function handleGetUserMediaError(e: Error) {
       break;
   }
 
-  closeVideoCall();
+  closeVideoCall(dispatch);
 }
 
-export function createPeerConnection(mail: string) {
+export function createPeerConnection(
+  mail: string,
+  dispatch: React.Dispatch<any>
+) {
   const pc = new RTCPeerConnection({
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
@@ -79,7 +85,7 @@ export function createPeerConnection(mail: string) {
       })
       .catch((e) => {
         console.log(e);
-        closeVideoCall();
+        closeVideoCall(dispatch);
       });
   };
 
@@ -92,14 +98,14 @@ export function createPeerConnection(mail: string) {
   };
 
   const handleTrackEvent = (ev: RTCTrackEvent) => {
-    store.dispatch(addRemoteStream(ev.streams[0]));
+    dispatch(addRemoteStream(ev.streams[0]));
   };
 
   const handleICEConnectionStateChangeEvent = (ev: Event) => {
     switch (pc.iceConnectionState) {
       case "closed":
       case "failed":
-        closeVideoCall();
+        closeVideoCall(dispatch);
         break;
     }
   };
@@ -107,7 +113,7 @@ export function createPeerConnection(mail: string) {
   function handleSignalingStateChangeEvent(ev: Event) {
     switch (pc.signalingState) {
       case "closed":
-        closeVideoCall();
+        closeVideoCall(dispatch);
         break;
     }
   }

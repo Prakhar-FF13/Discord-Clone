@@ -5,7 +5,6 @@ import {
 } from ".";
 import { VideoRoomDetails } from "../commonTypes";
 import { addLocalStream, addNewRoom } from "../store/actions/videoRoomActions";
-import store from "../store/store";
 import {
   addPeer,
   createPeerConnection,
@@ -29,41 +28,50 @@ export const joinVideoRoom = (roomId: string) => {
   sendJoinVideoRoomMessage(roomId);
 };
 
-export const newRoomCreated = (roomDetails: VideoRoomDetails[]) => {
-  store.dispatch(addNewRoom(roomDetails));
+export const newRoomCreated = (
+  roomDetails: VideoRoomDetails[],
+  dispatch: React.Dispatch<any>
+) => {
+  dispatch(addNewRoom(roomDetails));
 };
 
 // called when a new user joins a video room.
-export const videoRoomSendOffer = ({ mail }: { mail: string }) => {
-  const pc = createPeerConnection(mail);
+export const videoRoomSendOffer = (
+  { mail }: { mail: string },
+  dispatch: React.Dispatch<any>
+) => {
+  const pc = createPeerConnection(mail, dispatch);
   navigator.mediaDevices
     .getUserMedia(mediaConfig)
     .then((stream: MediaStream) => {
-      store.dispatch(addLocalStream(stream));
+      dispatch(addLocalStream(stream));
 
       // send the stream to connected peer.
       // IMPORTANT - this triggers the onnegotiationstarted event on the peer connection
       // it is handled in webRTC file.
       stream.getTracks().forEach((track) => pc.addTrack(track, stream));
     })
-    .catch(handleGetUserMediaError);
+    .catch((e) => handleGetUserMediaError(e, dispatch));
 };
 
-export const videoRoomSendAnswer = ({
-  offer,
-  mail,
-}: {
-  offer: RTCSessionDescription;
-  mail: string;
-}) => {
-  const pc = createPeerConnection(mail);
+export const videoRoomSendAnswer = (
+  {
+    offer,
+    mail,
+  }: {
+    offer: RTCSessionDescription;
+    mail: string;
+  },
+  dispatch: React.Dispatch<any>
+) => {
+  const pc = createPeerConnection(mail, dispatch);
 
   const desc = new RTCSessionDescription(offer);
 
   pc.setRemoteDescription(desc)
     .then(() => navigator.mediaDevices.getUserMedia(mediaConfig))
     .then((stream: MediaStream) => {
-      store.dispatch(addLocalStream(stream));
+      dispatch(addLocalStream(stream));
 
       stream.getTracks().forEach((track) => pc.addTrack(track, stream));
     })
@@ -73,7 +81,7 @@ export const videoRoomSendAnswer = ({
       if (pc.localDescription)
         sendWebRTCAnswerMessage(pc.localDescription, mail);
     })
-    .catch(handleGetUserMediaError);
+    .catch((e) => handleGetUserMediaError(e, dispatch));
 
   addPeer(mail, pc);
 };
