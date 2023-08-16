@@ -74,7 +74,6 @@ export default function Websocket(user: User, dispatch: Dispatch<any>) {
       }
 
       if (data && data.kind === WebSocketMessageKind.OfferVideoRoom) {
-        console.log("Got offer: ", data.payload);
         videoRoomHandler.videoRoomSendAnswer(
           user.Email,
           data.payload,
@@ -83,7 +82,6 @@ export default function Websocket(user: User, dispatch: Dispatch<any>) {
       }
 
       if (data && data.kind === WebSocketMessageKind.AnswerVideoRoom) {
-        console.log("Got answer: ", data.payload);
         videoRoomHandler.videoRoomReceiveAnswer(data.payload);
       }
 
@@ -92,7 +90,6 @@ export default function Websocket(user: User, dispatch: Dispatch<any>) {
       }
 
       if (data && data.kind === WebSocketMessageKind.NewIceCandidate) {
-        console.log("Got ice candidate: ", data.payload);
         handleNewIceCandidateMsg(data.payload);
       }
     }
