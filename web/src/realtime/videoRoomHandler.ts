@@ -48,9 +48,7 @@ export const videoRoomSendOffer = async (
 
     dispatch(addLocalStream(stream));
 
-    stream
-      .getTracks()
-      .forEach((track) => pc.addTransceiver(track, { streams: [stream] }));
+    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
   } catch (e) {
     handleGetUserMediaError(e, dispatch);
   }
@@ -89,9 +87,7 @@ export const videoRoomSendAnswer = async (
   dispatch(addLocalStream(stream));
 
   try {
-    stream
-      .getTracks()
-      .forEach((track) => pc.addTransceiver(track, { streams: [stream] }));
+    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
   } catch (err) {
     console.log(err);
   }
