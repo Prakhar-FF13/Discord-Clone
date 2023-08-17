@@ -49,6 +49,13 @@ export const closePeer = (pc: RTCPeerConnection) => {
       transceiver.stop();
     });
 
+    //@ts-ignore
+    if (pc.closeAllConnections) {
+      console.log("called");
+      //@ts-ignore
+      pc.closeAllConnections();
+    }
+
     pc.close();
   } catch (e) {
     console.log("Error: ", e);

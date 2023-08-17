@@ -45,37 +45,6 @@ const reducer = (state = initState, action: Action) => {
         localStream: action.stream,
       };
     case ACTION_TYPES.CloseVideoCall:
-      const local: HTMLMediaElement = document.getElementById(
-        "local_stream"
-      ) as HTMLMediaElement;
-
-      if (local && local.srcObject) {
-        local.pause();
-        (local.srcObject as MediaStream)
-          .getTracks()
-          .forEach((trk) => trk.stop());
-        local.srcObject = null;
-      }
-
-      const remotes = document.getElementsByClassName("remote");
-
-      for (let i = 0; i < remotes.length; i++) {
-        if (remotes[i]) {
-          const rs: HTMLMediaElement = remotes[i] as HTMLMediaElement;
-          if (rs.srcObject) {
-            rs.pause();
-            (rs.srcObject as MediaStream)
-              .getTracks()
-              .forEach((trk) => trk.stop());
-            rs.srcObject = null;
-          }
-        }
-      }
-
-      state.localStream?.getTracks().forEach((trk) => trk.stop());
-      state.remoteUsers?.forEach((rs) =>
-        rs.stream.getTracks().forEach((trk) => trk.stop())
-      );
       return {
         ...state,
         isUserInRoom: false,
@@ -88,23 +57,6 @@ const reducer = (state = initState, action: Action) => {
         isScreenSharingActive: false,
       };
     case ACTION_TYPES.UserLeaveVideoRoom:
-      state.remoteUsers.forEach((ru, idx) => {
-        if (ru.email === action.mail) {
-          const rm = document.getElementById(
-            `remote-video-${idx}`
-          ) as HTMLMediaElement;
-          if (rm && rm.srcObject) {
-            rm.pause();
-            (rm.srcObject as MediaStream)
-              .getTracks()
-              .forEach((trk) => trk.stop());
-            rm.srcObject = null;
-          }
-
-          ru.stream.getTracks().forEach((trk) => trk.stop());
-        }
-      });
-
       const newRemoteUsers = state.remoteUsers.filter(
         (rs) => rs.email !== action.mail
       );

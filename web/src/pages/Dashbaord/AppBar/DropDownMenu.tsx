@@ -5,8 +5,6 @@ import { IconButton } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 import { logout } from "../../../common/utils/auth";
 
-interface DropDownMenuProps {}
-
 export default function DropDownMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

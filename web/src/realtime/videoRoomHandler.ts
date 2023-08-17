@@ -48,11 +48,16 @@ export const videoRoomSendOffer = async (
   const pc = createPeerConnection(myMail, mail, dispatch, "offer");
 
   try {
-    const stream = await navigator.mediaDevices.getUserMedia(mediaConfig);
+    const localStream = await navigator.mediaDevices.getUserMedia(mediaConfig);
 
-    dispatch(addLocalStream(stream));
+    dispatch(addLocalStream(localStream));
 
-    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+    localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
+
+    //@ts-ignore
+    pc.closeAllConnections = () => {
+      localStream.getTracks().forEach((track) => track.stop());
+    };
   } catch (e) {
     handleGetUserMediaError(e, dispatch);
   }
@@ -89,12 +94,17 @@ export const videoRoomSendAnswer = async (
     console.log("Error setting remote description in videoRoomSendAnswer", e);
   }
 
-  const stream = await navigator.mediaDevices.getUserMedia(mediaConfig);
+  const localStream = await navigator.mediaDevices.getUserMedia(mediaConfig);
 
-  dispatch(addLocalStream(stream));
+  dispatch(addLocalStream(localStream));
+
+  //@ts-ignore
+  pc.closeAllConnections = () => {
+    localStream.getTracks().forEach((track) => track.stop());
+  };
 
   try {
-    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+    localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
   } catch (err) {
     console.log(err);
   }
