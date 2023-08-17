@@ -1,5 +1,3 @@
-import { Stream } from "stream";
-
 export interface User {
   Id?: number;
   Email: string;

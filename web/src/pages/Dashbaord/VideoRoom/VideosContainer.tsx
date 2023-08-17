@@ -10,7 +10,7 @@ const MainContainer = styled("div")({
 });
 
 const VideoTag = styled("video")({
-  width: "50%",
+  width: "33%",
 });
 
 const VideoContainer = () => {
@@ -35,9 +35,9 @@ const VideoContainer = () => {
     <MainContainer>
       <VideoTag id="local_stream" autoPlay />
 
-      {videoState.remoteStream.map((_, idx) => (
-        <VideoTag className="remote" autoPlay key={`${idx}`} />
-      ))}
+      {videoState.remoteStream.map((_, idx) =>
+        idx > 0 ? <VideoTag className="remote" autoPlay key={`${idx}`} /> : null
+      )}
     </MainContainer>
   );
 };

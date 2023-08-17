@@ -44,7 +44,21 @@ const reducer = (state = initState, action: Action) => {
         localStream: action.stream,
       };
     case ACTION_TYPES.CloseVideoCall:
-      return { ...initState };
+      state.localStream?.getTracks().forEach((trk) => trk.stop());
+      state.remoteStream?.forEach((rs) =>
+        rs.getTracks().forEach((trk) => trk.stop())
+      );
+      return {
+        ...state,
+        isUserInRoom: false,
+        isUserRoomCreator: false,
+        activeRoomDetails: null,
+        localStream: null,
+        remoteStream: [],
+        audioOnly: false,
+        screenSharingStream: null,
+        isScreenSharingActive: false,
+      };
     default:
       return state;
   }

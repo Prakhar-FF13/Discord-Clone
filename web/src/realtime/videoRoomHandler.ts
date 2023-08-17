@@ -73,11 +73,10 @@ export const videoRoomSendAnswer = async (
   if (pc.signalingState !== "stable") {
     // Set the local and remove descriptions for rollback; don't proceed
     // until both return.
-    // await Promise.all([
-    //   pc.setLocalDescription({ type: "rollback" }),
-    //   pc.setRemoteDescription(desc),
-    // ]);
-    await addRemoteDescription(sender, desc);
+    await Promise.all([
+      pc.setLocalDescription({ type: "rollback" }),
+      addRemoteDescription(sender, desc),
+    ]);
   } else {
     await addRemoteDescription(sender, desc);
   }
