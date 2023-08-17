@@ -88,7 +88,7 @@ export function createPeerConnection(
   };
 
   const handleTrackEvent = (ev: RTCTrackEvent) => {
-    dispatch(addRemoteStream(ev.streams[0]));
+    dispatch(addRemoteStream(targetMail, ev.streams[0]));
   };
 
   const handleICEConnectionStateChangeEvent = (ev: Event) => {

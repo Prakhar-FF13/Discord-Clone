@@ -1,7 +1,20 @@
-import { ACTION_TYPES, VideoRoomDetails } from "../../commonTypes";
+import {
+  ACTION_TYPES,
+  AddRemoteStreamAction,
+  VideoRoomDetails,
+} from "../../commonTypes";
 
-export const addRemoteStream = (stream: MediaStream) => {
-  return { type: ACTION_TYPES.AddRemoteStream, stream };
+export const addRemoteStream = (
+  email: string,
+  stream: MediaStream
+): AddRemoteStreamAction => {
+  return {
+    type: ACTION_TYPES.AddRemoteStream,
+    remoteUser: {
+      email,
+      stream,
+    },
+  };
 };
 
 export const addLocalStream = (stream: MediaStream | null) => {

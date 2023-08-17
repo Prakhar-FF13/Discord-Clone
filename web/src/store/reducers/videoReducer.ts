@@ -8,7 +8,7 @@ export const initState: VideoRoom = {
   activeRoomDetails: null,
   rooms: [],
   localStream: null,
-  remoteStream: [],
+  remoteUsers: [],
   audioOnly: false,
   screenSharingStream: null,
   isScreenSharingActive: false,
@@ -36,7 +36,7 @@ const reducer = (state = initState, action: Action) => {
     case ACTION_TYPES.AddRemoteStream:
       return {
         ...state,
-        remoteStream: [...state.remoteStream, action.stream],
+        remoteUsers: [...state.remoteUsers, action.remoteUser],
       };
     case ACTION_TYPES.AddLocalStream:
       return {
@@ -60,8 +60,8 @@ const reducer = (state = initState, action: Action) => {
       }
 
       state.localStream?.getTracks().forEach((trk) => trk.stop());
-      state.remoteStream?.forEach((rs) =>
-        rs.getTracks().forEach((trk) => trk.stop())
+      state.remoteUsers?.forEach((rs) =>
+        rs.stream.getTracks().forEach((trk) => trk.stop())
       );
       return {
         ...state,

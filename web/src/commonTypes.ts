@@ -45,13 +45,18 @@ export interface VideoRoomDetails {
   roomId: string;
   label: string;
 }
+
+export interface RemoteVideoRoomUser {
+  email: string;
+  stream: MediaStream;
+}
 export interface VideoRoom {
   isUserInRoom: boolean;
   isUserRoomCreator: boolean;
   activeRoomDetails: VideoRoomDetails | null;
   rooms: VideoRoomDetails[];
   localStream: MediaStream | null;
-  remoteStream: MediaStream[];
+  remoteUsers: RemoteVideoRoomUser[];
   audioOnly: boolean;
   screenSharingStream: MediaStream | null;
   isScreenSharingActive: boolean;
@@ -72,6 +77,7 @@ export enum WebSocketMessageKind {
   AnswerVideoRoom = "answer-video-room",
   NewUserInVideoRoom = "new-user-video-room",
   NewIceCandidate = "new-ice-candidate",
+  LeaveVideoRoom = "leave-video-room",
 }
 
 export enum ACTION_TYPES {
@@ -105,7 +111,7 @@ export interface CloseVideoCallAction {
 
 export interface AddRemoteStreamAction {
   type: ACTION_TYPES.AddRemoteStream;
-  stream: MediaStream;
+  remoteUser: RemoteVideoRoomUser;
 }
 
 export interface AddLocalStreamAction {

@@ -10,7 +10,8 @@ const MainContainer = styled("div")({
 });
 
 const VideoTag = styled("video")({
-  width: "33%",
+  minWidth: "33%",
+  flex: 1,
 });
 
 const VideoContainer = () => {
@@ -27,7 +28,7 @@ const VideoContainer = () => {
 
     for (let i = 0; i < remotes.length; i++) {
       const rs: HTMLMediaElement = remotes[i] as HTMLMediaElement;
-      rs.srcObject = videoState.remoteStream[i];
+      rs.srcObject = videoState.remoteUsers[i].stream;
     }
   }, [videoState]);
 
@@ -35,7 +36,7 @@ const VideoContainer = () => {
     <MainContainer>
       <VideoTag id="local_stream" autoPlay />
 
-      {videoState.remoteStream.map((_, idx) =>
+      {videoState.remoteUsers.map((_, idx) =>
         idx > 0 ? <VideoTag className="remote" autoPlay key={`${idx}`} /> : null
       )}
     </MainContainer>
