@@ -4,7 +4,11 @@ import {
   sendWebRTCAnswerMessage,
 } from ".";
 import { VideoRoomDetails } from "../commonTypes";
-import { addLocalStream, addNewRoom } from "../store/actions/videoRoomActions";
+import {
+  addLocalStream,
+  addNewRoom,
+  leaveRoom,
+} from "../store/actions/videoRoomActions";
 import {
   addRemoteDescription,
   createPeerConnection,
@@ -115,4 +119,11 @@ export const videoRoomReceiveAnswer = ({
   const desc = new RTCSessionDescription(answer);
 
   addRemoteDescription(sender, desc);
+};
+
+export const leaveVideoRoomHandler = (
+  mail: string,
+  dispatch: React.Dispatch<any>
+) => {
+  dispatch(leaveRoom(mail));
 };

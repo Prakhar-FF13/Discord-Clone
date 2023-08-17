@@ -82,6 +82,8 @@ func (c *Client) readMessages() {
 			c.joinVideoRoom(cm.Payload.RoomId)
 		} else if cm.Kind == "video-room-enter" {
 			c.enterVideoRoom(cm.Payload.RoomId)
+		} else if cm.Kind == "leave-video-room" {
+			c.leaveVideoRoom()
 		} else if cm.Kind == "offer-video-room" {
 			x := map[string]any{
 				"kind": "offer-video-room",
@@ -188,4 +190,13 @@ func (c *Client) redirectToMail(mail string, payload map[string]any) {
 	}
 
 	c.manager.emailToClient[mail].egress <- payloadJson
+}
+
+func (c *Client) leaveVideoRoom() {
+	if _, ok := c.manager.videoRooms[c.videoRoom]; ok {
+		delete(c.manager.videoRooms[c.videoRoom].participants, c)
+		c.manager.userLeftVideoRoom(c.email, c.videoRoom)
+
+		c.videoRoom = ""
+	}
 }

@@ -74,6 +74,15 @@ const reducer = (state = initState, action: Action) => {
         screenSharingStream: null,
         isScreenSharingActive: false,
       };
+    case ACTION_TYPES.UserLeaveVideoRoom:
+      const newRemoteUsers = state.remoteUsers.filter(
+        (rs) => rs.email !== action.mail
+      );
+
+      return {
+        ...state,
+        remoteUsers: newRemoteUsers,
+      };
     default:
       return state;
   }

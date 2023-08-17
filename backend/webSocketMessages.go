@@ -225,3 +225,25 @@ func (m *Manager) newUserJoinedARoom(mail string, roomId string) {
 		conn.egress <- paylodJson
 	}
 }
+
+func (m *Manager) userLeftVideoRoom(mail string, roomId string) {
+	payload := map[string]any{
+		"kind": "leave-video-room",
+		"payload": map[string]any{
+			"mail": mail,
+		},
+	}
+
+	paylodJson, err := encodeToJSON(payload)
+
+	if err != nil {
+		fmt.Println("Error notifying other users that a user has left the video room")
+		return
+	}
+
+	for conn := range m.videoRooms[roomId].participants {
+		if conn.email != mail {
+			conn.egress <- paylodJson
+		}
+	}
+}

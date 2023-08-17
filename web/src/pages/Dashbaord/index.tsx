@@ -29,6 +29,8 @@ const Dashboard = ({
 }) => {
   const { videoState, setVideoState } = useContext(VideoContext);
 
+  console.log(videoState);
+
   useEffect(() => {
     const userDetails: string | null = localStorage.getItem("user");
 

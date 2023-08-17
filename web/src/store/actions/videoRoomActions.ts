@@ -38,6 +38,13 @@ export const setJoinRoom = (
   };
 };
 
+export const leaveRoom = (mail: string) => {
+  return {
+    type: ACTION_TYPES.UserLeaveVideoRoom,
+    mail,
+  };
+};
+
 export const addNewRoom = (roomDetails: VideoRoomDetails[]) => {
   return {
     type: ACTION_TYPES.AddNewRoom,

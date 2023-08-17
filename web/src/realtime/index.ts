@@ -92,6 +92,11 @@ export default function Websocket(user: User, dispatch: Dispatch<any>) {
       if (data && data.kind === WebSocketMessageKind.NewIceCandidate) {
         handleNewIceCandidateMsg(data.payload);
       }
+
+      if (data && data.kind === WebSocketMessageKind.LeaveVideoRoom) {
+        console.log(data.payload);
+        videoRoomHandler.leaveVideoRoomHandler(data.payload.mail, dispatch);
+      }
     }
   };
 }
@@ -146,10 +151,9 @@ export const sendEnterVideoRoomMessage = (roomId: string) => {
   sendWebsocketMessage(data);
 };
 
-export const sendLeaveVideoRoomMessage = (roomId: string) => {
+export const sendLeaveVideoRoomMessage = () => {
   const data = JSON.stringify({
     kind: WebSocketMessageKind.LeaveVideoRoom,
-    payload: { roomId },
   });
 
   sendWebsocketMessage(data);

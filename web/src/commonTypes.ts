@@ -103,6 +103,12 @@ export enum ACTION_TYPES {
   AddRemoteStream = "ADD_REMOTE_STREAM",
   AddLocalStream = "ADD_LOCAL_STREAM",
   CloseVideoCall = "CLOSE_VIDEO_CALL",
+  UserLeaveVideoRoom = "USER_LEAVE_VIDEO_ROOM",
+}
+
+export interface UserLeaveVideoRoomAction {
+  type: ACTION_TYPES.UserLeaveVideoRoom;
+  mail: string;
 }
 
 export interface CloseVideoCallAction {
@@ -202,4 +208,5 @@ export type Action =
   | AddNewRoomAction
   | AddRemoteStreamAction
   | AddLocalStreamAction
-  | CloseVideoCallAction;
+  | CloseVideoCallAction
+  | UserLeaveVideoRoomAction;
