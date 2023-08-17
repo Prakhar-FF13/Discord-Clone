@@ -32,8 +32,6 @@ const VideoContainer = () => {
     }
   }, [videoState]);
 
-  console.log(videoState.remoteUsers);
-
   return (
     <MainContainer>
       <VideoTag id="local_stream" autoPlay />

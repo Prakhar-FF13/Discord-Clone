@@ -94,7 +94,6 @@ export default function Websocket(user: User, dispatch: Dispatch<any>) {
       }
 
       if (data && data.kind === WebSocketMessageKind.LeaveVideoRoom) {
-        console.log(data.payload);
         videoRoomHandler.leaveVideoRoomHandler(data.payload.mail, dispatch);
       }
     }
