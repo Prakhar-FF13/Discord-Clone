@@ -3,11 +3,15 @@ import { sendWebRTCNewIceCandidateMessage, sendWebRTCOfferMessage } from ".";
 import {
   addRemoteStream,
   closeVideoCallAction,
+  leaveRoom,
 } from "../store/actions/videoRoomActions";
 
 const peers: { [key: string]: RTCPeerConnection } = {};
 
 export const addPeer = (mail: string, pc: RTCPeerConnection) => {
+  if (peers[mail]) {
+    peers[mail].close();
+  }
   peers[mail] = pc;
 };
 
@@ -33,18 +37,22 @@ export const closePeerWithEmail = (mail: string) => {
 };
 
 export const closePeer = (pc: RTCPeerConnection) => {
-  pc.ontrack = null;
-  pc.onicecandidate = null;
-  pc.oniceconnectionstatechange = null;
-  pc.onsignalingstatechange = null;
-  pc.onicegatheringstatechange = null;
-  pc.onnegotiationneeded = null;
+  try {
+    pc.ontrack = null;
+    pc.onicecandidate = null;
+    pc.oniceconnectionstatechange = null;
+    pc.onsignalingstatechange = null;
+    pc.onicegatheringstatechange = null;
+    pc.onnegotiationneeded = null;
 
-  pc.getTransceivers().forEach((transceiver) => {
-    transceiver.stop();
-  });
+    pc.getTransceivers().forEach((transceiver) => {
+      transceiver.stop();
+    });
 
-  pc.close();
+    pc.close();
+  } catch (e) {
+    console.log("Error: ", e);
+  }
 };
 
 export default function closeVideoCall(dispatch: React.Dispatch<any>) {
@@ -103,8 +111,9 @@ export function createPeerConnection(
 
   const handleICEConnectionStateChangeEvent = (ev: Event) => {
     switch (pc.iceConnectionState) {
+      case "disconnected":
       case "closed":
-        closePeer(pc);
+        dispatch(leaveRoom(targetMail));
         break;
       case "failed":
         closeVideoCall(dispatch);

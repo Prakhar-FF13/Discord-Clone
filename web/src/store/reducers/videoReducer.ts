@@ -49,15 +49,27 @@ const reducer = (state = initState, action: Action) => {
         "local_stream"
       ) as HTMLMediaElement;
 
-      local.pause();
-      (local.srcObject as MediaStream).getTracks().forEach((trk) => trk.stop());
+      if (local && local.srcObject) {
+        local.pause();
+        (local.srcObject as MediaStream)
+          .getTracks()
+          .forEach((trk) => trk.stop());
+        local.srcObject = null;
+      }
 
       const remotes = document.getElementsByClassName("remote");
 
       for (let i = 0; i < remotes.length; i++) {
-        const rs: HTMLMediaElement = remotes[i] as HTMLMediaElement;
-        rs.pause();
-        (rs.srcObject as MediaStream).getTracks().forEach((trk) => trk.stop());
+        if (remotes[i]) {
+          const rs: HTMLMediaElement = remotes[i] as HTMLMediaElement;
+          if (rs.srcObject) {
+            rs.pause();
+            (rs.srcObject as MediaStream)
+              .getTracks()
+              .forEach((trk) => trk.stop());
+            rs.srcObject = null;
+          }
+        }
       }
 
       state.localStream?.getTracks().forEach((trk) => trk.stop());
@@ -81,12 +93,15 @@ const reducer = (state = initState, action: Action) => {
           const rm = document.getElementById(
             `remote-video-${idx}`
           ) as HTMLMediaElement;
-          if (rm) {
+          if (rm && rm.srcObject) {
             rm.pause();
             (rm.srcObject as MediaStream)
               .getTracks()
               .forEach((trk) => trk.stop());
+            rm.srcObject = null;
           }
+
+          ru.stream.getTracks().forEach((trk) => trk.stop());
         }
       });
 

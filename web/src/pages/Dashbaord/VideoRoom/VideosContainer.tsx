@@ -18,34 +18,33 @@ const VideoContainer = () => {
   const { videoState } = useContext(VideoContext);
 
   useEffect(() => {
-    const local: HTMLMediaElement = document.getElementById(
-      "local_stream"
-    ) as HTMLMediaElement;
-
-    local.srcObject = videoState.localStream;
+    const local = document.getElementById("local_stream") as HTMLMediaElement;
+    if (local) {
+      local.srcObject = videoState.localStream;
+    }
 
     const remotes = document.getElementsByClassName("remote");
 
     for (let i = 0; i < remotes.length; i++) {
-      const rs: HTMLMediaElement = remotes[i] as HTMLMediaElement;
-      rs.srcObject = videoState.remoteUsers[i].stream;
+      const rs = remotes[i] as HTMLMediaElement;
+      if (rs) {
+        rs.srcObject = videoState.remoteUsers[i].stream;
+      }
     }
   }, [videoState]);
 
   return (
     <MainContainer>
-      <VideoTag id="local_stream" autoPlay />
+      {videoState.localStream && <VideoTag id="local_stream" autoPlay />}
 
-      {videoState.remoteUsers.map((_, idx) =>
-        idx > 0 ? (
-          <VideoTag
-            className="remote"
-            autoPlay
-            key={`${idx}`}
-            id={`remote-video-${idx}`}
-          />
-        ) : null
-      )}
+      {videoState.remoteUsers.map((_, idx) => (
+        <VideoTag
+          className="remote"
+          autoPlay
+          key={`${idx}`}
+          id={`remote-video-${idx}`}
+        />
+      ))}
     </MainContainer>
   );
 };
