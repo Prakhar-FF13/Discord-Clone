@@ -44,6 +44,21 @@ const reducer = (state = initState, action: Action) => {
         localStream: action.stream,
       };
     case ACTION_TYPES.CloseVideoCall:
+      const local: HTMLMediaElement = document.getElementById(
+        "local_stream"
+      ) as HTMLMediaElement;
+
+      local.pause();
+      (local.srcObject as MediaStream).getTracks().forEach((trk) => trk.stop());
+
+      const remotes = document.getElementsByClassName("remote");
+
+      for (let i = 0; i < remotes.length; i++) {
+        const rs: HTMLMediaElement = remotes[i] as HTMLMediaElement;
+        rs.pause();
+        (rs.srcObject as MediaStream).getTracks().forEach((trk) => trk.stop());
+      }
+
       state.localStream?.getTracks().forEach((trk) => trk.stop());
       state.remoteStream?.forEach((rs) =>
         rs.getTracks().forEach((trk) => trk.stop())

@@ -19,7 +19,11 @@ export const addRemoteDescription = async (
   mail: string,
   desc: RTCSessionDescription
 ) => {
-  await peers[mail].setRemoteDescription(desc).catch(reportError);
+  try {
+    await peers[mail].setRemoteDescription(desc).catch(reportError);
+  } catch (e) {
+    console.log("Error setting remote description in addRemoteDescription", e);
+  }
 };
 
 export default function closeVideoCall(dispatch: React.Dispatch<any>) {
@@ -143,9 +147,8 @@ export const handleNewIceCandidateMsg = ({
   sender: string;
   candidate: RTCIceCandidate;
 }) => {
-  const can = new RTCIceCandidate(candidate);
+  const can = new RTCIceCandidate(candidate),
+    pc = getPeer(sender);
 
-  getPeer(sender)
-    .addIceCandidate(can)
-    .catch((e) => console.log(e));
+  if (pc) pc.addIceCandidate(can).catch((e) => console.log(e));
 };

@@ -24,6 +24,10 @@ function SideBar({ Email }: StateFromRedux) {
   const { videoState, setVideoState } = useContext(VideoContext);
 
   const handleJoinRoom = (room: VideoRoomDetails) => {
+    if (videoState.isUserInRoom) {
+      alert("Cannot start another video call as 1 is already in progress");
+      return;
+    }
     setVideoState(setJoinRoom(Email === room.createdBy, true, room));
     sendEnterVideoRoomMessage(room.roomId);
   };

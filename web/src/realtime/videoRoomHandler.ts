@@ -70,15 +70,19 @@ export const videoRoomSendAnswer = async (
 
   const desc = new RTCSessionDescription(offer);
 
-  if (pc.signalingState !== "stable") {
-    // Set the local and remove descriptions for rollback; don't proceed
-    // until both return.
-    await Promise.all([
-      pc.setLocalDescription({ type: "rollback" }),
-      addRemoteDescription(sender, desc),
-    ]);
-  } else {
-    await addRemoteDescription(sender, desc);
+  try {
+    if (pc.signalingState !== "stable") {
+      // Set the local and remove descriptions for rollback; don't proceed
+      // until both return.
+      await Promise.all([
+        pc.setLocalDescription({ type: "rollback" }),
+        addRemoteDescription(sender, desc),
+      ]);
+    } else {
+      await addRemoteDescription(sender, desc);
+    }
+  } catch (e) {
+    console.log("Error setting remote description in videoRoomSendAnswer", e);
   }
 
   const stream = await navigator.mediaDevices.getUserMedia(mediaConfig);
@@ -90,8 +94,11 @@ export const videoRoomSendAnswer = async (
   } catch (err) {
     console.log(err);
   }
-
-  await pc.setLocalDescription(await pc.createAnswer());
+  try {
+    await pc.setLocalDescription(await pc.createAnswer());
+  } catch (e) {
+    console.log("Error setting local description in sendVideoAnswer", e);
+  }
 
   if (pc.localDescription)
     sendWebRTCAnswerMessage(pc.localDescription, sender, myMail);
