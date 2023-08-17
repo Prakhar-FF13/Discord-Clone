@@ -32,12 +32,21 @@ const VideoContainer = () => {
     }
   }, [videoState]);
 
+  console.log(videoState.remoteUsers);
+
   return (
     <MainContainer>
       <VideoTag id="local_stream" autoPlay />
 
       {videoState.remoteUsers.map((_, idx) =>
-        idx > 0 ? <VideoTag className="remote" autoPlay key={`${idx}`} /> : null
+        idx > 0 ? (
+          <VideoTag
+            className="remote"
+            autoPlay
+            key={`${idx}`}
+            id={`remote-video-${idx}`}
+          />
+        ) : null
       )}
     </MainContainer>
   );

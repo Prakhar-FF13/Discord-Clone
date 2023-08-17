@@ -26,20 +26,30 @@ export const addRemoteDescription = async (
   }
 };
 
+export const closePeerWithEmail = (mail: string) => {
+  const pc = getPeer(mail);
+  if (pc) closePeer(pc);
+  delete peers[mail];
+};
+
+export const closePeer = (pc: RTCPeerConnection) => {
+  pc.ontrack = null;
+  pc.onicecandidate = null;
+  pc.oniceconnectionstatechange = null;
+  pc.onsignalingstatechange = null;
+  pc.onicegatheringstatechange = null;
+  pc.onnegotiationneeded = null;
+
+  pc.getTransceivers().forEach((transceiver) => {
+    transceiver.stop();
+  });
+
+  pc.close();
+};
+
 export default function closeVideoCall(dispatch: React.Dispatch<any>) {
   Object.keys(peers).forEach((k) => {
-    peers[k].ontrack = null;
-    peers[k].onicecandidate = null;
-    peers[k].oniceconnectionstatechange = null;
-    peers[k].onsignalingstatechange = null;
-    peers[k].onicegatheringstatechange = null;
-    peers[k].onnegotiationneeded = null;
-
-    peers[k].getTransceivers().forEach((transceiver) => {
-      transceiver.stop();
-    });
-
-    peers[k].close();
+    closePeer(peers[k]);
     delete peers[k];
   });
 
@@ -94,6 +104,8 @@ export function createPeerConnection(
   const handleICEConnectionStateChangeEvent = (ev: Event) => {
     switch (pc.iceConnectionState) {
       case "closed":
+        closePeer(pc);
+        break;
       case "failed":
         closeVideoCall(dispatch);
         break;

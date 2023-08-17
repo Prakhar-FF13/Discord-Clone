@@ -1,6 +1,7 @@
 import { ACTION_TYPES, Action } from "./../../commonTypes";
 import { VideoRoom } from "../../commonTypes";
 import { createContext, Dispatch } from "react";
+import { closePeerWithEmail } from "../../realtime/webRTC";
 
 export const initState: VideoRoom = {
   isUserInRoom: false,
@@ -69,15 +70,31 @@ const reducer = (state = initState, action: Action) => {
         isUserRoomCreator: false,
         activeRoomDetails: null,
         localStream: null,
-        remoteStream: [],
+        remoteUsers: [],
         audioOnly: false,
         screenSharingStream: null,
         isScreenSharingActive: false,
       };
     case ACTION_TYPES.UserLeaveVideoRoom:
+      state.remoteUsers.forEach((ru, idx) => {
+        if (ru.email === action.mail) {
+          const rm = document.getElementById(
+            `remote-video-${idx}`
+          ) as HTMLMediaElement;
+          if (rm) {
+            rm.pause();
+            (rm.srcObject as MediaStream)
+              .getTracks()
+              .forEach((trk) => trk.stop());
+          }
+        }
+      });
+
       const newRemoteUsers = state.remoteUsers.filter(
         (rs) => rs.email !== action.mail
       );
+
+      closePeerWithEmail(action.mail);
 
       return {
         ...state,
