@@ -29,8 +29,6 @@ const VideoContainer = ({ videoState }: { videoState: VideoRoom }) => {
     });
   });
 
-  console.log(videoState);
-
   return (
     <MainContainer>
       {videoState.localStream && (

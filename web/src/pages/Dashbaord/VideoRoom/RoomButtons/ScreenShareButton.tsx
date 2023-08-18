@@ -6,7 +6,7 @@ import { addScreenSharingStream } from "../../../../store/actions/videoRoomActio
 import { replaceTracks } from "../../../../realtime/webRTC";
 
 const screenShareConstraint = {
-  audio: true,
+  audio: false,
   video: true,
 };
 
@@ -38,6 +38,7 @@ const ScreenShareButton = ({
         trk.stop();
       });
       setVideoState(addScreenSharingStream(null));
+      if (videoState.localStream) replaceTracks(videoState.localStream);
     }
   };
 
