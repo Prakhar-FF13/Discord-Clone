@@ -8,6 +8,18 @@ import {
 
 const peers: { [key: string]: RTCPeerConnection } = {};
 
+export const replaceTracks = (stream: MediaStream) => {
+  stream.getTracks().forEach((trk) => {
+    Object.keys(peers).forEach((mail) => {
+      const sender = peers[mail]
+        .getSenders()
+        .find((s) => s.track?.kind === trk.kind);
+
+      sender?.replaceTrack(trk);
+    });
+  });
+};
+
 export const addPeer = (mail: string, pc: RTCPeerConnection) => {
   if (peers[mail]) {
     peers[mail].close();
