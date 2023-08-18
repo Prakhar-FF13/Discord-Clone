@@ -51,7 +51,6 @@ export const closePeer = (pc: RTCPeerConnection) => {
 
     //@ts-ignore
     if (pc.closeAllConnections) {
-      console.log("called");
       //@ts-ignore
       pc.closeAllConnections();
     }

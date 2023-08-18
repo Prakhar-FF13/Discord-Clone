@@ -9,7 +9,7 @@ export const initState: VideoRoom = {
   activeRoomDetails: null,
   rooms: [],
   localStream: null,
-  remoteUsers: [],
+  remoteUsers: {},
   audioOnly: false,
   screenSharingStream: null,
   isScreenSharingActive: false,
@@ -35,9 +35,24 @@ const reducer = (state = initState, action: Action) => {
         rooms: action.roomDetails,
       };
     case ACTION_TYPES.AddRemoteStream:
+      console.log(action.remoteUser.mail);
+
+      let x = [];
+      if (state.remoteUsers[action.remoteUser.mail]) {
+        x = [
+          ...state.remoteUsers[action.remoteUser.mail],
+          action.remoteUser.stream,
+        ];
+      } else {
+        x = [action.remoteUser.stream];
+      }
+
       return {
         ...state,
-        remoteUsers: [...state.remoteUsers, action.remoteUser],
+        remoteUsers: {
+          ...state.remoteUsers,
+          [action.remoteUser.mail]: x,
+        },
       };
     case ACTION_TYPES.AddLocalStream:
       return {
@@ -51,15 +66,16 @@ const reducer = (state = initState, action: Action) => {
         isUserRoomCreator: false,
         activeRoomDetails: null,
         localStream: null,
-        remoteUsers: [],
+        remoteUsers: {},
         audioOnly: false,
         screenSharingStream: null,
         isScreenSharingActive: false,
       };
     case ACTION_TYPES.UserLeaveVideoRoom:
-      const newRemoteUsers = state.remoteUsers.filter(
-        (rs) => rs.email !== action.mail
-      );
+      const newRemoteUsers = {
+        ...state.remoteUsers,
+      };
+      delete newRemoteUsers[action.mail];
 
       closePeerWithEmail(action.mail);
 

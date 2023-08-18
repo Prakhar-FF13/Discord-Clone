@@ -30,10 +30,10 @@ const VideoContainer = () => {
         />
       )}
 
-      {videoState.remoteUsers.map((ru, idx) => (
+      {Object.keys(videoState.remoteUsers).map((mail) => (
         <ReactPlayer
-          key={`${idx}`}
-          url={ru.stream}
+          key={mail}
+          url={videoState.remoteUsers[mail][0]}
           style={videoStyle}
           playing={true}
         />

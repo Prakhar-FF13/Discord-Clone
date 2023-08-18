@@ -46,17 +46,13 @@ export interface VideoRoomDetails {
   label: string;
 }
 
-export interface RemoteVideoRoomUser {
-  email: string;
-  stream: MediaStream;
-}
 export interface VideoRoom {
   isUserInRoom: boolean;
   isUserRoomCreator: boolean;
   activeRoomDetails: VideoRoomDetails | null;
   rooms: VideoRoomDetails[];
   localStream: MediaStream | null;
-  remoteUsers: RemoteVideoRoomUser[];
+  remoteUsers: { [key: string]: MediaStream[] };
   audioOnly: boolean;
   screenSharingStream: MediaStream | null;
   isScreenSharingActive: boolean;
@@ -117,7 +113,10 @@ export interface CloseVideoCallAction {
 
 export interface AddRemoteStreamAction {
   type: ACTION_TYPES.AddRemoteStream;
-  remoteUser: RemoteVideoRoomUser;
+  remoteUser: {
+    mail: string;
+    stream: MediaStream;
+  };
 }
 
 export interface AddLocalStreamAction {

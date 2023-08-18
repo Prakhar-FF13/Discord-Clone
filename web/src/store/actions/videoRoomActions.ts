@@ -11,8 +11,8 @@ export const addRemoteStream = (
   return {
     type: ACTION_TYPES.AddRemoteStream,
     remoteUser: {
-      email,
-      stream,
+      mail: email,
+      stream: stream,
     },
   };
 };
