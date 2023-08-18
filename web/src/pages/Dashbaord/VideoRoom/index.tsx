@@ -29,7 +29,7 @@ const minimizedRoomStyle = {
 };
 
 const VideoRoom = () => {
-  const { videoState } = useContext(VideoContext);
+  const { videoState, setVideoState } = useContext(VideoContext);
 
   const [isRoomMinimized, setIsRoomMinimized] = useState(true);
 
@@ -41,8 +41,8 @@ const VideoRoom = () => {
     <MainContainer
       style={isRoomMinimized ? minimizedRoomStyle : fullScreenRoomStyle}
     >
-      <VideosContainer />
-      <RoomButtons />
+      <VideosContainer videoState={videoState} />
+      <RoomButtons videoState={videoState} setVideoState={setVideoState} />
       <ResizeRoomButton
         isRoomMinimized={isRoomMinimized}
         handleRoomResize={roomResizeHandler}

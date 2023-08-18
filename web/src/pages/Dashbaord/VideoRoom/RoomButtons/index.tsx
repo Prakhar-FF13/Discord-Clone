@@ -3,6 +3,8 @@ import ScreenShareButton from "./ScreenShareButton";
 import MicButton from "./MicButton";
 import CloseRoomButton from "./CloseRoomButton";
 import CameraButton from "./CameraButton";
+import React from "react";
+import { VideoRoom } from "../../../../commonTypes";
 
 const MainContainer = styled("div")({
   height: "15%",
@@ -15,13 +17,19 @@ const MainContainer = styled("div")({
   justifyContent: "center",
 });
 
-const RoomButtons = () => {
+const RoomButtons = ({
+  setVideoState,
+  videoState,
+}: {
+  setVideoState: React.Dispatch<any>;
+  videoState: VideoRoom;
+}) => {
   return (
     <MainContainer>
       <ScreenShareButton />
-      <MicButton />
-      <CloseRoomButton />
-      <CameraButton />
+      <MicButton localStream={videoState.localStream} />
+      <CloseRoomButton setVideoState={setVideoState} />
+      <CameraButton localStream={videoState.localStream} />
     </MainContainer>
   );
 };

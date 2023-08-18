@@ -35,8 +35,6 @@ const reducer = (state = initState, action: Action) => {
         rooms: action.roomDetails,
       };
     case ACTION_TYPES.AddRemoteStream:
-      console.log(action.remoteUser.mail);
-
       let x = [];
       if (state.remoteUsers[action.remoteUser.mail]) {
         x = [

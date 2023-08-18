@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
-import { useContext } from "react";
-import { VideoContext } from "../../../store/reducers/videoReducer";
 import ReactPlayer from "react-player";
+import { VideoRoom } from "../../../commonTypes";
 
 const MainContainer = styled("div")({
   height: "85%",
@@ -17,9 +16,7 @@ const videoStyle = {
   display: "flex",
 };
 
-const VideoContainer = () => {
-  const { videoState } = useContext(VideoContext);
-
+const VideoContainer = ({ videoState }: { videoState: VideoRoom }) => {
   return (
     <MainContainer>
       {videoState.localStream && (

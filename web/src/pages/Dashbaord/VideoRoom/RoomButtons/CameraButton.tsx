@@ -2,11 +2,19 @@ import { Videocam, VideocamOff } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useState } from "react";
 
-const CameraButton = () => {
+const CameraButton = ({ localStream }: { localStream: MediaStream | null }) => {
   const [videoOn, setVideoOn] = useState(true);
 
   const handleToggleVideo = () => {
-    setVideoOn(!videoOn);
+    if (
+      localStream &&
+      localStream.getVideoTracks() &&
+      localStream.getVideoTracks().length
+    ) {
+      localStream.getVideoTracks()[0].enabled =
+        !localStream.getVideoTracks()[0].enabled;
+      setVideoOn(!videoOn);
+    }
   };
 
   return (
