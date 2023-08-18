@@ -100,6 +100,24 @@ export enum ACTION_TYPES {
   AddLocalStream = "ADD_LOCAL_STREAM",
   CloseVideoCall = "CLOSE_VIDEO_CALL",
   UserLeaveVideoRoom = "USER_LEAVE_VIDEO_ROOM",
+  AddScreenShareStream = "ADD_SCREEN_SHARE_STREAM",
+  RemoveAStream = "REMOVE_A_STREAM",
+  RemoveLocalStream = "REMOVE_LOCAL_STREAM",
+}
+
+export interface RemoveLocalStreamAction {
+  type: ACTION_TYPES.RemoveLocalStream;
+}
+export interface RemoveStreamAction {
+  type: ACTION_TYPES.RemoveAStream;
+  mail: string;
+  streamId: string;
+}
+
+export interface AddScreenShareStreamAction {
+  type: ACTION_TYPES.AddScreenShareStream;
+  stream: MediaStream | null;
+  isScreenSharingActive: boolean;
 }
 
 export interface UserLeaveVideoRoomAction {
@@ -113,10 +131,8 @@ export interface CloseVideoCallAction {
 
 export interface AddRemoteStreamAction {
   type: ACTION_TYPES.AddRemoteStream;
-  remoteUser: {
-    mail: string;
-    stream: MediaStream;
-  };
+  mail: string;
+  stream: MediaStream;
 }
 
 export interface AddLocalStreamAction {
@@ -208,4 +224,7 @@ export type Action =
   | AddRemoteStreamAction
   | AddLocalStreamAction
   | CloseVideoCallAction
-  | UserLeaveVideoRoomAction;
+  | UserLeaveVideoRoomAction
+  | AddScreenShareStreamAction
+  | RemoveStreamAction
+  | RemoveLocalStreamAction;

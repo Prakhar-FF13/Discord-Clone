@@ -1,17 +1,47 @@
 import { ScreenShare, StopScreenShare } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
-import { useState } from "react";
+import React from "react";
+import { VideoRoom } from "../../../../commonTypes";
+import { addScreenSharingStream } from "../../../../store/actions/videoRoomActions";
 
-const ScreenShareButton = () => {
-  const [isScreenSharingActive, setScreenSharingActive] = useState(false);
+const screenShareConstraint = {
+  audio: true,
+  video: true,
+};
 
-  const handleToggleScreenShare = () => {
-    setScreenSharingActive(!isScreenSharingActive);
+const ScreenShareButton = ({
+  setVideoState,
+  videoState,
+}: {
+  videoState: VideoRoom;
+  setVideoState: React.Dispatch<any>;
+}) => {
+  const handleToggleScreenShare = async () => {
+    if (!videoState.isScreenSharingActive) {
+      let stream = null;
+      try {
+        stream = await navigator.mediaDevices.getDisplayMedia(
+          screenShareConstraint
+        );
+      } catch (e) {
+        alert("Could not share screen.");
+        console.log(e);
+      }
+
+      if (stream) {
+        setVideoState(addScreenSharingStream(stream));
+      }
+    } else {
+      videoState.screenSharingStream?.getTracks().forEach((trk) => {
+        trk.stop();
+      });
+      setVideoState(addScreenSharingStream(null));
+    }
   };
 
   return (
     <IconButton onClick={handleToggleScreenShare} style={{ color: "white" }}>
-      {isScreenSharingActive ? <StopScreenShare /> : <ScreenShare />}
+      {videoState.isScreenSharingActive ? <StopScreenShare /> : <ScreenShare />}
     </IconButton>
   );
 };

@@ -17,6 +17,20 @@ const videoStyle = {
 };
 
 const VideoContainer = ({ videoState }: { videoState: VideoRoom }) => {
+  const ids: { [key: string]: boolean } = {};
+
+  const streams: MediaStream[] = [];
+  Object.keys(videoState.remoteUsers).forEach((mail) => {
+    videoState.remoteUsers[mail].forEach((s) => {
+      if (!(s.id in ids) || ids[s.id] === false) {
+        streams.push(s);
+        ids[s.id] = true;
+      }
+    });
+  });
+
+  console.log(videoState);
+
   return (
     <MainContainer>
       {videoState.localStream && (
@@ -27,14 +41,11 @@ const VideoContainer = ({ videoState }: { videoState: VideoRoom }) => {
         />
       )}
 
-      {Object.keys(videoState.remoteUsers).map((mail) => (
-        <ReactPlayer
-          key={mail}
-          url={videoState.remoteUsers[mail][0]}
-          style={videoStyle}
-          playing={true}
-        />
-      ))}
+      {streams.map((s) => {
+        return (
+          <ReactPlayer key={s.id} url={s} style={videoStyle} playing={true} />
+        );
+      })}
     </MainContainer>
   );
 };

@@ -1,8 +1,33 @@
 import {
   ACTION_TYPES,
   AddRemoteStreamAction,
+  AddScreenShareStreamAction,
   VideoRoomDetails,
 } from "../../commonTypes";
+
+export const removeLocalStream = () => {
+  return {
+    type: ACTION_TYPES.RemoveLocalStream,
+  };
+};
+
+export const removeRemoteStream = (mail: string, streamId: string) => {
+  return {
+    type: ACTION_TYPES.RemoveAStream,
+    mail,
+    streamId,
+  };
+};
+
+export const addScreenSharingStream = (
+  stream: MediaStream | null
+): AddScreenShareStreamAction => {
+  return {
+    type: ACTION_TYPES.AddScreenShareStream,
+    stream,
+    isScreenSharingActive: stream ? true : false,
+  };
+};
 
 export const addRemoteStream = (
   email: string,
@@ -10,10 +35,8 @@ export const addRemoteStream = (
 ): AddRemoteStreamAction => {
   return {
     type: ACTION_TYPES.AddRemoteStream,
-    remoteUser: {
-      mail: email,
-      stream: stream,
-    },
+    mail: email,
+    stream: stream,
   };
 };
 

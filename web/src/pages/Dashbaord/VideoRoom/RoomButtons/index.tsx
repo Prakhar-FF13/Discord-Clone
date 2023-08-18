@@ -26,7 +26,10 @@ const RoomButtons = ({
 }) => {
   return (
     <MainContainer>
-      <ScreenShareButton />
+      <ScreenShareButton
+        videoState={videoState}
+        setVideoState={setVideoState}
+      />
       <MicButton localStream={videoState.localStream} />
       <CloseRoomButton setVideoState={setVideoState} />
       <CameraButton localStream={videoState.localStream} />

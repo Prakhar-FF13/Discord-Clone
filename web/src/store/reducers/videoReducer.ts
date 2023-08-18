@@ -36,20 +36,17 @@ const reducer = (state = initState, action: Action) => {
       };
     case ACTION_TYPES.AddRemoteStream:
       let x = [];
-      if (state.remoteUsers[action.remoteUser.mail]) {
-        x = [
-          ...state.remoteUsers[action.remoteUser.mail],
-          action.remoteUser.stream,
-        ];
+      if (state.remoteUsers[action.mail]) {
+        x = [...state.remoteUsers[action.mail], action.stream];
       } else {
-        x = [action.remoteUser.stream];
+        x = [action.stream];
       }
 
       return {
         ...state,
         remoteUsers: {
           ...state.remoteUsers,
-          [action.remoteUser.mail]: x,
+          [action.mail]: x,
         },
       };
     case ACTION_TYPES.AddLocalStream:
@@ -81,6 +78,31 @@ const reducer = (state = initState, action: Action) => {
         ...state,
         remoteUsers: newRemoteUsers,
       };
+    case ACTION_TYPES.AddScreenShareStream:
+      return {
+        ...state,
+        screenSharingStream: action.stream,
+        isScreenSharingActive: action.isScreenSharingActive,
+      };
+    case ACTION_TYPES.RemoveLocalStream:
+      state.localStream?.getTracks().forEach((trk) => trk.stop());
+      return {
+        ...state,
+        localStream: null,
+      };
+
+    case ACTION_TYPES.RemoveAStream:
+      let newUser = state.remoteUsers[action.mail];
+      newUser = newUser.filter((s) => s.id !== action.streamId);
+
+      return {
+        ...state,
+        remoteUsers: {
+          ...state.remoteUsers,
+          [action.mail]: newUser,
+        },
+      };
+
     default:
       return state;
   }

@@ -8,6 +8,7 @@ import {
   addLocalStream,
   addNewRoom,
   leaveRoom,
+  removeLocalStream,
 } from "../store/actions/videoRoomActions";
 import {
   addRemoteDescription,
@@ -49,6 +50,9 @@ export const videoRoomSendOffer = async (
 
   try {
     const localStream = await navigator.mediaDevices.getUserMedia(mediaConfig);
+    localStream.onremovetrack = () => {
+      dispatch(removeLocalStream());
+    };
 
     dispatch(addLocalStream(localStream));
 
@@ -95,6 +99,9 @@ export const videoRoomSendAnswer = async (
   }
 
   const localStream = await navigator.mediaDevices.getUserMedia(mediaConfig);
+  localStream.onremovetrack = () => {
+    dispatch(removeLocalStream());
+  };
 
   dispatch(addLocalStream(localStream));
 
