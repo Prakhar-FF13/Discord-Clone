@@ -31,12 +31,20 @@ const VideoContainer = ({ videoState }: { videoState: VideoRoom }) => {
 
   return (
     <MainContainer>
-      {videoState.localStream && (
+      {videoState.isScreenSharingActive && videoState.screenSharingStream ? (
         <ReactPlayer
-          url={videoState.localStream}
+          url={videoState.screenSharingStream}
           style={videoStyle}
           playing={true}
         />
+      ) : (
+        videoState.localStream && (
+          <ReactPlayer
+            url={videoState.localStream}
+            style={videoStyle}
+            playing={true}
+          />
+        )
       )}
 
       {streams.map((s) => {
