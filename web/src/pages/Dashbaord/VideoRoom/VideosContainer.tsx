@@ -12,6 +12,9 @@ const MainContainer = styled("div")({
 
 const videoStyle = {
   minWidth: "33%",
+  maxWidth: "50%",
+  minHeight: "33%",
+  maxHeight: "50%",
   flex: 1,
   display: "flex",
 };
@@ -31,20 +34,19 @@ const VideoContainer = ({ videoState }: { videoState: VideoRoom }) => {
 
   return (
     <MainContainer>
-      {videoState.isScreenSharingActive && videoState.screenSharingStream ? (
+      {videoState.isScreenSharingActive && videoState.screenSharingStream && (
         <ReactPlayer
           url={videoState.screenSharingStream}
           style={videoStyle}
           playing={true}
         />
-      ) : (
-        videoState.localStream && (
-          <ReactPlayer
-            url={videoState.localStream}
-            style={videoStyle}
-            playing={true}
-          />
-        )
+      )}
+      {videoState.localStream && !videoState.isScreenSharingActive && (
+        <ReactPlayer
+          url={videoState.localStream}
+          style={videoStyle}
+          playing={true}
+        />
       )}
 
       {streams.map((s) => {
